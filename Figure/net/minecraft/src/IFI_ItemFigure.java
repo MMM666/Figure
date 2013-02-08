@@ -5,7 +5,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.lwjgl.opengl.EXTRescaleNormal;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
+import org.lwjgl.util.glu.GLU;
 
 public class IFI_ItemFigure extends Item implements MMM_IItemRender {
 
@@ -188,6 +191,7 @@ public class IFI_ItemFigure extends Item implements MMM_IItemRender {
 	@Override
 	public boolean renderItemInFirstPerson(float pDelta) {
 		// 元のコード丸パクリ
+		/*
 		EntityPlayerSP entityplayersp = MMM_Helper.mc.thePlayer;
 		float f1 = prevEquippedProgress + (equippedProgress - prevEquippedProgress) * pDelta;
 		float f2 = ((EntityPlayer) (entityplayersp)).prevRotationPitch + (((EntityPlayer) (entityplayersp)).rotationPitch - ((EntityPlayer) (entityplayersp)).prevRotationPitch) * pDelta;
@@ -217,7 +221,7 @@ public class IFI_ItemFigure extends Item implements MMM_IItemRender {
 		GL11.glTranslatef(-f17 * 0.4F, MathHelper.sin(MathHelper.sqrt_float(f9) * 3.141593F * 2.0F) * 0.2F, -f13 * 0.2F);
 		GL11.glTranslatef(0.7F * f5, -0.65F * f5 - (1.0F - f1) * 0.6F, -0.9F * f5);
 		GL11.glRotatef(45F, 0.0F, 1.0F, 0.0F);
-		GL11.glEnable(32826 /*GL_RESCALE_NORMAL_EXT*/);
+		GL11.glEnable(EXTRescaleNormal.GL_RESCALE_NORMAL_EXT);
 		f9 = entityplayersp.getSwingProgress(pDelta);
 		f13 = MathHelper.sin(f9 * f9 * 3.141593F);
 		f17 = MathHelper.sin(MathHelper.sqrt_float(f9) * 3.141593F);
@@ -233,6 +237,7 @@ public class IFI_ItemFigure extends Item implements MMM_IItemRender {
 		GL11.glPopMatrix();
 		
 		RenderHelper.disableStandardItemLighting();
+		*/
 		return true;
 	}
 
@@ -243,12 +248,12 @@ public class IFI_ItemFigure extends Item implements MMM_IItemRender {
 	}
 
 	public boolean renderItem() {
-		
+		/*
 //      renderManager.renderEntityWithPosYaw(new EntityFigure(entityitem.worldObj, entityitem.item.getItemDamage()), d, d1, d2, f, f1);
 		EntityFigure ef = new EntityFigure(entityitem.worldObj, IFI_ItemFigure.entityIndexMap.get(entityitem.item.getItemDamage()));
 		renderManager.renderEntityWithPosYaw(ef, 0, 0, 0, 0, f1);
 		ef.callAfterRender();
-
+*/
 		return true;
 	}
 
