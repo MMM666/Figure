@@ -3,6 +3,7 @@ package net.minecraft.src;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import org.lwjgl.opengl.EXTRescaleNormal;
@@ -12,7 +13,7 @@ import org.lwjgl.util.glu.GLU;
 
 public class IFI_ItemFigure extends Item implements MMM_IItemRender {
 
-	public static World lasetWorld;
+//	public static World lasetWorld;
 	public static Map<Integer, Entity> entityIndexMap = new TreeMap<Integer, Entity>();
 	public static Map<String, Entity> entityStringMap = new TreeMap<String, Entity>();
 
@@ -24,7 +25,7 @@ public class IFI_ItemFigure extends Item implements MMM_IItemRender {
 		setMaxDamage(0);
 		setCreativeTab(CreativeTabs.tabDecorations);
 	}
-
+/*
 	public static void checkCreateEntity(World world) {
 		// Entityのリストを作成
 		if (world != null && lasetWorld != world) {
@@ -46,18 +47,60 @@ public class IFI_ItemFigure extends Item implements MMM_IItemRender {
 			lasetWorld = world;
 		}
 	}
-
+*/
 	@Override
-	public ItemStack onItemRightClick(ItemStack itemstack, World world,
-			EntityPlayer entityplayer) {
-		// 初期チェック
-		checkCreateEntity(world);
+	public boolean onItemUse(ItemStack par1ItemStack,
+			EntityPlayer par2EntityPlayer, World par3World,
+			int par4, int par5, int par6, int par7,
+			float par8, float par9, float par10) {
+		// こっちでやれば座標検出要らないと思う
+		if (par3World.getBlockMaterial(par4, par5 + 1, par6) == Material.air || par9 <= 0.5D) {
+			// 方向ぎめはここに入れる
+			mod_IFI_Figure.Debug("x:%f, y:%f, z:%f, dir:%d", par8, par9, par10, par7);
+			double x, y, z;
+			if (par7 == 1) {
+				// 天辺を選択した場合詳細な配置ができる
+				x = par4 + par8;
+				y = par5 + par9;
+				z = par6 + par10;
+			} else {
+				x = par4 + 0.5D;
+				y = par5 + 1.0D;
+				z = par6 + 0.5D;
+			}
+			float lyaw = (180F - par2EntityPlayer.rotationYaw) % 360F;
+			
+			if (par1ItemStack.getItemDamage() > 0) {
+				if (!par3World.isRemote) {
+					// Server
+					// 選択なしで設置
+					IFI_EntityFigure ef = new IFI_EntityFigure(par3World, par1ItemStack.getItemDamage());
+					ef.setPositionAndRotation(x, y, z, lyaw, 0F);
+					par3World.spawnEntityInWorld(ef);
+					par3World.playSoundAtEntity(par2EntityPlayer, "step.wood",
+							0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
+				}
+			} else {
+				if (par3World.isRemote) {
+					// Client
+					// Guiを表示してフィギュアを選択
+					IFI_EntityFigure ef = new IFI_EntityFigure(par3World);
+					ef.setPositionAndRotation(x, y, z, lyaw, 0F);
+					ModLoader.openGUI(par2EntityPlayer, new IFI_GuiFigureSelect(par3World, ef));
+				}
+			}
+			par1ItemStack.stackSize--;
+		}
 
+		return false;
+	}
+	/*
+	@Override
+	public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer) {
 		// 設置
 		float f = 1.0F;
 		float f1 = entityplayer.prevRotationPitch
-				+ (entityplayer.rotationPitch - entityplayer.prevRotationPitch)
-				* f;
+				+ (entityplayer.rotationPitch - entityplayer.prevRotationPitch) * f;
 		float f2 = entityplayer.prevRotationYaw
 				+ (entityplayer.rotationYaw - entityplayer.prevRotationYaw) * f;
 		double d = entityplayer.prevPosX
@@ -79,6 +122,7 @@ public class IFI_ItemFigure extends Item implements MMM_IItemRender {
 		Vec3 vec3d1 = Vec3.createVectorHelper((double) f7 * d3, (double) f8 * d3, (double) f9 * d3);
 		MovingObjectPosition movingobjectposition = world.rayTraceBlocks_do(vec3d, vec3d1, true);
 		if (movingobjectposition == null) {
+			// 設置可能位置がありませんでした。
 			return itemstack;
 		}
 		if (movingobjectposition.typeOfHit == EnumMovingObjectType.TILE) {
@@ -86,8 +130,40 @@ public class IFI_ItemFigure extends Item implements MMM_IItemRender {
 			int j = movingobjectposition.blockY;
 			int k = movingobjectposition.blockZ;
 			double my = Block.blocksList[world.getBlockId(i, j, k)].maxY;
-			if (world.getBlockMaterial(i, j + 1, k) == Material.air
-					|| my <= 0.5D) {
+			if (world.getBlockMaterial(i, j + 1, k) == Material.air || my <= 0.5D) {
+				// 方向ぎめはここに入れる
+				System.out.println(String.format("dir:%d", movingobjectposition.sideHit));
+				double x, y, z;
+				if (movingobjectposition.sideHit == 1) {
+					// 天辺を選択した場合詳細な配置ができる
+					double dd = (j + my - vec3d.yCoord) / (vec3d1.yCoord - vec3d.yCoord);
+					x = (vec3d1.xCoord - vec3d.xCoord) * dd + vec3d.xCoord;
+					y = j + my;
+					z = (vec3d1.zCoord - vec3d.zCoord) * dd + vec3d.zCoord;
+					System.out
+							.println(String.format("%f, %f, %f", x, y, z));
+				} else {
+					x = i + 0.5D;
+					y = j + 1.0D;
+					z = k + 0.5D;
+				}
+				
+				
+				if (itemstack.getItemDamage() > 0) {
+					// 選択なしで設置
+//					EntityFigure ef = new EntityFigure(world, null);
+					
+				} else {
+					if (world.isRemote) {
+						// Client
+						// Guiを表示してフィギュアを選択
+						IFI_EntityFigure ef = new IFI_EntityFigure(world);
+						ef.setPositionAndRotation2(x, y, z,
+								(entityplayer.rotationYaw + 180F) % 360F, 0, 1);
+						ModLoader.openGUI(entityplayer, new IFI_GuiFigureSelect(world, ef));
+					}
+				}
+
 				if (!world.isRemote) {
 					Entity se = null;
 					if (itemstack.getItemDamage() != 0) {
@@ -103,7 +179,7 @@ public class IFI_ItemFigure extends Item implements MMM_IItemRender {
 					EntityFigure ef = new EntityFigure(world, se);
 					if (itemstack.getItemDamage() == 0) {
 						if (entityplayer instanceof EntityPlayerSP) {
-							ModLoader.openGUI(entityplayer, new GuiFigureSelect(ef));
+							ModLoader.openGUI(entityplayer, new IFI_GuiFigureSelect(world, ef));
 						}
 					}
 					// 方向ぎめはここに入れる
@@ -134,6 +210,7 @@ public class IFI_ItemFigure extends Item implements MMM_IItemRender {
 					ef.getGui().setRotation();
 					world.spawnEntityInWorld(ef);
 				}
+
 				world.playSoundAtEntity(entityplayer, "step.wood", 0.5F,
 						0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
 				itemstack.stackSize--;
@@ -142,16 +219,15 @@ public class IFI_ItemFigure extends Item implements MMM_IItemRender {
 		
 		return itemstack;
 	}
+				*/
 
 	@Override
 	public String getItemNameIS(ItemStack itemstack) {
 		if (itemstack.getItemDamage() != 0) {
-			checkCreateEntity(mod_IFI_Figure.mc.theWorld);
-			Entity e = entityIndexMap.get(itemstack.getItemDamage());
-			if (e != null) {
+			String ls = EntityList.getStringFromID(itemstack.getItemDamage());
+			if (ls != null) {
 				return (new StringBuilder()).append(super.getItemName())
-						.append(".").append(EntityList.getEntityString(e))
-						.toString();
+						.append(".").append(ls).toString();
 			} else {
 				// System.out.println(String.format("figua-e-id lost:%d",
 				// itemstack.getItemDamage()));
@@ -164,9 +240,21 @@ public class IFI_ItemFigure extends Item implements MMM_IItemRender {
 	@Override
 	public void getSubItems(int par1, CreativeTabs par2CreativeTabs, List par3List) {
 		par3List.add(new ItemStack(mod_IFI_Figure.figure, 1));
-		if (!entityIndexMap.isEmpty()) {
-			for (Map.Entry<Integer, Entity> ei : entityIndexMap.entrySet()) {
-				par3List.add(new ItemStack(mod_IFI_Figure.figure, 1, ei.getKey()));
+		Map<Integer, Class> lmap = null;
+		try {
+			lmap = (Map<Integer, Class>)ModLoader.getPrivateValue(EntityList.class, null, 2);
+		} catch (Exception e) {
+			
+		}
+		if (lmap != null && MMM_Helper.mc != null && MMM_Helper.mc.theWorld != null) {
+			for (Entry<Integer, Class> le : lmap.entrySet()) {
+				try {
+					Entity lentity = EntityList.createEntityByID(le.getKey(), MMM_Helper.mc.theWorld);
+					if (lentity instanceof EntityLiving) {
+						par3List.add(new ItemStack(mod_IFI_Figure.figure, 1, le.getKey()));
+					}
+				} catch (Exception e) {
+				}
 			}
 		}
 	}
@@ -179,7 +267,7 @@ public class IFI_ItemFigure extends Item implements MMM_IItemRender {
 		GL11.glRotatef(180F, 0F, 1F, 0F);
 		GL11.glScalef(2.5F, 2.5F, 2.5F);
 		
-		EntityFigure ef = new EntityFigure(pEntity.worldObj, IFI_ItemFigure.entityIndexMap.get(pItemstack.getItemDamage()));
+		IFI_EntityFigure ef = new IFI_EntityFigure(pEntity.worldObj, IFI_ItemFigure.entityIndexMap.get(pItemstack.getItemDamage()));
 		RenderManager.instance.renderEntityWithPosYaw(ef, 0, 0, 0, 0, 0);
 		ef.callAfterRender();
 //		RenderManager.instance.renderEntityWithPosYaw(new EntityFigure(entityliving.worldObj, ItemFigure.entityIndexMap.get(itemstack.getItemDamage())), 0, 0, 0, 0, 0);
@@ -270,7 +358,8 @@ public class IFI_ItemFigure extends Item implements MMM_IItemRender {
 			GL11.glRotatef(45F, 0.0F, 1.0F, 0.0F);
 			
 //            renderManager.renderEntityWithPosYaw(new EntityFigure(ModLoader.getMinecraftInstance().theWorld, j), 0, 0, 0, 0, 0);
-			EntityFigure ef = new EntityFigure(MMM_Helper.mc.theWorld, IFI_ItemFigure.entityIndexMap.get(j));
+			IFI_EntityFigure ef = new IFI_EntityFigure(MMM_Helper.mc.theWorld, IFI_ItemFigure.entityIndexMap.get(j));
+//			IFI_EntityFigure ef = new IFI_EntityFigure(MMM_Helper.mc.theWorld, j);
 			RenderManager.instance.renderEntityWithPosYaw(ef, 0, 0, 0, 0, 0);
 			ef.callAfterRender();
 			

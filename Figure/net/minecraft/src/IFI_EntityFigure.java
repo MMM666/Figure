@@ -5,7 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
-public class EntityFigure extends Entity {
+public class IFI_EntityFigure extends Entity {
 
 	public EntityLiving renderEntity;
 	public float zoom = 4F;
@@ -14,15 +14,16 @@ public class EntityFigure extends Entity {
 	private int health;
 	private Method afterrender;
 	public float additionalYaw;
+	public byte changeCount;
 
-	public EntityFigure(World world) {
+	public IFI_EntityFigure(World world) {
 		super(world);
 		health = 5;
 		additionalYaw = 0.0F;
-		IFI_ItemFigure.checkCreateEntity(world);
+		changeCount = -1;
 	}
 
-	public EntityFigure(World world, Entity entity) {
+	public IFI_EntityFigure(World world, Entity entity) {
 		this(world);
 		
 		if (!(entity instanceof EntityLiving)) {
@@ -32,12 +33,13 @@ public class EntityFigure extends Entity {
 		getGui();
 	}
 
-	public EntityFigure(World world, int index) {
+	public IFI_EntityFigure(World world, int index) {
 		this(world, EntityList.createEntityByID(index, world));
 	}
 
 	@Override
 	protected void entityInit() {
+		dataWatcher.addObject(2, (byte)-1);
 	}
 
 	@Override
@@ -53,15 +55,13 @@ public class EntityFigure extends Entity {
 				// ë∂ç›ÇµÇ»Ç¢MOB
 				System.out.println(String.format("figua-lost:%s",
 						nbttagcompound.getString("mobString")));
-				IFI_ItemFigure.checkCreateEntity(worldObj);
+//				IFI_ItemFigure.checkCreateEntity(worldObj);
 				r = (Entity) IFI_ItemFigure.entityIndexMap.values().toArray()[0];
 			}
 			setRenderEntity((EntityLiving) r);
-			renderEntity.readFromNBT(nbttagcompound);
-			renderEntity.dataWatcher.updateObject(0,
-					nbttagcompound.getByte("DataWatcher0"));
-			renderEntity.prevRotationPitch = nbttagcompound
-					.getFloat("prevPitch");
+			renderEntity.readFromNBT(nbttagcompound.getCompoundTag("Entity"));
+			renderEntity.dataWatcher.updateObject(0, nbttagcompound.getByte("DataWatcher0"));
+			renderEntity.prevRotationPitch = nbttagcompound.getFloat("prevPitch");
 			renderEntity.prevRotationYaw = nbttagcompound.getFloat("prevYaw");
 			renderEntity.prevRotationYawHead = renderEntity.rotationYawHead = renderEntity.prevRotationYaw;
 			getGui().readEntityFromNBT(nbttagcompound);
@@ -77,13 +77,15 @@ public class EntityFigure extends Entity {
 		nbttagcompound.setFloat("zoom", zoom);
 		nbttagcompound.setShort("Health", (byte) health);
 		nbttagcompound.setFloat("additionalYaw", additionalYaw);
+		NBTTagCompound lnbt = new NBTTagCompound();
 		if (renderEntity != null) {
-			renderEntity.writeToNBT(nbttagcompound);
+			renderEntity.writeToNBT(lnbt);
 			nbttagcompound.setByte("DataWatcher0", renderEntity.dataWatcher.getWatchableObjectByte(0));
 			nbttagcompound.setFloat("prevPitch", renderEntity.prevRotationPitch);
 			nbttagcompound.setFloat("prevYaw", renderEntity.prevRotationYaw);
 			getGui().writeEntityToNBT(nbttagcompound);
 		}
+		nbttagcompound.setCompoundTag("Entity", lnbt);
 	}
 
 	@Override
@@ -127,8 +129,7 @@ public class EntityFigure extends Entity {
 			if (riddenByEntity != null) {
 				riddenByEntity.mountEntity(null);
 			}
-			entityDropItem(new ItemStack(mod_IFI_Figure.figure.itemID, 1,
-					mobIndex), 0.0F);
+			entityDropItem(new ItemStack(mod_IFI_Figure.figure.itemID, 1, mobIndex), 0.0F);
 			setDead();
 		} else {
 			health -= i;
@@ -186,19 +187,24 @@ public class EntityFigure extends Entity {
 
 	@Override
 	public boolean interact(EntityPlayer entityplayer) {
-		if (!worldObj.isRemote) {
+		if (worldObj.isRemote) {
+			// Client
 			ModLoader.openGUI(entityplayer, getGui());
 		}
 		return true;
 	}
 
-	protected void setRenderEntity(EntityLiving entity) {
+	public void setRenderEntity(EntityLiving entity) {
 		renderEntity = entity;
 		if (renderEntity != null) {
 			mobString = EntityList.getEntityString(renderEntity);
 			mobIndex = EntityList.getEntityID(renderEntity);
 			setZoom(zoom);
 		}
+	}
+
+	public boolean hasRenderEntity() {
+		return renderEntity != null;
 	}
 
 	public void setZoom(float z) {
@@ -212,24 +218,24 @@ public class EntityFigure extends Entity {
 		renderEntity.renderDistanceWeight = zoom;
 	}
 
-	public GuiFigurePause getGui() {
-		Class<GuiFigurePause> cl = mod_IFI_Figure.guiClassMap.get(mobString);
-		GuiFigurePause g = null;
+	public IFI_GuiFigurePause getGui() {
+		Class<IFI_GuiFigurePause> cl = mod_IFI_Figure.guiClassMap.get(mobString);
+		IFI_GuiFigurePause g = null;
 		afterrender = null;
 		if (cl != null) {
 			try {
-				Constructor<GuiFigurePause> cn = cl
-						.getConstructor(new Class[] { EntityFigure.class });
+				Constructor<IFI_GuiFigurePause> cn = cl
+						.getConstructor(new Class[] { IFI_EntityFigure.class });
 				g = cn.newInstance(new Object[] { this });
 
 				afterrender = g.getClass().getMethod("afterRender",
-						new Class[] { EntityFigure.class });
+						new Class[] { IFI_EntityFigure.class });
 			} catch (Exception exception) {
 				System.out.println("can't constract Gui.");
 			}
 		}
 		if (g == null) {
-			g = new GuiFigurePause(this);
+			g = new IFI_GuiFigurePause(this);
 		}
 		
 		return g;
