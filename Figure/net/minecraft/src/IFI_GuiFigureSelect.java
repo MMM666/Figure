@@ -37,7 +37,7 @@ public class IFI_GuiFigureSelect extends MMM_GuiMobSelect {
 	@Override
 	public void onGuiClosed() {
 		super.onGuiClosed();
-		targetFigure.getGui().setRotation();
+		IFI_Client.getGui(targetFigure).setRotation();
 		// 設定されたEntityに適合するパケットセンダーを実行
 		byte ldata[] = new byte[17 + targetFigure.mobString.length()];
 		ldata[0] = IFI_Server_SpawnFigure;

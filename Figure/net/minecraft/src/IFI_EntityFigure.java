@@ -12,7 +12,7 @@ public class IFI_EntityFigure extends Entity {
 	public String mobString;
 	public int mobIndex;
 	private int health;
-	private Method afterrender;
+	public Method afterrender;
 	public float additionalYaw;
 	public byte changeCount;
 
@@ -30,7 +30,7 @@ public class IFI_EntityFigure extends Entity {
 			entity = EntityList.createEntityByName("Zombie", world);
 		}
 		setRenderEntity((EntityLiving) entity);
-		getGui();
+		IFI_Client.getGui(this);
 	}
 
 	public IFI_EntityFigure(World world, int index) {
@@ -64,8 +64,8 @@ public class IFI_EntityFigure extends Entity {
 			renderEntity.prevRotationPitch = nbttagcompound.getFloat("prevPitch");
 			renderEntity.prevRotationYaw = nbttagcompound.getFloat("prevYaw");
 			renderEntity.prevRotationYawHead = renderEntity.rotationYawHead = renderEntity.prevRotationYaw;
-			getGui().readEntityFromNBT(nbttagcompound);
-			getGui().setRotation();
+			IFI_Client.getGui(this).readEntityFromNBT(nbttagcompound);
+			IFI_Client.getGui(this).setRotation();
 		}
 	}
 
@@ -83,7 +83,7 @@ public class IFI_EntityFigure extends Entity {
 			nbttagcompound.setByte("DataWatcher0", renderEntity.dataWatcher.getWatchableObjectByte(0));
 			nbttagcompound.setFloat("prevPitch", renderEntity.prevRotationPitch);
 			nbttagcompound.setFloat("prevYaw", renderEntity.prevRotationYaw);
-			getGui().writeEntityToNBT(nbttagcompound);
+			IFI_Client.getGui(this).writeEntityToNBT(nbttagcompound);
 		}
 		nbttagcompound.setCompoundTag("Entity", lnbt);
 	}
@@ -189,7 +189,7 @@ public class IFI_EntityFigure extends Entity {
 	public boolean interact(EntityPlayer entityplayer) {
 		if (worldObj.isRemote) {
 			// Client
-			ModLoader.openGUI(entityplayer, getGui());
+			ModLoader.openGUI(entityplayer, IFI_Client.getGui(this));
 		}
 		return true;
 	}
@@ -218,47 +218,5 @@ public class IFI_EntityFigure extends Entity {
 		renderEntity.renderDistanceWeight = zoom;
 	}
 
-	public IFI_GuiFigurePause getGui() {
-		Class<IFI_GuiFigurePause> cl = mod_IFI_Figure.guiClassMap.get(mobString);
-		IFI_GuiFigurePause g = null;
-		afterrender = null;
-		if (cl != null) {
-			try {
-				Constructor<IFI_GuiFigurePause> cn = cl
-						.getConstructor(new Class[] { IFI_EntityFigure.class });
-				g = cn.newInstance(new Object[] { this });
-
-				afterrender = g.getClass().getMethod("afterRender",
-						new Class[] { IFI_EntityFigure.class });
-			} catch (Exception exception) {
-				System.out.println("can't constract Gui.");
-			}
-		}
-		if (g == null) {
-			g = new IFI_GuiFigurePause(this);
-		}
-		
-		return g;
-	}
-
-	public boolean callAfterRender() {
-		if (afterrender == null)
-			return false;
-		
-		try {
-			afterrender.invoke(null, new Object[] { this });
-			return true;
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return false;
-	}
 
 }

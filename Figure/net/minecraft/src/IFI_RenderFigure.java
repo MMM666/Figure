@@ -15,9 +15,8 @@ public class IFI_RenderFigure extends Render {
 			GL11.glPushMatrix();
 			GL11.glTranslatef(
 					(float) d,
-					(float) d1
-							+ ((ef.renderEntity.isRiding()
-									? (float) ef.renderEntity.getYOffset()
+					(float) d1 + ((ef.renderEntity.isRiding()
+							? (float) ef.renderEntity.getYOffset()
 									: ef.renderEntity.yOffset) / ef.zoom),
 					(float) d2);
 			// GL11.glRotatef(angle, x, y, z)
@@ -27,7 +26,7 @@ public class IFI_RenderFigure extends Render {
 			GL11.glRotatef(ef.rotationYaw - ef.additionalYaw, 0F, 1F, 0F);
 			renderManager.renderEntityWithPosYaw(ef.renderEntity, 0, 0, 0, 0, 0);
 			GL11.glPopMatrix();
-			ef.callAfterRender();
+			IFI_Client.callAfterRender(ef);
 		}
 	}
 

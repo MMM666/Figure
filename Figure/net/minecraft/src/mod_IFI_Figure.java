@@ -24,8 +24,9 @@ public class mod_IFI_Figure extends BaseMod {
 	public static RenderItem renderItem; // 元のRenderItem
 	public static int iconIndex;
 	public static Item figure;
-	public static Map<String, Class<Entity>> entityClassMap = new TreeMap<String, Class<Entity>>();
 	public static Map<String, Class> guiClassMap = new HashMap<String, Class>();
+	public static Map<String, IFI_ServerFigure> serverMap = new HashMap<String, IFI_ServerFigure>();
+	public static IFI_ServerFigure defServerFigure;
 
 
 	public static void Debug(String pText, Object... pData) {
@@ -97,7 +98,6 @@ public class mod_IFI_Figure extends BaseMod {
 					.getPrivateValue(EntityList.class, null, 0);
 			Map<Class<Entity>, Integer> ci = (Map<Class<Entity>, Integer>) ModLoader
 					.getPrivateValue(EntityList.class, null, 3);
-			ClassLoader classloader1 = mod_IFI_Figure.class.getClassLoader();
 			Package packege1 = mod_IFI_Figure.class.getPackage();
 			String strpackege = "";
 			if (packege1 != null) {
@@ -112,7 +112,6 @@ public class mod_IFI_Figure extends BaseMod {
 					if (EntityLiving.class.isAssignableFrom(cl)
 							&& !cl.isAssignableFrom(EntityLiving.class)
 							&& !cl.isAssignableFrom(EntityMob.class)) {
-						entityClassMap.put(me.getKey(), me.getValue());
 						// 名称の追加
 						ModLoader.addLocalization(
 								(new StringBuilder())
@@ -122,20 +121,11 @@ public class mod_IFI_Figure extends BaseMod {
 								(new StringBuilder()).append("Figure ")
 										.append(me.getKey()).toString());
 						// オートでGUIを追加
-						String cls = (new StringBuilder()).append(strpackege)
-								.append("IFI_GuiFigurePause_").append(me.getKey())
-								.toString();
-						try {
-							Class class1 = classloader1.loadClass(cls);
-							addGui(me.getKey(), class1);
-							System.out.println("success:" + cls);
-						} catch (Exception e) {
-							System.out.println("fali:" + cls);
-						}
-						
+						addGui(strpackege, me.getKey());
 					}
 				}
 			}
+			defServerFigure = new IFI_ServerFigure();
 		} catch (Exception exception) {
 			exception.printStackTrace();
 		}
@@ -144,9 +134,38 @@ public class mod_IFI_Figure extends BaseMod {
 				new Object[] { new ItemStack(figure, 1, -1) });
 	}
 
-	public void addGui(String name, Class cl) {
-		if (name != null && name.length() > 0) {
-			guiClassMap.put(name, cl);
+	public void addGui(String pPackegeName, String pName) {
+		if (pName != null && pName.length() > 0) {
+			ClassLoader classloader1 = mod_IFI_Figure.class.getClassLoader();
+			String lcs1, lcs2;
+			Class lclass1 = null, lclass2 = null;
+			IFI_ServerFigure lserver = null;
+			if (MMM_Helper.isClient) {
+				try {
+					lcs1 = (new StringBuilder()).append(pPackegeName)
+							.append("IFI_GuiFigurePause_").append(pName)
+							.toString();
+					lclass1 = classloader1.loadClass(lcs1);
+				} catch (Exception e) {
+				}
+			}
+			try {
+				lcs2 = (new StringBuilder()).append(pPackegeName)
+						.append("IFI_ServerFigure_").append(pName)
+						.toString();
+				lclass2 = classloader1.loadClass(lcs2);
+				lserver = (IFI_ServerFigure)lclass2.newInstance();
+			} catch (Exception e) {
+			}
+			if ((MMM_Helper.isClient || lclass1 != null) && lserver != null) {
+				if (MMM_Helper.isClient) {
+					guiClassMap.put(pName, lclass1);
+				}
+				serverMap.put(pName, lserver);
+				Debug("success:%s", pName);
+				return;
+			}
+			Debug("fali:%s", pName);
 		}
 	}
 
@@ -168,8 +187,17 @@ public class mod_IFI_Figure extends BaseMod {
 	public void serverCustomPayload(NetServerHandler var1, Packet250CustomPayload var2) {
 		// 独自パケットチャンネルの受信
 		WorldServer lworld = (WorldServer)var1.playerEntity.worldObj;
-		Entity lentity;
-		IFI_EntityFigure lfigure;
+		Entity lentity = null;
+		IFI_EntityFigure lfigure = null;
+		IFI_ServerFigure lserver = null;
+		if ((var2.data[0] & 0x80) != 0) {
+			int leid = MMM_Helper.getInt(var2.data, 1);
+			lentity = lworld.getEntityByID(leid);
+			if (lentity instanceof IFI_EntityFigure) {
+				lfigure = (IFI_EntityFigure)lentity;
+				lserver = mod_IFI_Figure.getServerFigure(lfigure);
+			}
+		}
 		int leid;
 		switch (var2.data[0]) {
 		case IFI_Server_SpawnFigure:
@@ -189,79 +217,41 @@ public class mod_IFI_Figure extends BaseMod {
 			break;
 			
 		case IFI_Server_UpadteFigure:
-			// クライアントから姿勢制御データ等を受信
-			leid = MMM_Helper.getInt(var2.data, 1);
-			lentity = lworld.getEntityByID(leid);
-			if (lentity instanceof IFI_EntityFigure) {
-				lfigure = (IFI_EntityFigure)lentity;
-				ModLoader.serverSendPacket(var1, 
-						new Packet250CustomPayload("IFI|Upd", sendData(lfigure)));
-				Debug("DataSendToClient.");
-			}
+			// クライアントから姿勢制御データ要求を受信
+			ModLoader.serverSendPacket(var1, 
+					new Packet250CustomPayload("IFI|Upd", lserver.getData(lfigure)));
+			Debug("DataSendToClient.");
 			break;
 			
 		case IFI_Packet_Data:
 			// クライアントから姿勢制御データ等を受信
-			leid = MMM_Helper.getInt(var2.data, 1);
-			lentity = lworld.getEntityByID(leid);
-			if (lentity instanceof IFI_EntityFigure) {
-				lfigure = (IFI_EntityFigure)lentity;
-				reciveData(lfigure, var2.data);
-				Debug("DataSet ID:%d Server.", lentity.entityId);
-				lworld.getEntityTracker().sendPacketToAllPlayersTrackingEntity(
-						lentity, new Packet250CustomPayload("IFI|Upd", sendData(lfigure)));
-				Debug("DataSendToAllClient.");
-			}
+			lserver.reciveData(lfigure, var2.data);
+			Debug("DataSet ID:%d Server.", lentity.entityId);
+			lworld.getEntityTracker().sendPacketToAllPlayersTrackingEntity(
+					lentity, new Packet250CustomPayload("IFI|Upd", lserver.getData(lfigure)));
+			Debug("DataSendToAllClient.");
 			break;
 		}
 	}
 
 	@Override
 	public void clientCustomPayload(NetClientHandler var1, Packet250CustomPayload var2) {
-		// 独自パケットチャンネルの受信
-		World lworld = MMM_Helper.mc.theWorld;
-		Entity lentity;
-		IFI_EntityFigure lfigure;
-		switch (var2.data[0]) {
-		case IFI_Packet_Data:
-			// クライアントから姿勢制御データ等を受信
-			int leid = MMM_Helper.getInt(var2.data, 1);
-			lentity = lworld.getEntityByID(leid);
-			if (lentity instanceof IFI_EntityFigure) {
-				reciveData((IFI_EntityFigure)lentity, var2.data);
-			}
-			Debug("DataSet ID:%d Client.", lentity.entityId);
-			break;
-		}
+		IFI_Client.clientCustomPayload(var1, var2);
 	}
 
 	/**
-	 * 固有データを相手へ送る
+	 * 独自通信用処理を獲得する。
 	 */
-	public static byte[] sendData(IFI_EntityFigure pFigure) {
-		byte[] rbyte = new byte[23];
-		rbyte[0] = IFI_Packet_Data;
-		MMM_Helper.setInt(rbyte, 1, pFigure.entityId);
-		rbyte[5] = 0;
-		MMM_Helper.setFloat(rbyte, 6, pFigure.additionalYaw);
-		MMM_Helper.setFloat(rbyte, 10, pFigure.zoom);
-		rbyte[14] = 0;
-		MMM_Helper.setFloat(rbyte, 15, pFigure.renderEntity.rotationYawHead);
-		MMM_Helper.setFloat(rbyte, 19, pFigure.renderEntity.rotationPitch);
-		return rbyte;
-	}
-
-	/**
-	 * 固有データを受け取ってEntityへ設定する
-	 */
-	public static void reciveData(IFI_EntityFigure pFigure, byte[] pData) {
-		if (pFigure.hasRenderEntity()) {
-			EntityLiving lel = pFigure.renderEntity;
-			pFigure.additionalYaw = MMM_Helper.getFloat(pData, 6);
-			pFigure.zoom = MMM_Helper.getFloat(pData, 10);
-			lel.prevRotationYaw = lel.rotationYawHead = lel.prevRotationYawHead = MMM_Helper.getFloat(pData, 15);
-			lel.prevRotationPitch = lel.rotationPitch = MMM_Helper.getFloat(pData, 19);
+	public static IFI_ServerFigure getServerFigure(IFI_EntityFigure pEntity) {
+		if (pEntity.renderEntity == null) {
+			return null;
 		}
+		String ls = pEntity.mobString;
+//		String ls = EntityList.getEntityString(pEntity.renderEntity);
+		if (serverMap.containsKey(ls)) {
+			return serverMap.get(ls);
+		}
+		return defServerFigure;
 	}
 
 }

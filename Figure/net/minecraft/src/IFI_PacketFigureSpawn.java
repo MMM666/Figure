@@ -70,6 +70,7 @@ public class IFI_PacketFigureSpawn extends Packet23VehicleSpawn {
 			}
 			
 			lentity.entityId = entityId;
+			// サーバーへ姿勢データの要求をする
 			MMM_Helper.mc.theWorld.addEntityToWorld(entityId, lentity);
 			byte ldata[] = new byte[5];
 			ldata[0] = IFI_Server_UpadteFigure;

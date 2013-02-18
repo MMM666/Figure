@@ -11,7 +11,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 import org.lwjgl.util.glu.GLU;
 
-public class IFI_ItemFigure extends Item implements MMM_IItemRender {
+public class IFI_ItemFigure extends Item {
 
 //	public static World lasetWorld;
 	public static Map<Integer, Entity> entityIndexMap = new TreeMap<Integer, Entity>();
@@ -259,7 +259,6 @@ public class IFI_ItemFigure extends Item implements MMM_IItemRender {
 		}
 	}
 
-	@Override
 	public boolean renderItem(EntityLiving pEntity, ItemStack pItemstack, int pIndex) {
 		//特殊レンダーへ
 		GL11.glPushMatrix();
@@ -269,14 +268,13 @@ public class IFI_ItemFigure extends Item implements MMM_IItemRender {
 		
 		IFI_EntityFigure ef = new IFI_EntityFigure(pEntity.worldObj, IFI_ItemFigure.entityIndexMap.get(pItemstack.getItemDamage()));
 		RenderManager.instance.renderEntityWithPosYaw(ef, 0, 0, 0, 0, 0);
-		ef.callAfterRender();
+		IFI_Client.callAfterRender(ef);
 //		RenderManager.instance.renderEntityWithPosYaw(new EntityFigure(entityliving.worldObj, ItemFigure.entityIndexMap.get(itemstack.getItemDamage())), 0, 0, 0, 0, 0);
 		
 		GL11.glPopMatrix();
 		return true;
 	}
 
-	@Override
 	public boolean renderItemInFirstPerson(float pDelta) {
 		// 元のコード丸パクリ
 		/*
@@ -326,23 +324,13 @@ public class IFI_ItemFigure extends Item implements MMM_IItemRender {
 		
 		RenderHelper.disableStandardItemLighting();
 		*/
-		return true;
+		GL11.glRotatef(0F, 0.0F, 1.0F, 0.0F);
+		return false;
 	}
 
-	@Override
 	public String getRenderTexture() {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	public boolean renderItem() {
-		/*
-//      renderManager.renderEntityWithPosYaw(new EntityFigure(entityitem.worldObj, entityitem.item.getItemDamage()), d, d1, d2, f, f1);
-		EntityFigure ef = new EntityFigure(entityitem.worldObj, IFI_ItemFigure.entityIndexMap.get(entityitem.item.getItemDamage()));
-		renderManager.renderEntityWithPosYaw(ef, 0, 0, 0, 0, f1);
-		ef.callAfterRender();
-*/
-		return true;
 	}
 
 	public boolean drawItemIntoGui(FontRenderer fontrenderer, RenderEngine renderengine, int i, int j, int k, int l, int i1)
@@ -361,7 +349,7 @@ public class IFI_ItemFigure extends Item implements MMM_IItemRender {
 			IFI_EntityFigure ef = new IFI_EntityFigure(MMM_Helper.mc.theWorld, IFI_ItemFigure.entityIndexMap.get(j));
 //			IFI_EntityFigure ef = new IFI_EntityFigure(MMM_Helper.mc.theWorld, j);
 			RenderManager.instance.renderEntityWithPosYaw(ef, 0, 0, 0, 0, 0);
-			ef.callAfterRender();
+			IFI_Client.callAfterRender(ef);
 			
 			GL11.glPopMatrix();
 			return true;
