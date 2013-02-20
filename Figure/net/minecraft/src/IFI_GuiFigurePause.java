@@ -1,6 +1,10 @@
 package net.minecraft.src;
 
+import static net.minecraft.src.IFI_Statics.IFI_Packet_UpadteItem;
+
+import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 
 import org.lwjgl.opengl.ARBMultisample;
 import org.lwjgl.opengl.ARBMultitexture;
@@ -16,6 +20,7 @@ public class IFI_GuiFigurePause extends GuiScreen {
 	protected String button10[] = { "Dismount", "Ride" };
 	protected String button11[] = { "Stand", "Sneak" };
 	protected static float button13[] = { 1, 2, 4, 6 };
+	protected String button16[] = { "A", "C" };
 	protected MMM_GuiSlider figureYaw;
 
 	public IFI_GuiFigurePause(IFI_EntityFigure entityfigure) {
@@ -36,6 +41,7 @@ public class IFI_GuiFigurePause extends GuiScreen {
 		ModLoader.clientSendPacket(new Packet250CustomPayload("IFI|Upd",
 				mod_IFI_Figure.getServerFigure(targetEntity).getData(targetEntity)));
 		mod_IFI_Figure.Debug("DataSendToServer.");
+		mod_IFI_Figure.getServerFigure(targetEntity).sendItems(targetEntity, true);
 	}
 
 	@Override
@@ -69,17 +75,16 @@ public class IFI_GuiFigurePause extends GuiScreen {
 		elt.rotationPitch = -(float) Math.atan(f6 / 40F) * 20F;
 		elt.rotationYawHead = elt.rotationYaw;
 		elt.prevRotationYawHead = elt.rotationYaw;
-		setRotation();
+		mod_IFI_Figure.getServerFigure(targetEntity).setRotation(targetEntity);
 		GL11.glTranslatef(0.0F, elt.yOffset, 0.0F);
 		RenderManager.instance.playerViewY = 180F;
-		RenderManager.instance.renderEntityWithPosYaw(elt, 0.0D, 0.0D, 0.0D,
-				0.0F, 1.0F);
+		RenderManager.instance.renderEntityWithPosYaw(elt, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F);
 		elt.renderYawOffset = f2;
 		elt.prevRotationYaw = elt.rotationYaw + f2;
 		elt.prevRotationPitch = elt.rotationPitch;
 		elt.rotationYawHead = elt.rotationYaw + f2;
 		elt.prevRotationYawHead = elt.rotationYaw + f2;
-		setRotation();
+		mod_IFI_Figure.getServerFigure(targetEntity).setRotation(targetEntity);
 
 		// System.out.println(String.format("f: %f, %f, %f", elt.rotationYaw,
 		// elt.prevRotationYaw, elt.renderYawOffset));
@@ -97,22 +102,25 @@ public class IFI_GuiFigurePause extends GuiScreen {
 
 	@Override
 	public void initGui() {
+		if (targetEntity.renderEntity != null && IFI_GuiItemSelect.isChange) {
+			setItems();
+		}
+		IFI_GuiItemSelect.isChange = false;
+		
 		StringTranslate stringtranslate = StringTranslate.getInstance();
-
-		controlList.add(new GuiButton(10, width / 2 + 60, height / 6 + 48 + 12,
-				80, 20, stringtranslate.translateKey(
-						button10[targetEntity.renderEntity.isRiding() ? 1 : 0])));
-		controlList.add(new GuiButton(11, width / 2 + 60, height / 6 + 72 + 12,
-				80, 20, stringtranslate.translateKey(
-						button11[targetEntity.renderEntity.isSneaking() ? 1 : 0])));
-		controlList.add(new GuiButton(13, width / 2 + 60, height / 6 + 0 + 12,
-				80, 20, stringtranslate.translateKey(String.format("1 / %.0f",
-						targetEntity.zoom))));
-		// controlList.add(new GuiButton(200, width / 2 - 100, height / 6 + 168,
-		// 200, 20, stringtranslate.translateKey("gui.done")));
+		
+		controlList.add(new GuiButton(10, width / 2 + 60, height / 6 + 48 + 12, 80, 20,
+				stringtranslate.translateKey(button10[targetEntity.renderEntity.isRiding() ? 1 : 0])));
+		controlList.add(new GuiButton(11, width / 2 + 60, height / 6 + 72 + 12, 80, 20,
+				stringtranslate.translateKey(button11[targetEntity.renderEntity.isSneaking() ? 1 : 0])));
+		controlList.add(new GuiButton(13, width / 2 + 60, height / 6 + 0 + 12, 60, 20,
+				stringtranslate.translateKey(String.format("1 / %.0f", targetEntity.zoom))));
+		controlList.add(new GuiButton(16, width / 2 + 120, height / 6 + 0 + 12, 20, 20,
+				stringtranslate.translateKey(button16[targetEntity.renderEntity.isChild() ? 1 : 0])));
+		controlList.add(new GuiButton(17, width / 2 - 140, height / 6 + 96 + 12, 80, 20,
+				stringtranslate.translateKey("EquipSelect")));
 		figureYaw = new MMM_GuiSlider(15, width / 2 - 50, height / 6 + 96 + 12,
-				String.format("%.2f", targetEntity.additionalYaw),
-				(targetEntity.additionalYaw + 180F) / 360F);
+				String.format("%.2f", targetEntity.additionalYaw), (targetEntity.additionalYaw + 180F) / 360F);
 		controlList.add(figureYaw);
 		
 		controlList.add(new GuiButton(20, width / 2 + 80, height / 6 + 24 + 12,
@@ -121,22 +129,9 @@ public class IFI_GuiFigurePause extends GuiScreen {
 				20, 20, stringtranslate.translateKey("+")));
 		controlList.add(new GuiButton(22, width / 2 + 120, height / 6 + 24 + 12,
 				20, 20, stringtranslate.translateKey("-")));
+		// controlList.add(new GuiButton(200, width / 2 - 100, height / 6 + 168,
+		// 200, 20, stringtranslate.translateKey("gui.done")));
 	}
-
-	/**
-	 * 特殊なデータ読み込みを実行
-	 */
-	public void readEntityFromNBT(NBTTagCompound nbttagcompound) {}
-
-	/**
-	 * 特殊なデータ書き込みを実行
-	 */
-	public void writeEntityToNBT(NBTTagCompound nbttagcompound) {}
-
-	/**
-	 * 姿勢制御用
-	 */
-	public void setRotation() {}
 
 	public float getGuiRenderYawOffset() {
 		return 0.0F;
@@ -193,6 +188,20 @@ public class IFI_GuiFigurePause extends GuiScreen {
 				guibutton.displayString = String.format("%.0f / 1", -button13[i]);
 			}
 		}
+		if (guibutton.id == 16) {
+			// 幼生態判定
+			if (targetEntity.renderEntity instanceof EntityAgeable) {
+				EntityAgeable lentity = (EntityAgeable)targetEntity.renderEntity;
+				lentity.setGrowingAge(lentity.isChild() ? 0 : -1);
+				guibutton.displayString = button16[lentity.isChild() ? 1 : 0];
+			}
+		}
+		if (guibutton.id == 17) {
+			// 装備品の設定
+			IFI_GuiItemSelect.clearInventory();
+			getItems();
+			mc.displayGuiScreen(new IFI_GuiItemSelect(this, targetEntity.renderEntity));
+		}
 		
 		if (guibutton.id == 20) {
 			targetEntity.renderEntity.yOffset = 0;
@@ -214,6 +223,28 @@ public class IFI_GuiFigurePause extends GuiScreen {
 			mc.gameSettings.saveOptions();
 			mc.displayGuiScreen(null);
 		}
+	}
+
+	/**
+	 * アイテムを設定する
+	 */
+	public void setItems() {
+		targetEntity.renderEntity.setCurrentItemOrArmor(4, IFI_GuiItemSelect.inventoryItem.getStackInSlot(0));
+		targetEntity.renderEntity.setCurrentItemOrArmor(3, IFI_GuiItemSelect.inventoryItem.getStackInSlot(1));
+		targetEntity.renderEntity.setCurrentItemOrArmor(2, IFI_GuiItemSelect.inventoryItem.getStackInSlot(2));
+		targetEntity.renderEntity.setCurrentItemOrArmor(1, IFI_GuiItemSelect.inventoryItem.getStackInSlot(3));
+		targetEntity.renderEntity.setCurrentItemOrArmor(0, IFI_GuiItemSelect.inventoryItem.getStackInSlot(4));
+	}
+
+	/**
+	 * 現在のアイテムをGUIへ移す。
+	 */
+	public void getItems() {
+		IFI_GuiItemSelect.inventoryItem.setInventorySlotContents(0, targetEntity.renderEntity.getCurrentArmor(3));
+		IFI_GuiItemSelect.inventoryItem.setInventorySlotContents(1, targetEntity.renderEntity.getCurrentArmor(2));
+		IFI_GuiItemSelect.inventoryItem.setInventorySlotContents(2, targetEntity.renderEntity.getCurrentArmor(1));
+		IFI_GuiItemSelect.inventoryItem.setInventorySlotContents(3, targetEntity.renderEntity.getCurrentArmor(0));
+		IFI_GuiItemSelect.inventoryItem.setInventorySlotContents(4, targetEntity.renderEntity.getHeldItem());
 	}
 
 	public static void afterRender(IFI_EntityFigure entityfigure) {

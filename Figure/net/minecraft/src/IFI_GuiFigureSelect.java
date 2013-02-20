@@ -12,7 +12,7 @@ public class IFI_GuiFigureSelect extends MMM_GuiMobSelect {
 
 
 	public IFI_GuiFigureSelect(World pWorld, IFI_EntityFigure entityfigure) {
-		super(pWorld);
+		super(pWorld, IFI_ItemFigure.entityStringMap);
 		screenTitle = "Figure Select";
 		targetFigure = entityfigure;
 	}
@@ -37,15 +37,21 @@ public class IFI_GuiFigureSelect extends MMM_GuiMobSelect {
 	@Override
 	public void onGuiClosed() {
 		super.onGuiClosed();
-		IFI_Client.getGui(targetFigure).setRotation();
+		IFI_ServerFigure isf = mod_IFI_Figure.getServerFigure(targetFigure);
+		byte ldata[];
+		if (isf != null) {
+			isf.setRotation(targetFigure);
+			ldata = new byte[17 + targetFigure.mobString.length()];
+			MMM_Helper.setStr(ldata, 17, targetFigure.mobString);
+		} else {
+			ldata = new byte[17];
+		}
 		// 設定されたEntityに適合するパケットセンダーを実行
-		byte ldata[] = new byte[17 + targetFigure.mobString.length()];
 		ldata[0] = IFI_Server_SpawnFigure;
 		MMM_Helper.setFloat(ldata, 1, (float)targetFigure.posX);
 		MMM_Helper.setFloat(ldata, 5, (float)targetFigure.posY);
 		MMM_Helper.setFloat(ldata, 9, (float)targetFigure.posZ);
 		MMM_Helper.setFloat(ldata, 13, targetFigure.rotationYaw);
-		MMM_Helper.setStr(ldata, 17, targetFigure.mobString);
 		ModLoader.clientSendPacket(new Packet250CustomPayload("IFI|Upd", ldata));
 	}
 

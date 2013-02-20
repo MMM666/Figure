@@ -1,7 +1,10 @@
 package net.minecraft.src;
 
 import static net.minecraft.src.IFI_Statics.IFI_Packet_Data;
+import static net.minecraft.src.IFI_Statics.IFI_Packet_UpadteItem;
 
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
@@ -9,6 +12,17 @@ import java.lang.reflect.InvocationTargetException;
  * Client側専用の処理
  */
 public class IFI_Client {
+
+	public static void setZoomRate() {
+		String s[] = mod_IFI_Figure.zoomRate.split(",");
+		if (s.length > 0) {
+			float az[] = new float[s.length];
+			for (int i = 0; i < s.length; i++) {
+				az[i] = Float.valueOf(s[i].trim());
+			}
+			IFI_GuiFigurePause.button13 = az;
+		}
+	}
 
 	public static void clientCustomPayload(NetClientHandler var1, Packet250CustomPayload var2) {
 		// 独自パケットチャンネルの受信
@@ -26,11 +40,20 @@ public class IFI_Client {
 		}
 		switch (var2.data[0]) {
 		case IFI_Packet_Data:
-			// クライアントから姿勢制御データ等を受信
-			lserver.reciveData((IFI_EntityFigure)lentity, var2.data);
+			// サーバーから姿勢制御データ等を受信
+			lserver.setData((IFI_EntityFigure)lentity, var2.data);
 			mod_IFI_Figure.Debug("DataSet ID:%d Client.", lentity.entityId);
 			break;
+			
+		case IFI_Packet_UpadteItem:
+			// サーバーからItemStackを受信
+			lserver.reciveItem(lfigure, var2.data);
+			break;
 		}
+	}
+
+	public static void sendToServer(Packet pPacket) {
+		ModLoader.clientSendPacket(pPacket);
 	}
 
 	/**
@@ -78,5 +101,8 @@ public class IFI_Client {
 		return false;
 	}
 
+	public static void initEntitys() {
+		new IFI_GuiFigureSelect(MMM_Helper.mc.theWorld, null);
+	}
 
 }

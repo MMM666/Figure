@@ -23,7 +23,7 @@ public class IFI_RenderFigure extends Render {
 			float fz = 1F / ef.zoom;
 			// float fz = 0.25F;
 			GL11.glScalef(fz, fz, fz);
-			GL11.glRotatef(ef.rotationYaw - ef.additionalYaw, 0F, 1F, 0F);
+			GL11.glRotatef(ef.rotationYaw + ef.additionalYaw, 0F, 1F, 0F);
 			renderManager.renderEntityWithPosYaw(ef.renderEntity, 0, 0, 0, 0, 0);
 			GL11.glPopMatrix();
 			IFI_Client.callAfterRender(ef);

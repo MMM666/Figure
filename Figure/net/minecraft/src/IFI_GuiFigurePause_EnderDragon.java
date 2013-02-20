@@ -8,7 +8,7 @@ public class IFI_GuiFigurePause_EnderDragon extends IFI_GuiFigurePause {
 		super(entityfigua);
 		edragon = (EntityDragon) targetEntity.renderEntity;
 	}
-
+/*
 	@Override
 	public void readEntityFromNBT(NBTTagCompound nbttagcompound) {
 		edragon.rotationYaw = edragon.prevRotationYaw;
@@ -114,7 +114,7 @@ public class IFI_GuiFigurePause_EnderDragon extends IFI_GuiFigurePause {
 
 		// elt.onUpdate();
 	}
-
+*/
 	private float func_40159_b(double d) {
 		for (; d >= 180D; d -= 360D) {
 		}

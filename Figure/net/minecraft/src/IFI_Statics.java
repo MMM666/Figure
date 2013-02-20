@@ -29,5 +29,12 @@ public class IFI_Statics {
 	 * 1-4 : EntityID
 	 */
 	public static final byte IFI_Server_UpadteFigure	= (byte)0x82;
+	/**
+	 * 0 : 0x83
+	 * 1-4 : EntityID
+	 * 5 : SlotID
+	 * 6- : ItemStack
+	 */
+	public static final byte IFI_Packet_UpadteItem		= (byte)0x83;
 
 }

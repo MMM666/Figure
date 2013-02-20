@@ -8,7 +8,7 @@ import java.util.List;
 public class IFI_EntityFigure extends Entity {
 
 	public EntityLiving renderEntity;
-	public float zoom = 4F;
+	public float zoom;
 	public String mobString;
 	public int mobIndex;
 	private int health;
@@ -16,11 +16,13 @@ public class IFI_EntityFigure extends Entity {
 	public float additionalYaw;
 	public byte changeCount;
 
+
 	public IFI_EntityFigure(World world) {
 		super(world);
 		health = 5;
 		additionalYaw = 0.0F;
 		changeCount = -1;
+		zoom = mod_IFI_Figure.defaultZoomRate;
 	}
 
 	public IFI_EntityFigure(World world, Entity entity) {
@@ -49,23 +51,24 @@ public class IFI_EntityFigure extends Entity {
 		health = nbttagcompound.getShort("Health");
 		additionalYaw = nbttagcompound.getFloat("additionalYaw");
 		if (s != null) {
-			Entity r = EntityList.createEntityByName(
+			Entity lentity = EntityList.createEntityByName(
 					nbttagcompound.getString("mobString"), worldObj);
-			if (r == null || !(r instanceof EntityLiving)) {
+			if (lentity == null || !(lentity instanceof EntityLiving)) {
 				// ë∂ç›ÇµÇ»Ç¢MOB
 				System.out.println(String.format("figua-lost:%s",
 						nbttagcompound.getString("mobString")));
 //				IFI_ItemFigure.checkCreateEntity(worldObj);
-				r = (Entity) IFI_ItemFigure.entityIndexMap.values().toArray()[0];
+				lentity = (Entity) IFI_ItemFigure.entityStringMap.values().toArray()[0];
 			}
-			setRenderEntity((EntityLiving) r);
+			setRenderEntity((EntityLiving) lentity);
 			renderEntity.readFromNBT(nbttagcompound.getCompoundTag("Entity"));
 			renderEntity.dataWatcher.updateObject(0, nbttagcompound.getByte("DataWatcher0"));
 			renderEntity.prevRotationPitch = nbttagcompound.getFloat("prevPitch");
 			renderEntity.prevRotationYaw = nbttagcompound.getFloat("prevYaw");
 			renderEntity.prevRotationYawHead = renderEntity.rotationYawHead = renderEntity.prevRotationYaw;
-			IFI_Client.getGui(this).readEntityFromNBT(nbttagcompound);
-			IFI_Client.getGui(this).setRotation();
+			renderEntity.yOffset = nbttagcompound.getFloat("yOffset");
+			mod_IFI_Figure.getServerFigure(this).readEntityFromNBT(this, nbttagcompound);
+			mod_IFI_Figure.getServerFigure(this).setRotation(this);
 		}
 	}
 
@@ -83,7 +86,8 @@ public class IFI_EntityFigure extends Entity {
 			nbttagcompound.setByte("DataWatcher0", renderEntity.dataWatcher.getWatchableObjectByte(0));
 			nbttagcompound.setFloat("prevPitch", renderEntity.prevRotationPitch);
 			nbttagcompound.setFloat("prevYaw", renderEntity.prevRotationYaw);
-			IFI_Client.getGui(this).writeEntityToNBT(nbttagcompound);
+			nbttagcompound.setFloat("yOffset", renderEntity.yOffset);
+			mod_IFI_Figure.getServerFigure(this).writeEntityToNBT(this, nbttagcompound);
 		}
 		nbttagcompound.setCompoundTag("Entity", lnbt);
 	}
@@ -182,6 +186,7 @@ public class IFI_EntityFigure extends Entity {
 		}
 		if (renderEntity != null) {
 			setFlag(2, renderEntity.isRiding());
+			renderEntity.setPosition(posX, posY, posZ);
 		}
 	}
 

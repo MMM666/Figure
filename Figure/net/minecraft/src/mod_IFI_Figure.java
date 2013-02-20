@@ -2,7 +2,9 @@ package net.minecraft.src;
 
 import static net.minecraft.src.IFI_Statics.*;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
@@ -18,6 +20,8 @@ public class mod_IFI_Figure extends BaseMod {
 	public static boolean useIcon = true;
 	@MLProp(info = "Zoom rate.")
 	public static String zoomRate = "1, 2, 4, 6";
+	@MLProp(info = "default Zoom rate.")
+	public static float defaultZoomRate = 4F;
 	@MLProp()
 	public static boolean isDebugMessage = true;
 
@@ -58,22 +62,17 @@ public class mod_IFI_Figure extends BaseMod {
 		ModLoader.registerEntityID(IFI_EntityFigure.class, "Figure", lentityid);
 		ModLoader.addEntityTracker(this, IFI_EntityFigure.class, lentityid, 64, 10, false);
 		
-		// 名称変換テーブルの追加
-		ModLoader.addLocalization(
-				(new StringBuilder()).append(figure.getItemName()).append(".name").toString(),
-				(new StringBuilder()).append("Figure").toString());
-		// レシピの追加
-		ModLoader.addShapelessRecipe(new ItemStack(figure, 1, 0), new Object[] {Item.stick, Item.clay});
-		ModLoader.addShapelessRecipe(new ItemStack(Item.clay), new Object[] { figure });
-		
-		// 倍率設定
-		String s[] = zoomRate.split(",");
-		if (s.length > 0) {
-			float az[] = new float[s.length];
-			for (int i = 0; i < s.length; i++) {
-				az[i] = Float.valueOf(s[i].trim());
-			}
-			IFI_GuiFigurePause.button13 = az;
+		if (MMM_Helper.isClient) {
+			// 名称変換テーブルの追加
+			ModLoader.addLocalization(
+					(new StringBuilder()).append(figure.getItemName()).append(".name").toString(),
+					(new StringBuilder()).append("Figure").toString());
+			// レシピの追加
+			ModLoader.addShapelessRecipe(new ItemStack(figure, 1, 0), new Object[] {Item.stick, Item.clay});
+			ModLoader.addShapelessRecipe(new ItemStack(Item.clay), new Object[] { figure });
+			
+			// 倍率設定
+			IFI_Client.setZoomRate();
 		}
 		
 		// プレーヤースキン表示用MOBの追加
@@ -172,8 +171,6 @@ public class mod_IFI_Figure extends BaseMod {
 	@Override
 	public Packet23VehicleSpawn getSpawnPacket(Entity var1, int var2) {
 		// Modloader用
-//		ByteArrayOutputStream lbs = new ByteArrayOutputStream();
-//		DataOutputStream ld = new DataOutputStream(lbs);
 		return new IFI_PacketFigureSpawn(var1, var2, ((IFI_EntityFigure)var1).mobIndex);
 	}
 
@@ -190,30 +187,38 @@ public class mod_IFI_Figure extends BaseMod {
 		Entity lentity = null;
 		IFI_EntityFigure lfigure = null;
 		IFI_ServerFigure lserver = null;
+		int leid = 0;
 		if ((var2.data[0] & 0x80) != 0) {
-			int leid = MMM_Helper.getInt(var2.data, 1);
+			leid = MMM_Helper.getInt(var2.data, 1);
 			lentity = lworld.getEntityByID(leid);
 			if (lentity instanceof IFI_EntityFigure) {
 				lfigure = (IFI_EntityFigure)lentity;
 				lserver = mod_IFI_Figure.getServerFigure(lfigure);
 			}
 		}
-		int leid;
 		switch (var2.data[0]) {
 		case IFI_Server_SpawnFigure:
-			// 指定値にフィギュアをスポーン
-			String lname = MMM_Helper.getStr(var2.data, 17);
-			lentity = EntityList.createEntityByName(lname, lworld);
-			lfigure = new IFI_EntityFigure(lworld, lentity);
 			double lx = (double)MMM_Helper.getFloat(var2.data, 1);
 			double ly = (double)MMM_Helper.getFloat(var2.data, 5);
 			double lz = (double)MMM_Helper.getFloat(var2.data, 9);
 			float lyaw = MMM_Helper.getFloat(var2.data, 13);
-			lfigure.setPositionAndRotation(lx, ly, lz, lyaw, 0F);
-			lworld.spawnEntityInWorld(lfigure);
-			lworld.playSoundAtEntity(var1.playerEntity, "step.wood",
-					0.5F, 0.4F / ((new Random()).nextFloat() * 0.4F + 0.8F));
-			Debug("SpawnFigure: %s, %f, %f, %f Server.", lname, lx, ly, lz);
+			if (var2.data.length == 17) {
+				// 未選択でGUI閉じたのでアイテムをドロップ
+				EntityItem leitem = new EntityItem(lworld, lx, ly + 0.25D, lz, new ItemStack(figure));
+				leitem.delayBeforeCanPickup = 10;
+				lworld.spawnEntityInWorld(leitem);
+				Debug("SpawnItem: %f, %f, %f Server.", lx, ly, lz);
+			} else {
+				// 指定値にフィギュアをスポーン
+				String lname = MMM_Helper.getStr(var2.data, 17);
+				lentity = EntityList.createEntityByName(lname, lworld);
+				lfigure = new IFI_EntityFigure(lworld, lentity);
+				lfigure.setPositionAndRotation(lx, ly, lz, lyaw, 0F);
+				lworld.spawnEntityInWorld(lfigure);
+				lworld.playSoundAtEntity(var1.playerEntity, "step.wood",
+						0.5F, 0.4F / ((new Random()).nextFloat() * 0.4F + 0.8F));
+				Debug("SpawnFigure: %s, %f, %f, %f Server.", lname, lx, ly, lz);
+			}
 			break;
 			
 		case IFI_Server_UpadteFigure:
@@ -221,15 +226,23 @@ public class mod_IFI_Figure extends BaseMod {
 			ModLoader.serverSendPacket(var1, 
 					new Packet250CustomPayload("IFI|Upd", lserver.getData(lfigure)));
 			Debug("DataSendToClient.");
+			lserver.sendItems(lfigure, false);
 			break;
 			
 		case IFI_Packet_Data:
 			// クライアントから姿勢制御データ等を受信
-			lserver.reciveData(lfigure, var2.data);
+			lserver.setData(lfigure, var2.data);
 			Debug("DataSet ID:%d Server.", lentity.entityId);
 			lworld.getEntityTracker().sendPacketToAllPlayersTrackingEntity(
 					lentity, new Packet250CustomPayload("IFI|Upd", lserver.getData(lfigure)));
 			Debug("DataSendToAllClient.");
+			break;
+			
+		case IFI_Packet_UpadteItem:
+			// クライアントからItemStackを受信
+			lserver.reciveItem(lfigure, var2.data);
+			// クライアントへItemStackを送信
+			lserver.sendItem(var2.data[5], lfigure, false);
 			break;
 		}
 	}
@@ -247,11 +260,16 @@ public class mod_IFI_Figure extends BaseMod {
 			return null;
 		}
 		String ls = pEntity.mobString;
-//		String ls = EntityList.getEntityString(pEntity.renderEntity);
 		if (serverMap.containsKey(ls)) {
 			return serverMap.get(ls);
 		}
 		return defServerFigure;
+	}
+
+	@Override
+	public void clientConnect(NetClientHandler var1) {
+		// コネクト時にリストを作成。
+		IFI_Client.initEntitys();
 	}
 
 }

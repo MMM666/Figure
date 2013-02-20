@@ -1,6 +1,6 @@
 package net.minecraft.src;
 
-public class IFI_RenderFigurePlayer extends RenderLiving {
+public class IFI_RenderFigurePlayer extends RenderBiped {
 
 	private ModelBiped modelBipedMain;
 	private ModelBiped modelArmorChestplate;
@@ -50,7 +50,8 @@ public class IFI_RenderFigurePlayer extends RenderLiving {
 
 	@Override
 	protected int shouldRenderPass(EntityLiving entityliving, int i, float f) {
-		return setArmorModel((IFI_EntityFigurePlayer) entityliving, i, f);
+		return super.shouldRenderPass(entityliving, i, f);
+		//		return setArmorModel((IFI_EntityFigurePlayer) entityliving, i, f);
 	}
 
 	@Override

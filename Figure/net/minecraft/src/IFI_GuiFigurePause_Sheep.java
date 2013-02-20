@@ -2,6 +2,10 @@ package net.minecraft.src;
 
 public class IFI_GuiFigurePause_Sheep extends IFI_GuiFigurePause {
 
+	private EntitySheep es;
+	private String button102[] = { "Fullfrontal", "Sheared" };
+
+
 	public IFI_GuiFigurePause_Sheep(IFI_EntityFigure entityfigua) {
 		super(entityfigua);
 		es = (EntitySheep) targetEntity.renderEntity;
@@ -10,11 +14,10 @@ public class IFI_GuiFigurePause_Sheep extends IFI_GuiFigurePause {
 	public void initGui() {
 		super.initGui();
 		controlList
-				.add(new GuiButton(102, width / 2 - 140, height / 6 + 0 + 12,
-						80, 20, button102[es.getSheared() ? 0 : 1]));
-		controlList.add(new GuiButton(103, width / 2 - 140,
-				height / 6 + 24 + 12, 80, 20, String.format("Color : %x",
-						es.getFleeceColor())));
+				.add(new GuiButton(102, width / 2 - 140, height / 6 + 0 + 12, 80, 20, 
+						button102[es.getSheared() ? 0 : 1]));
+		controlList.add(new GuiButton(103, width / 2 - 140, height / 6 + 24 + 12, 80, 20,
+				String.format("Color : %x", es.getFleeceColor())));
 	}
 
 	protected void actionPerformed(GuiButton guibutton) {
@@ -40,8 +43,5 @@ public class IFI_GuiFigurePause_Sheep extends IFI_GuiFigurePause {
 			break;
 		}
 	}
-
-	private EntitySheep es;
-	private String button102[] = { "Fullfrontal", "Sheared" };
 
 }
