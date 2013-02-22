@@ -61,7 +61,7 @@ public class IFI_ServerFigure {
 				}
 				lel.rotationYaw = lel.prevRotationYaw =
 						lel.rotationYawHead = lel.prevRotationYawHead = lds.readFloat();
-				lel.rotationPitch = lds.readFloat();
+				lel.rotationPitch = lel.prevRotationPitch = lds.readFloat();
 				lel.yOffset = lds.readFloat();
 				reciveData(pFigure, lds);
 				pFigure.setZoom(pFigure.zoom);

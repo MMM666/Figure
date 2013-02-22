@@ -12,12 +12,15 @@ public class IFI_ServerFigure_LittleMaid extends IFI_ServerFigure {
 		super.sendData(pFigure, pData);
 		LMM_EntityLittleMaid lentity = (LMM_EntityLittleMaid)pFigure.renderEntity;
 		int lf = (lentity.maidWait ? 1 : 0) |
-				(lentity.isMaidContract() ? 2 : 0);
+				(lentity.isMaidContract() ? 2 : 0) |
+				(lentity.mstatAimeBow ? 4 : 0);
 		pData.writeByte(lf);
-//		lentity.textureIndex = MMM_TextureManager.getStringToIndex(lentity.textureName);
-//		lentity.textureArmorIndex = MMM_TextureManager.getStringToIndex(lentity.textureArmorName);
+		pData.writeByte(lentity.maidColor);
+		lentity.textureIndex = MMM_TextureManager.getStringToIndex(lentity.textureName);
+		lentity.textureArmorIndex = MMM_TextureManager.getStringToIndex(lentity.textureArmorName);
 		pData.writeInt(lentity.textureIndex);
 		pData.writeInt(lentity.textureArmorIndex);
+		mod_IFI_Figure.Debug("tex-s: %d,  %d : %d", lentity.textureArmorIndex, lentity.textureArmorIndex, lentity.maidColor);
 	}
 
 	@Override
@@ -30,7 +33,11 @@ public class IFI_ServerFigure_LittleMaid extends IFI_ServerFigure {
 		lentity.maidContract = (lf & 2) != 0;
 		lentity.setMaidContract(lentity.maidContract);
 		lentity.setOwner(lentity.maidContract ? "Figure" : "");
+		lentity.mstatAimeBow = (lf & 4) != 0;
+		lentity.updateAimebow();
+		lentity.maidColor = pData.readByte();
 		lentity.setTextureIndex(pData.readInt(), pData.readInt());
+		mod_IFI_Figure.Debug("tex-r: %d,  %d : %d", lentity.textureArmorIndex, lentity.textureArmorIndex, lentity.maidColor);
 		LMM_Client.setTextureValue(lentity);
 		
 //		lentity.setDominantArm(0);
@@ -61,6 +68,19 @@ public class IFI_ServerFigure_LittleMaid extends IFI_ServerFigure {
 		sendItem(6, pFigure, pClient);
 		sendItem(21, pFigure, pClient);
 		sendItem(22, pFigure, pClient);
+	}
+
+	@Override
+	public void readEntityFromNBT(IFI_EntityFigure pFigure, NBTTagCompound nbttagcompound) {
+		super.readEntityFromNBT(pFigure, nbttagcompound);
+		((LMM_EntityLittleMaid)pFigure.renderEntity).mstatAimeBow = nbttagcompound.getBoolean("Aimbow");
+		((LMM_EntityLittleMaid)pFigure.renderEntity).updateAimebow();
+	}
+
+	@Override
+	public void writeEntityToNBT(IFI_EntityFigure pFigure, NBTTagCompound nbttagcompound) {
+		super.writeEntityToNBT(pFigure, nbttagcompound);
+		nbttagcompound.setBoolean("Aimbow", ((LMM_EntityLittleMaid)pFigure.renderEntity).isAimebow());
 	}
 
 }

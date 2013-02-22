@@ -35,13 +35,20 @@ public class IFI_GuiFigurePause extends GuiScreen {
 	}
 
 	@Override
+	protected void keyTyped(char par1, int par2) {
+		if (par2 == 1) {
+			// データをサーバーへ送る
+			ModLoader.clientSendPacket(new Packet250CustomPayload("IFI|Upd",
+					mod_IFI_Figure.getServerFigure(targetEntity).getData(targetEntity)));
+			mod_IFI_Figure.Debug("DataSendToServer.");
+			mod_IFI_Figure.getServerFigure(targetEntity).sendItems(targetEntity, true);
+		}
+		super.keyTyped(par1, par2);
+	}
+	
+	@Override
 	public void onGuiClosed() {
 		super.onGuiClosed();
-		// データをサーバーへ送る
-		ModLoader.clientSendPacket(new Packet250CustomPayload("IFI|Upd",
-				mod_IFI_Figure.getServerFigure(targetEntity).getData(targetEntity)));
-		mod_IFI_Figure.Debug("DataSendToServer.");
-		mod_IFI_Figure.getServerFigure(targetEntity).sendItems(targetEntity, true);
 	}
 
 	@Override

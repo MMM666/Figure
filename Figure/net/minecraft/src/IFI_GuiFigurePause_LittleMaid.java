@@ -16,7 +16,7 @@ public class IFI_GuiFigurePause_LittleMaid extends IFI_GuiFigurePause {
 	private GuiButton bt103;
 	private GuiButton bt110;
 	private String button102[] = { "Contract", "Wild" };
-	private String button104[] = { "Wait", "Active" };
+	private String button104[] = { "Wait", "Active", "Aim" };
 	private int armorIndex;
 	private int armorDamage;
 
@@ -49,7 +49,7 @@ public class IFI_GuiFigurePause_LittleMaid extends IFI_GuiFigurePause {
 		controlList.add(new GuiButton(102, width / 2 - 140, height / 6 + 24 + 12, 80, 20, button102[elm.maidContract ? 0 : 1]));
 		bt103 = new GuiButton(103, width / 2 - 140, height / 6 + 48 + 12, 80, 20, String.format("Color : %x", elm.maidColor));
 		controlList.add(bt103);
-		controlList.add(new GuiButton(104, width / 2 + 60, height / 6 + 96 + 12, 80, 20, button104[elm.isMaidWait() ? 0 : 1]));
+		controlList.add(new GuiButton(104, width / 2 + 60, height / 6 + 96 + 12, 80, 20, button104[elm.isMaidWait() ? 0 : elm.mstatAimeBow ? 2 : 1]));
 
 		bt110 = new GuiButton(110, width / 2 - 120, height / 6 + 72 + 12, 40,
 				20, String.format("%d", armorDamage));
@@ -57,8 +57,8 @@ public class IFI_GuiFigurePause_LittleMaid extends IFI_GuiFigurePause {
 		controlList.add(new GuiButton(111, width / 2 - 140, height / 6 + 72 + 12, 20, 20, "+"));
 		controlList.add(new GuiButton(112, width / 2 - 80, height / 6 + 72 + 12, 20, 20, "-"));
 		
-		elm.textureIndex = MMM_TextureManager.getStringToIndex(elm.textureName);
-		elm.textureArmorIndex = MMM_TextureManager.getStringToIndex(elm.textureArmorName);
+//		elm.textureIndex = MMM_TextureManager.getStringToIndex(elm.textureName);
+//		elm.textureArmorIndex = MMM_TextureManager.getStringToIndex(elm.textureArmorName);
 		elm.mstatMaskSelect = 16;
 		elm.setDominantArm(0);
 		elm.setEquipItem(0, 0);
@@ -159,8 +159,18 @@ public class IFI_GuiFigurePause_LittleMaid extends IFI_GuiFigurePause {
 			bt103.displayString = String.format("Color : %x", elm.getMaidColor());
 		}
 		if (guibutton.id == 104) {
-			elm.setMaidWait(!elm.isMaidWait());
-			guibutton.displayString = button104[elm.isMaidWait() ? 0 : 1];
+			if (elm.isMaidWait()) {
+				elm.setMaidWait(false);
+				elm.mstatAimeBow = true;
+				elm.updateAimebow();
+			} else if (elm.mstatAimeBow) {
+				elm.mstatAimeBow = false;
+				elm.updateAimebow();
+			} else {
+				elm.setMaidWait(true);
+			}
+//			elm.setMaidWait(!elm.isMaidWait());
+			guibutton.displayString = button104[elm.isMaidWait() ? 0 : elm.mstatAimeBow ? 2 : 1];
 		}
 
 		if (guibutton.id == 110) {
