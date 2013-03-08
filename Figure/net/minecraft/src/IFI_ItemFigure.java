@@ -1,5 +1,6 @@
 package net.minecraft.src;
 
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -13,9 +14,8 @@ import org.lwjgl.util.glu.GLU;
 
 public class IFI_ItemFigure extends Item {
 
-//	public static World lasetWorld;
-//	public static Map<Integer, Entity> entityIndexMap = new TreeMap<Integer, Entity>();
 	public static Map<String, Entity> entityStringMap = new TreeMap<String, Entity>();
+	public static IFI_EntityFigure fentityFigure = new IFI_EntityFigure(null);
 
 	public static ItemStack firstPerson;
 
@@ -75,19 +75,25 @@ public class IFI_ItemFigure extends Item {
 				if (!par3World.isRemote) {
 					// Server
 					// 選択なしで設置
-					IFI_EntityFigure ef = new IFI_EntityFigure(par3World, par1ItemStack.getItemDamage());
-					ef.setPositionAndRotation(x, y, z, lyaw, 0F);
-					par3World.spawnEntityInWorld(ef);
-					par3World.playSoundAtEntity(par2EntityPlayer, "step.wood",
-							0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
+					try {
+						Constructor<IFI_EntityFigure> lc = mod_IFI_Figure.classFigure.getConstructor(World.class, int.class);
+						IFI_EntityFigure ef = lc.newInstance(par3World, par1ItemStack.getItemDamage());
+						ef.setPositionAndRotation(x, y, z, lyaw, 0F);
+						par3World.spawnEntityInWorld(ef);
+						par3World.playSoundAtEntity(par2EntityPlayer, "step.wood",
+								0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
+					} catch (Exception e) {
+					}
 				}
 			} else {
 				if (par3World.isRemote) {
 					// Client
 					// Guiを表示してフィギュアを選択
-					IFI_EntityFigure ef = new IFI_EntityFigure(par3World);
-					ef.setPositionAndRotation(x, y, z, lyaw, 0F);
-					ModLoader.openGUI(par2EntityPlayer, new IFI_GuiFigureSelect(par3World, ef));
+					// ここで生成されるEntityは捨てインスタンス
+//					IFI_EntityFigure ef = new IFI_EntityFigure(par3World);
+					fentityFigure.setWorld(par3World);
+					fentityFigure.setPositionAndRotation(x, y, z, lyaw, 0F);
+					ModLoader.openGUI(par2EntityPlayer, new IFI_GuiFigureSelect(par3World, fentityFigure));
 				}
 			}
 			par1ItemStack.stackSize--;
@@ -161,10 +167,9 @@ public class IFI_ItemFigure extends Item {
 		}
 		firstPerson = null;
 		
-		IFI_EntityFigure ef = new IFI_EntityFigure(null);
-		ef.setRenderEntity(getEntityFromID(pItemstack.getItemDamage()));
-		RenderManager.instance.renderEntityWithPosYaw(ef, 0, 0, 0, 0, 0);
-		IFI_Client.callAfterRender(ef);
+		fentityFigure.setRenderEntity(getEntityFromID(pItemstack.getItemDamage()));
+		RenderManager.instance.renderEntityWithPosYaw(fentityFigure, 0, 0, 0, 0, 0);
+		IFI_Client.callAfterRender(fentityFigure);
 		
 		GL11.glPopMatrix();
 		return true;
@@ -191,10 +196,11 @@ public class IFI_ItemFigure extends Item {
 			GL11.glRotatef(210F, 1.0F, 0.0F, 0.0F);
 			GL11.glRotatef(45F, 0.0F, 1.0F, 0.0F);
 			
-			IFI_EntityFigure ef = new IFI_EntityFigure(MMM_Helper.mc.theWorld);
-			ef.setRenderEntity(getEntityFromID(j));
-			RenderManager.instance.renderEntityWithPosYaw(ef, 0, 0, 0, 0, 0);
-			IFI_Client.callAfterRender(ef);
+//			IFI_EntityFigure ef = new IFI_EntityFigure(MMM_Helper.mc.theWorld);
+			fentityFigure.setWorld(MMM_Helper.mc.theWorld);
+			fentityFigure.setRenderEntity(getEntityFromID(j));
+			RenderManager.instance.renderEntityWithPosYaw(fentityFigure, 0, 0, 0, 0, 0);
+			IFI_Client.callAfterRender(fentityFigure);
 			
 			GL11.glPopMatrix();
 			return true;

@@ -7,6 +7,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -26,11 +27,12 @@ public class mod_IFI_Figure extends BaseMod {
 	public static boolean isDebugMessage = true;
 
 	public static RenderItem renderItem; // 元のRenderItem
-	public static int iconIndex;
 	public static Item figure;
+	public static Class classFigure;
 	public static Map<String, Class> guiClassMap = new HashMap<String, Class>();
 	public static Map<String, IFI_ServerFigure> serverMap = new HashMap<String, IFI_ServerFigure>();
 	public static IFI_ServerFigure defServerFigure;
+	public static boolean isFigurePlayer = false;
 
 
 	public static void Debug(String pText, Object... pData) {
@@ -52,15 +54,19 @@ public class mod_IFI_Figure extends BaseMod {
 
 	@Override
 	public void load() {
-		iconIndex = ModLoader.addOverride("/gui/items.png", "/item/figure.png");
-		if (useIcon) {
-			figure = new IFI_ItemFigure(itemID - 256).setIconIndex(iconIndex).setItemName("Figure");
+		int licon;
+		if (MMM_Helper.isForge) {
+			licon = 17;
 		} else {
-			figure = new IFI_ItemFigure(itemID - 256).setIconCoord(11, 0).setItemName("Figure");
+			licon = !useIcon ? 11 : ModLoader.addOverride("/gui/items.png", "/item/figure.png");
 		}
+		figure = new IFI_ItemFigure(itemID - 256).setIconIndex(licon).setItemName("Figure");
 		int lentityid = ModLoader.getUniqueEntityId();
-		ModLoader.registerEntityID(IFI_EntityFigure.class, "Figure", lentityid);
-		ModLoader.addEntityTracker(this, IFI_EntityFigure.class, lentityid, 64, 10, false);
+		classFigure = MMM_Helper.getEntityClass(this, "IFI_EntityFigure");
+		ModLoader.registerEntityID(classFigure, "Figure", lentityid);
+		// これはForge用ID的な意味で。
+		ModLoader.addEntityTracker(this, classFigure, lentityid, 64, 10, false);
+		MMM_Helper.setForgeIcon(figure);
 		
 		if (MMM_Helper.isClient) {
 			// 名称変換テーブルの追加
@@ -76,8 +82,16 @@ public class mod_IFI_Figure extends BaseMod {
 		}
 		
 		// プレーヤースキン表示用MOBの追加
-		ModLoader.registerEntityID(IFI_EntityFigurePlayer.class, "FigurePlayer",
-				ModLoader.getUniqueEntityId());
+		int li = -1;
+		if (MMM_Helper.isForge) {
+			li = ModLoader.getUniqueEntityId();
+		} else {
+			li = MMM_Helper.getNextEntityID();
+		}
+		if (li > -1) {
+			ModLoader.registerEntityID(IFI_EntityFigurePlayer.class, "FigurePlayer", li);
+			isFigurePlayer = true;
+		}
 		
 		// パケットチャンネル追加
 		ModLoader.registerPacketChannel(this, "IFI|Upd");
@@ -85,8 +99,10 @@ public class mod_IFI_Figure extends BaseMod {
 
 	@Override
 	public void addRenderer(Map map) {
-		map.put(IFI_EntityFigure.class, new IFI_RenderFigure());
-		map.put(IFI_EntityFigurePlayer.class, new IFI_RenderFigurePlayer());
+		map.put(classFigure, new IFI_RenderFigure());
+		if (isFigurePlayer) {
+			map.put(IFI_EntityFigurePlayer.class, new IFI_RenderFigurePlayer());
+		}
 	}
 
 	@Override
@@ -177,7 +193,16 @@ public class mod_IFI_Figure extends BaseMod {
 	@Override
 	public Entity spawnEntity(int var1, World var2, double var3, double var5, double var7) {
 		// Forge用
-		return super.spawnEntity(var1, var2, var3, var5, var7);
+		if (!MMM_Helper.isForge) return null;
+		try {
+			Constructor<IFI_EntityFigure> lc = classFigure.getConstructor(World.class);
+			IFI_EntityFigure lentity = lc.newInstance(var2);
+			lentity.entityId = var1;
+			lentity.setPosition(var3, var5, var7);
+			return lentity;
+		} catch (Exception e) {
+		}
+		return null;
 	}
 
 	@Override
@@ -211,13 +236,19 @@ public class mod_IFI_Figure extends BaseMod {
 			} else {
 				// 指定値にフィギュアをスポーン
 				String lname = MMM_Helper.getStr(var2.data, 17);
-				lentity = EntityList.createEntityByName(lname, lworld);
-				lfigure = new IFI_EntityFigure(lworld, lentity);
-				lfigure.setPositionAndRotation(lx, ly, lz, lyaw, 0F);
-				lworld.spawnEntityInWorld(lfigure);
-				lworld.playSoundAtEntity(var1.playerEntity, "step.wood",
-						0.5F, 0.4F / ((new Random()).nextFloat() * 0.4F + 0.8F));
-				Debug("SpawnFigure: %s, %f, %f, %f Server.", lname, lx, ly, lz);
+				try {
+					Constructor<IFI_EntityFigure> lc = classFigure.getConstructor(World.class);
+					lfigure = lc.newInstance(lworld);
+					lentity = EntityList.createEntityByName(lname, lworld);
+					lfigure.setRenderEntity((EntityLiving)lentity);
+					lfigure.setPositionAndRotation(lx, ly, lz, lyaw, 0F);
+					lworld.spawnEntityInWorld(lfigure);
+					lworld.playSoundAtEntity(var1.playerEntity, "step.wood",
+							0.5F, 0.4F / ((new Random()).nextFloat() * 0.4F + 0.8F));
+					Debug("SpawnFigure: %s, %f, %f, %f Server.", lname, lx, ly, lz);
+				} catch (Exception e) {
+					Debug("SpawnFigure: failed.");
+				}
 			}
 			break;
 			
