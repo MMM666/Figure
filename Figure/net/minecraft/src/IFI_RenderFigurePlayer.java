@@ -24,16 +24,10 @@ public class IFI_RenderFigurePlayer extends RenderBiped {
 		if (entityfigureplayer.isSneaking()) {
 			d3 -= 0.125D;
 		}
-		super.doRenderLiving(entityfigureplayer, d, d3, d2, f, f1);
+		doRenderLiving(entityfigureplayer, d, d3, d2, f, f1);
 		modelArmorChestplate.isSneak = modelArmor.isSneak = modelBipedMain.isSneak = false;
 		modelArmorChestplate.isRiding = modelArmor.isRiding = modelBipedMain.isRiding = false;
 	}
-
-//	@Override
-//	public void doRenderLiving(EntityLiving entityliving,
-//			double d, double d1, double d2, float f, float f1) {
-//		doRenderFigurePlayer((IFI_EntityFigurePlayer) entityliving, d, d1, d2, f, f1);
-//	}
 
 	@Override
 	public void doRender(Entity entity, double d, double d1, double d2, float f, float f1) {

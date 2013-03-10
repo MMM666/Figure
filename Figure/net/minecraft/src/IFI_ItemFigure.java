@@ -1,21 +1,18 @@
 package net.minecraft.src;
 
 import java.lang.reflect.Constructor;
-import java.util.ArrayList;
+import java.lang.reflect.Modifier;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
-import org.lwjgl.opengl.EXTRescaleNormal;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
-import org.lwjgl.util.glu.GLU;
 
 public class IFI_ItemFigure extends Item {
 
 	public static Map<String, Entity> entityStringMap = new TreeMap<String, Entity>();
-	public static IFI_EntityFigure fentityFigure = new IFI_EntityFigure(null);
+	public static IFI_EntityFigure fentityFigure;
 
 	public static ItemStack firstPerson;
 
@@ -26,29 +23,7 @@ public class IFI_ItemFigure extends Item {
 		setMaxDamage(0);
 		setCreativeTab(CreativeTabs.tabDecorations);
 	}
-/*
-	public static void checkCreateEntity(World world) {
-		// Entityのリストを作成
-		if (world != null && lasetWorld != world) {
-			entityIndexMap.clear();
-			entityStringMap.clear();
-			for (Map.Entry<String, Class<Entity>> me : mod_IFI_Figure.entityClassMap
-					.entrySet()) {
-				if (me.getKey() == null)
-					continue;
-				Entity entity1 = EntityList.createEntityByName(me.getKey(),
-						world);
-				if (entity1 != null) {
-					entityIndexMap.put(
-							Integer.valueOf(EntityList.getEntityID(entity1)),
-							entity1);
-					entityStringMap.put(me.getKey(), entity1);
-				}
-			}
-			lasetWorld = world;
-		}
-	}
-*/
+
 	@Override
 	public boolean onItemUse(ItemStack par1ItemStack,
 			EntityPlayer par2EntityPlayer, World par3World,
@@ -77,12 +52,13 @@ public class IFI_ItemFigure extends Item {
 					// 選択なしで設置
 					try {
 						Constructor<IFI_EntityFigure> lc = mod_IFI_Figure.classFigure.getConstructor(World.class, int.class);
-						IFI_EntityFigure ef = lc.newInstance(par3World, par1ItemStack.getItemDamage());
-						ef.setPositionAndRotation(x, y, z, lyaw, 0F);
-						par3World.spawnEntityInWorld(ef);
+						IFI_EntityFigure lef = lc.newInstance(par3World, par1ItemStack.getItemDamage());
+						lef.setPositionAndRotation(x, y, z, lyaw, 0F);
+						par3World.spawnEntityInWorld(lef);
 						par3World.playSoundAtEntity(par2EntityPlayer, "step.wood",
 								0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
 					} catch (Exception e) {
+						e.printStackTrace();
 					}
 				}
 			} else {
@@ -93,7 +69,8 @@ public class IFI_ItemFigure extends Item {
 //					IFI_EntityFigure ef = new IFI_EntityFigure(par3World);
 					fentityFigure.setWorld(par3World);
 					fentityFigure.setPositionAndRotation(x, y, z, lyaw, 0F);
-					ModLoader.openGUI(par2EntityPlayer, new IFI_GuiFigureSelect(par3World, fentityFigure));
+//					ModLoader.openGUI(par2EntityPlayer, new IFI_GuiFigureSelect(par3World, fentityFigure));
+					IFI_Client.openGuiSelect(par2EntityPlayer, par3World);
 				}
 			}
 			par1ItemStack.stackSize--;
@@ -132,53 +109,27 @@ public class IFI_ItemFigure extends Item {
 		} catch (Exception e) {
 			
 		}
-		if (lmap != null && MMM_Helper.mc != null && MMM_Helper.mc.theWorld != null) {
+		if (lmap != null) {
 			for (Entry<Integer, Class> le : lmap.entrySet()) {
-				try {
-					Entity lentity = EntityList.createEntityByID(le.getKey(), MMM_Helper.mc.theWorld);
-					if (lentity instanceof EntityLiving) {
-						par3List.add(new ItemStack(mod_IFI_Figure.figure, 1, le.getKey()));
-					}
-				} catch (Exception e) {
+				Class lcl = le.getValue();
+				if (!Modifier.isAbstract(lcl.getModifiers()) && EntityLiving.class.isAssignableFrom(lcl)) {
+					par3List.add(new ItemStack(mod_IFI_Figure.figure, 1, le.getKey()));
 				}
 			}
 		}
 	}
 
-	public EntityLiving getEntityFromID(int pIndex) {
+	public static EntityLiving getEntityFromID(int pIndex) {
 		return (EntityLiving)entityStringMap.get(EntityList.getStringFromID(pIndex));
 	}
 
 	public boolean renderItem(EntityLiving pEntity, ItemStack pItemstack, int pIndex) {
-		//特殊レンダーへ
-		if (pItemstack.getItemDamage() == 0) {
-			return false;
-		}
-		GL11.glPushMatrix();
-		if (pEntity != null) {
-			if (pItemstack == firstPerson) {
-				GL11.glTranslatef(-0.5F, 0.0F, 0.25F);
-				GL11.glRotatef(225F, 0F, 1F, 0F);
-			} else {
-				GL11.glTranslatef(-0.5F, 0.0F, 0.5F);
-				GL11.glRotatef(180F, 0F, 1F, 0F);
-			}
-			GL11.glScalef(2.5F, 2.5F, 2.5F);
-		}
-		firstPerson = null;
-		
-		fentityFigure.setRenderEntity(getEntityFromID(pItemstack.getItemDamage()));
-		RenderManager.instance.renderEntityWithPosYaw(fentityFigure, 0, 0, 0, 0, 0);
-		IFI_Client.callAfterRender(fentityFigure);
-		
-		GL11.glPopMatrix();
-		return true;
+		return IFI_Client.renderItem(pEntity, pItemstack, pIndex);
 	}
 
 	public boolean renderItemInFirstPerson(float pDelta, MMM_IItemRenderer pItemRenderer) {
-		// 元のコード丸パクリ
 		firstPerson = pItemRenderer.getItemToRender();
-		return false;
+		return IFI_Client.renderItemInFirstPerson(pDelta, pItemRenderer);
 	}
 
 	public String getRenderTexture() {
@@ -186,27 +137,7 @@ public class IFI_ItemFigure extends Item {
 	}
 
 	public boolean drawItemIntoGui(FontRenderer fontrenderer, RenderEngine renderengine, int i, int j, int k, int l, int i1) {
-		if  (j != 0) {
-			// 特殊レンダーGUI内部
-			GL11.glPushMatrix();
-			GL11.glTranslatef(l - 2, i1 + 3, -3F);
-			GL11.glScalef(10F, 10F, 10F);
-			GL11.glTranslatef(1.0F, 0.5F, 1.0F);
-			GL11.glScalef(1.0F, 1.0F, -1F);
-			GL11.glRotatef(210F, 1.0F, 0.0F, 0.0F);
-			GL11.glRotatef(45F, 0.0F, 1.0F, 0.0F);
-			
-//			IFI_EntityFigure ef = new IFI_EntityFigure(MMM_Helper.mc.theWorld);
-			fentityFigure.setWorld(MMM_Helper.mc.theWorld);
-			fentityFigure.setRenderEntity(getEntityFromID(j));
-			RenderManager.instance.renderEntityWithPosYaw(fentityFigure, 0, 0, 0, 0, 0);
-			IFI_Client.callAfterRender(fentityFigure);
-			
-			GL11.glPopMatrix();
-			return true;
-		} else {
-			return false;
-		}
+		return IFI_Client.drawItemIntoGui(fontrenderer, renderengine, i, j, k, l, i1);
 	}
 
 }

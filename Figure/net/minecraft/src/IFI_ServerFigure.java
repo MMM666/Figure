@@ -11,8 +11,6 @@ import java.io.DataOutput;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import com.google.common.io.ByteArrayDataOutput;
-
 /**
  * サーバー側の受信処理。 GUIを作成した際はこちらも作ること。
  */

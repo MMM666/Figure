@@ -2,11 +2,12 @@ package net.minecraft.src;
 
 import static net.minecraft.src.IFI_Statics.IFI_Packet_Data;
 import static net.minecraft.src.IFI_Statics.IFI_Packet_UpadteItem;
+import static net.minecraft.src.IFI_Statics.IFI_Server_UpadteFigure;
 
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+
+import org.lwjgl.opengl.GL11;
 
 /**
  * Client側専用の処理
@@ -103,6 +104,87 @@ public class IFI_Client {
 
 	public static void initEntitys() {
 		new IFI_GuiFigureSelect(MMM_Helper.mc.theWorld, null);
+	}
+
+	/**
+	 * サーバーにフィギュア固有データを要求する。
+	 */
+	public static void getFigureData(Entity pEntity) {
+		// サーバーへ姿勢データの要求をする
+		byte ldata[] = new byte[5];
+		ldata[0] = IFI_Server_UpadteFigure;
+		MMM_Helper.setInt(ldata, 1, pEntity.entityId);
+		ModLoader.clientSendPacket(new Packet250CustomPayload("IFI|Upd", ldata));
+	}
+
+	public static void openGuiSelect(EntityPlayer pEntity, World pWorld) {
+		// Guiを表示してフィギュアを選択
+		ModLoader.openGUI(pEntity, new IFI_GuiFigureSelect(pWorld, IFI_ItemFigure.fentityFigure));
+	}
+
+	public static void openGuiPause(EntityPlayer pPlayer, IFI_EntityFigure pFigure) {
+		ModLoader.openGUI(pPlayer, IFI_Client.getGui(pFigure));
+	}
+
+	public static boolean renderItem(EntityLiving pEntity, ItemStack pItemstack, int pIndex) {
+		//特殊レンダーへ
+		if (pItemstack.getItemDamage() == 0) {
+			return false;
+		}
+		GL11.glPushMatrix();
+		if (pEntity != null) {
+			if (pItemstack == IFI_ItemFigure.firstPerson) {
+				GL11.glTranslatef(-0.5F, 0.0F, 0.25F);
+				GL11.glRotatef(225F, 0F, 1F, 0F);
+			} else {
+				GL11.glTranslatef(-0.5F, 0.0F, 0.5F);
+				GL11.glRotatef(180F, 0F, 1F, 0F);
+			}
+			GL11.glScalef(2.5F, 2.5F, 2.5F);
+		}
+		IFI_ItemFigure.firstPerson = null;
+		
+		IFI_ItemFigure.fentityFigure.setWorld(MMM_Helper.mc.theWorld);
+		IFI_ItemFigure.fentityFigure.setPositionAndRotation(0, 0, 0, 0F, 0F);
+		IFI_ItemFigure.fentityFigure.setRenderEntity(IFI_ItemFigure.getEntityFromID(pItemstack.getItemDamage()));
+		RenderManager.instance.renderEntityWithPosYaw(IFI_ItemFigure.fentityFigure, 0, 0, 0, 0, 0);
+		IFI_Client.callAfterRender(IFI_ItemFigure.fentityFigure);
+		
+//		mod_IFI_Figure.Debug("Entity:%s, World:%b", fentityFigure.renderEntity.getClass().getSimpleName(), fentityFigure.worldObj != null);
+		
+		
+		
+		GL11.glPopMatrix();
+		return true;
+	}
+
+	public static boolean renderItemInFirstPerson(float pDelta, MMM_IItemRenderer pItemRenderer) {
+		// 元のコード丸パクリ
+		return false;
+	}
+
+	public static boolean drawItemIntoGui(FontRenderer fontrenderer, RenderEngine renderengine, int i, int j, int k, int l, int i1) {
+		if  (j != 0) {
+			// 特殊レンダーGUI内部
+			GL11.glPushMatrix();
+			GL11.glTranslatef(l - 2, i1 + 3, -3F);
+			GL11.glScalef(10F, 10F, 10F);
+			GL11.glTranslatef(1.0F, 0.5F, 1.0F);
+			GL11.glScalef(1.0F, 1.0F, -1F);
+			GL11.glRotatef(210F, 1.0F, 0.0F, 0.0F);
+			GL11.glRotatef(45F, 0.0F, 1.0F, 0.0F);
+			
+//			IFI_EntityFigure ef = new IFI_EntityFigure(MMM_Helper.mc.theWorld);
+			IFI_ItemFigure.fentityFigure.setWorld(MMM_Helper.mc.theWorld);
+			IFI_ItemFigure.fentityFigure.setRenderEntity(IFI_ItemFigure.getEntityFromID(j));
+			RenderManager.instance.renderEntityWithPosYaw(IFI_ItemFigure.fentityFigure, 0, 0, 0, 0, 0);
+			IFI_Client.callAfterRender(IFI_ItemFigure.fentityFigure);
+			
+			GL11.glPopMatrix();
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 }

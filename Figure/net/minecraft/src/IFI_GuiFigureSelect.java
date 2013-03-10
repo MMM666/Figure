@@ -66,7 +66,6 @@ public class IFI_GuiFigureSelect extends MMM_GuiMobSelect {
 	@Override
 	public void drawSlot(int pSlotindex, int pX, int pY, int pDrawheight,
 			Tessellator pTessellator, String pName, Entity pEntity) {
-		pEntity
 		drawString(fontRenderer, pName,
 				(width - fontRenderer.getStringWidth(pName)) / 2, pY + 10, 0xffffff);
 	}

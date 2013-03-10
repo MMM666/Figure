@@ -1,17 +1,14 @@
 package net.minecraft.src;
 
-import static net.minecraft.src.IFI_Statics.*;
+import static net.minecraft.src.IFI_Statics.IFI_Packet_Data;
+import static net.minecraft.src.IFI_Statics.IFI_Packet_UpadteItem;
+import static net.minecraft.src.IFI_Statics.IFI_Server_SpawnFigure;
+import static net.minecraft.src.IFI_Statics.IFI_Server_UpadteFigure;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.OutputStream;
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
-import java.util.TreeMap;
 
 public class mod_IFI_Figure extends BaseMod {
 
@@ -67,6 +64,10 @@ public class mod_IFI_Figure extends BaseMod {
 		// これはForge用ID的な意味で。
 		ModLoader.addEntityTracker(this, classFigure, lentityid, 64, 10, false);
 		MMM_Helper.setForgeIcon(figure);
+		try {
+			IFI_ItemFigure.fentityFigure = getEntityFigure(null);
+		} catch (Exception e) {
+		}
 		
 		if (MMM_Helper.isClient) {
 			// 名称変換テーブルの追加
@@ -195,8 +196,7 @@ public class mod_IFI_Figure extends BaseMod {
 		// Forge用
 		if (!MMM_Helper.isForge) return null;
 		try {
-			Constructor<IFI_EntityFigure> lc = classFigure.getConstructor(World.class);
-			IFI_EntityFigure lentity = lc.newInstance(var2);
+			IFI_EntityFigure lentity = getEntityFigure(var2);
 			lentity.entityId = var1;
 			lentity.setPosition(var3, var5, var7);
 			return lentity;
@@ -237,8 +237,7 @@ public class mod_IFI_Figure extends BaseMod {
 				// 指定値にフィギュアをスポーン
 				String lname = MMM_Helper.getStr(var2.data, 17);
 				try {
-					Constructor<IFI_EntityFigure> lc = classFigure.getConstructor(World.class);
-					lfigure = lc.newInstance(lworld);
+					lfigure = getEntityFigure(lworld);
 					lentity = EntityList.createEntityByName(lname, lworld);
 					lfigure.setRenderEntity((EntityLiving)lentity);
 					lfigure.setPositionAndRotation(lx, ly, lz, lyaw, 0F);
@@ -301,6 +300,14 @@ public class mod_IFI_Figure extends BaseMod {
 	public void clientConnect(NetClientHandler var1) {
 		// コネクト時にリストを作成。
 		IFI_Client.initEntitys();
+	}
+
+	/**
+	 * EntityFigureのインスタンスを返す
+	 */
+	public static IFI_EntityFigure getEntityFigure(World pWorld) throws Exception {
+		Constructor<IFI_EntityFigure> lc = classFigure.getConstructor(World.class);
+		return lc.newInstance(pWorld);
 	}
 
 }

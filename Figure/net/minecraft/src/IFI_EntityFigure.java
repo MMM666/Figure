@@ -1,7 +1,5 @@
 package net.minecraft.src;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
@@ -15,6 +13,7 @@ public class IFI_EntityFigure extends Entity {
 	public Method afterrender;
 	public float additionalYaw;
 	public byte changeCount;
+	protected boolean isFirst = false;
 
 
 	public IFI_EntityFigure(World world) {
@@ -147,6 +146,12 @@ public class IFI_EntityFigure extends Entity {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
+		if (!isFirst && worldObj.isRemote) {
+			// サーバーへ固有データの要求をする
+			IFI_Client.getFigureData(this);
+			isFirst = true;
+		}
+		
 		prevPosX = posX;
 		prevPosY = posY;
 		prevPosZ = posZ;
@@ -194,7 +199,8 @@ public class IFI_EntityFigure extends Entity {
 	public boolean interact(EntityPlayer entityplayer) {
 		if (worldObj.isRemote) {
 			// Client
-			ModLoader.openGUI(entityplayer, IFI_Client.getGui(this));
+			IFI_Client.openGuiPause(entityplayer, this);
+//			ModLoader.openGUI(entityplayer, IFI_Client.getGui(this));
 		}
 		return true;
 	}
@@ -202,6 +208,7 @@ public class IFI_EntityFigure extends Entity {
 	public void setRenderEntity(EntityLiving entity) {
 		renderEntity = entity;
 		if (renderEntity != null) {
+			renderEntity.setWorld(worldObj);
 			mobString = EntityList.getEntityString(renderEntity);
 			mobIndex = EntityList.getEntityID(renderEntity);
 			setZoom(zoom);

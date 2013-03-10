@@ -1,6 +1,5 @@
 package net.minecraft.src;
 
-import static net.minecraft.src.IFI_Statics.*;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -70,12 +69,8 @@ public class IFI_PacketFigureSpawn extends Packet23VehicleSpawn {
 			}
 			
 			lentity.entityId = entityId;
-			// サーバーへ姿勢データの要求をする
 			MMM_Helper.mc.theWorld.addEntityToWorld(entityId, lentity);
-			byte ldata[] = new byte[5];
-			ldata[0] = IFI_Server_UpadteFigure;
-			MMM_Helper.setInt(ldata, 1, lentity.entityId);
-			ModLoader.clientSendPacket(new Packet250CustomPayload("IFI|Upd", ldata));
+//			IFI_Client.getFigureData(lentity);
 			mod_IFI_Figure.Debug("SpawnFigure %s, %f, %f, %f Client.",
 					lentity.mobString, lentity.posX, lentity.posY, lentity.posZ);
 		}
