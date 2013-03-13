@@ -30,6 +30,12 @@ public class IFI_RenderFigurePlayer extends RenderBiped {
 	}
 
 	@Override
+	public void doRenderLiving(EntityLiving par1EntityLiving, double par2,
+			double par4, double par6, float par8, float par9) {
+		super.doRenderLiving(par1EntityLiving, par2, par4, par6, par8, par9);
+	}
+
+	@Override
 	public void doRender(Entity entity, double d, double d1, double d2, float f, float f1) {
 		doRenderFigurePlayer((IFI_EntityFigurePlayer) entity, d, d1, d2, f, f1);
 	}

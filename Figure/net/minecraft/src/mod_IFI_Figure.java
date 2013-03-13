@@ -13,7 +13,7 @@ import java.util.Random;
 public class mod_IFI_Figure extends BaseMod {
 
 	@MLProp(info = "ItemID(shiftIndex = ItemID - 256)", min = 256, max = 32000)
-	public static int itemID = 22203;
+	public static int ItemID = 22203;
 	@MLProp(info = "Override Icon.(false = Icon:GoldenApple)")
 	public static boolean useIcon = true;
 	@MLProp(info = "Zoom rate.")
@@ -23,7 +23,6 @@ public class mod_IFI_Figure extends BaseMod {
 	@MLProp()
 	public static boolean isDebugMessage = true;
 
-	public static RenderItem renderItem; // Œ³‚ÌRenderItem
 	public static Item figure;
 	public static Class classFigure;
 	public static Map<String, Class> guiClassMap = new HashMap<String, Class>();
@@ -41,12 +40,17 @@ public class mod_IFI_Figure extends BaseMod {
 
 	@Override
 	public String getVersion() {
-		return "1.4.7-1";
+		return "1.4.7-2";
 	}
 
 	@Override
 	public String getName() {
 		return "Figure";
+	}
+
+	@Override
+	public String getPriorities() {
+		return "required-after:mod_MMM_MMMLib";
 	}
 
 	@Override
@@ -57,7 +61,7 @@ public class mod_IFI_Figure extends BaseMod {
 		} else {
 			licon = !useIcon ? 11 : ModLoader.addOverride("/gui/items.png", "/item/figure.png");
 		}
-		figure = new IFI_ItemFigure(itemID - 256).setIconIndex(licon).setItemName("Figure");
+		figure = new IFI_ItemFigure(ItemID - 256).setIconIndex(licon).setItemName("Figure");
 		int lentityid = ModLoader.getUniqueEntityId();
 		classFigure = MMM_Helper.getEntityClass(this, "IFI_EntityFigure");
 		ModLoader.registerEntityID(classFigure, "Figure", lentityid);

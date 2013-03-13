@@ -42,6 +42,7 @@ public class IFI_GuiFigurePause extends GuiScreen {
 					mod_IFI_Figure.getServerFigure(targetEntity).getData(targetEntity)));
 			mod_IFI_Figure.Debug("DataSendToServer.");
 			mod_IFI_Figure.getServerFigure(targetEntity).sendItems(targetEntity, true);
+//			targetEntity.setPosition(targetEntity.posX, targetEntity.posY, targetEntity.posZ);
 		}
 		super.keyTyped(par1, par2);
 	}
@@ -131,13 +132,11 @@ public class IFI_GuiFigurePause extends GuiScreen {
 		controlList.add(figureYaw);
 		
 		controlList.add(new GuiButton(20, width / 2 + 80, height / 6 + 24 + 12,
-				40, 20, String.format("%.2f", targetEntity.renderEntity.yOffset)));
+				40, 20, String.format("%.2f", targetEntity.fyOffset)));
 		controlList.add(new GuiButton(21, width / 2 + 60, height / 6 + 24 + 12,
 				20, 20, stringtranslate.translateKey("+")));
 		controlList.add(new GuiButton(22, width / 2 + 120, height / 6 + 24 + 12,
 				20, 20, stringtranslate.translateKey("-")));
-		// controlList.add(new GuiButton(200, width / 2 - 100, height / 6 + 168,
-		// 200, 20, stringtranslate.translateKey("gui.done")));
 	}
 
 	public float getGuiRenderYawOffset() {
@@ -211,25 +210,21 @@ public class IFI_GuiFigurePause extends GuiScreen {
 		}
 		
 		if (guibutton.id == 20) {
-			targetEntity.renderEntity.yOffset = 0;
+			targetEntity.fyOffset = 0;
 		}
 		if (guibutton.id == 21) {
-			targetEntity.renderEntity.yOffset += 0.05;
+			targetEntity.fyOffset += 0.05;
 		}
 		if (guibutton.id == 22) {
-			targetEntity.renderEntity.yOffset -= 0.05;
+			targetEntity.fyOffset -= 0.05;
 		}
 		for (int k = 0; k < controlList.size(); k++) {
 			GuiButton gb = (GuiButton) controlList.get(k);
 			if (gb.id == 20) {
-				gb.displayString = String.format("%.2f", targetEntity.renderEntity.yOffset);
+				gb.displayString = String.format("%.2f", targetEntity.fyOffset);
 			}
 		}
 		
-		if (guibutton.id == 200) {
-			mc.gameSettings.saveOptions();
-			mc.displayGuiScreen(null);
-		}
 	}
 
 	/**

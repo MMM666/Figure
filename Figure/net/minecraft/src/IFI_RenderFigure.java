@@ -15,7 +15,7 @@ public class IFI_RenderFigure extends Render {
 			GL11.glPushMatrix();
 			GL11.glTranslatef(
 					(float) d,
-					(float) d1 + ((ef.renderEntity.isRiding()
+					(float) d1 + ef.fyOffset + ((ef.renderEntity.isRiding()
 							? (float) ef.renderEntity.getYOffset()
 									: ef.renderEntity.yOffset) / ef.zoom),
 					(float) d2);

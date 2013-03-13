@@ -13,6 +13,7 @@ public class IFI_EntityFigure extends Entity {
 	public Method afterrender;
 	public float additionalYaw;
 	public byte changeCount;
+	public float fyOffset;
 	protected boolean isFirst = false;
 
 
@@ -21,6 +22,7 @@ public class IFI_EntityFigure extends Entity {
 		health = 5;
 		additionalYaw = 0.0F;
 		changeCount = -1;
+		fyOffset = 0F;
 		zoom = mod_IFI_Figure.defaultZoomRate;
 	}
 
@@ -65,7 +67,7 @@ public class IFI_EntityFigure extends Entity {
 			renderEntity.prevRotationPitch = nbttagcompound.getFloat("prevPitch");
 			renderEntity.prevRotationYaw = nbttagcompound.getFloat("prevYaw");
 			renderEntity.prevRotationYawHead = renderEntity.rotationYawHead = renderEntity.prevRotationYaw;
-			renderEntity.yOffset = nbttagcompound.getFloat("yOffset");
+			fyOffset = nbttagcompound.getFloat("yOffset");
 			mod_IFI_Figure.getServerFigure(this).readEntityFromNBT(this, nbttagcompound);
 			mod_IFI_Figure.getServerFigure(this).setRotation(this);
 		}
@@ -85,7 +87,7 @@ public class IFI_EntityFigure extends Entity {
 			nbttagcompound.setByte("DataWatcher0", renderEntity.dataWatcher.getWatchableObjectByte(0));
 			nbttagcompound.setFloat("prevPitch", renderEntity.prevRotationPitch);
 			nbttagcompound.setFloat("prevYaw", renderEntity.prevRotationYaw);
-			nbttagcompound.setFloat("yOffset", renderEntity.yOffset);
+			nbttagcompound.setFloat("yOffset", fyOffset);
 			mod_IFI_Figure.getServerFigure(this).writeEntityToNBT(this, nbttagcompound);
 		}
 		nbttagcompound.setCompoundTag("Entity", lnbt);

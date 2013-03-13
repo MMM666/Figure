@@ -32,7 +32,7 @@ public class IFI_ServerFigure {
 			lds.writeByte(lf); // Flags
 			lds.writeFloat(lentity.rotationYaw);
 			lds.writeFloat(lentity.rotationPitch);
-			lds.writeFloat(lentity.yOffset);
+			lds.writeFloat(pFigure.fyOffset);
 			sendData(pFigure, lds);
 			return lba.toByteArray();
 		} catch (Exception e) {
@@ -60,7 +60,7 @@ public class IFI_ServerFigure {
 				lel.rotationYaw = lel.prevRotationYaw =
 						lel.rotationYawHead = lel.prevRotationYawHead = lds.readFloat();
 				lel.rotationPitch = lel.prevRotationPitch = lds.readFloat();
-				lel.yOffset = lds.readFloat();
+				pFigure.fyOffset = lds.readFloat();
 				reciveData(pFigure, lds);
 				pFigure.setZoom(pFigure.zoom);
 			} catch (Exception e) {
