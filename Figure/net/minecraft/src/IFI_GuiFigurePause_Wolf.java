@@ -14,19 +14,19 @@ public class IFI_GuiFigurePause_Wolf extends IFI_GuiFigurePause {
 
 	public void initGui() {
 		super.initGui();
-		controlList.add(new GuiButton(102, width / 2 - 140,
+		buttonList.add(new GuiButton(102, width / 2 - 140,
 				height / 6 + 0 + 12, 80, 20, button102[ew.isTamed() ? 0 : 1]));
-		controlList
+		buttonList
 				.add(new GuiButton(103, width / 2 - 140, height / 6 + 24 + 12,
 						80, 20, button103[ew.isSitting() ? 0 : 1]));
-		controlList.add(new GuiButton(104, width / 2 - 140,
+		buttonList.add(new GuiButton(104, width / 2 - 140,
 				height / 6 + 48 + 12, 80, 20, button104[ew.isAngry() ? 0 : 1]));
 
-		controlList.add(new GuiButton(150, width / 2 - 120,
+		buttonList.add(new GuiButton(150, width / 2 - 120,
 				height / 6 + 72 + 12, 40, 20, String.format("%d", ew.health)));
-		controlList.add(new GuiButton(151, width / 2 - 140,
+		buttonList.add(new GuiButton(151, width / 2 - 140,
 				height / 6 + 72 + 12, 20, 20, "+"));
-		controlList.add(new GuiButton(152, width / 2 - 80,
+		buttonList.add(new GuiButton(152, width / 2 - 80,
 				height / 6 + 72 + 12, 20, 20, "-"));
 	}
 
@@ -65,8 +65,8 @@ public class IFI_GuiFigurePause_Wolf extends IFI_GuiFigurePause {
 			if (ew.health > 0)
 				ew.health--;
 		}
-		for (int k = 0; k < controlList.size(); k++) {
-			GuiButton gb = (GuiButton) controlList.get(k);
+		for (int k = 0; k < buttonList.size(); k++) {
+			GuiButton gb = (GuiButton) buttonList.get(k);
 			if (gb.id == 150) {
 				ew.dataWatcher.updateObject(18, Integer.valueOf(ew.health));
 				gb.displayString = String.format("%d", ew.health);

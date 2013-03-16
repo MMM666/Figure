@@ -117,25 +117,25 @@ public class IFI_GuiFigurePause extends GuiScreen {
 		
 		StringTranslate stringtranslate = StringTranslate.getInstance();
 		
-		controlList.add(new GuiButton(10, width / 2 + 60, height / 6 + 48 + 12, 80, 20,
+		buttonList.add(new GuiButton(10, width / 2 + 60, height / 6 + 48 + 12, 80, 20,
 				stringtranslate.translateKey(button10[targetEntity.renderEntity.isRiding() ? 1 : 0])));
-		controlList.add(new GuiButton(11, width / 2 + 60, height / 6 + 72 + 12, 80, 20,
+		buttonList.add(new GuiButton(11, width / 2 + 60, height / 6 + 72 + 12, 80, 20,
 				stringtranslate.translateKey(button11[targetEntity.renderEntity.isSneaking() ? 1 : 0])));
-		controlList.add(new GuiButton(13, width / 2 + 60, height / 6 + 0 + 12, 60, 20,
+		buttonList.add(new GuiButton(13, width / 2 + 60, height / 6 + 0 + 12, 60, 20,
 				stringtranslate.translateKey(String.format("1 / %.0f", targetEntity.zoom))));
-		controlList.add(new GuiButton(16, width / 2 + 120, height / 6 + 0 + 12, 20, 20,
+		buttonList.add(new GuiButton(16, width / 2 + 120, height / 6 + 0 + 12, 20, 20,
 				stringtranslate.translateKey(button16[targetEntity.renderEntity.isChild() ? 1 : 0])));
-		controlList.add(new GuiButton(17, width / 2 - 140, height / 6 + 96 + 12, 80, 20,
+		buttonList.add(new GuiButton(17, width / 2 - 140, height / 6 + 96 + 12, 80, 20,
 				stringtranslate.translateKey("EquipSelect")));
 		figureYaw = new MMM_GuiSlider(15, width / 2 - 50, height / 6 + 96 + 12,
 				String.format("%.2f", targetEntity.additionalYaw), (targetEntity.additionalYaw + 180F) / 360F);
-		controlList.add(figureYaw);
+		buttonList.add(figureYaw);
 		
-		controlList.add(new GuiButton(20, width / 2 + 80, height / 6 + 24 + 12,
+		buttonList.add(new GuiButton(20, width / 2 + 80, height / 6 + 24 + 12,
 				40, 20, String.format("%.2f", targetEntity.fyOffset)));
-		controlList.add(new GuiButton(21, width / 2 + 60, height / 6 + 24 + 12,
+		buttonList.add(new GuiButton(21, width / 2 + 60, height / 6 + 24 + 12,
 				20, 20, stringtranslate.translateKey("+")));
-		controlList.add(new GuiButton(22, width / 2 + 120, height / 6 + 24 + 12,
+		buttonList.add(new GuiButton(22, width / 2 + 120, height / 6 + 24 + 12,
 				20, 20, stringtranslate.translateKey("-")));
 	}
 
@@ -218,8 +218,8 @@ public class IFI_GuiFigurePause extends GuiScreen {
 		if (guibutton.id == 22) {
 			targetEntity.fyOffset -= 0.05;
 		}
-		for (int k = 0; k < controlList.size(); k++) {
-			GuiButton gb = (GuiButton) controlList.get(k);
+		for (int k = 0; k < buttonList.size(); k++) {
+			GuiButton gb = (GuiButton) buttonList.get(k);
 			if (gb.id == 20) {
 				gb.displayString = String.format("%.2f", targetEntity.fyOffset);
 			}

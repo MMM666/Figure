@@ -11,8 +11,8 @@ import org.lwjgl.opengl.GL12;
 
 public class IFI_GuiItemSelect extends GuiContainer {
 
-	public static InventoryBasic inventory = new InventoryBasic("tmp", 45);
-	public static InventoryBasic inventoryItem = new InventoryBasic("sel", 9);
+	public static InventoryBasic inventory = new InventoryBasic("tmp", false, 45);
+	public static InventoryBasic inventoryItem = new InventoryBasic("sel", false, 9);
 
 	private static int selectedTabIndex = CreativeTabs.tabBlock.getTabIndex();
 
@@ -162,7 +162,7 @@ public class IFI_GuiItemSelect extends GuiContainer {
 	@Override
 	public void initGui() {
 		super.initGui();
-		this.controlList.clear();
+		this.buttonList.clear();
 		Keyboard.enableRepeatEvents(true);
 		this.searchField = new GuiTextField(this.fontRenderer,
 				this.guiLeft + 82, this.guiTop + 6, 89, this.fontRenderer.FONT_HEIGHT);

@@ -85,11 +85,11 @@ public class IFI_ItemFigure extends Item {
 	}
 
 	@Override
-	public String getItemNameIS(ItemStack itemstack) {
+	public String getUnlocalizedName(ItemStack itemstack) {
 		if (itemstack.getItemDamage() != 0) {
 			String ls = EntityList.getStringFromID(itemstack.getItemDamage());
 			if (ls != null) {
-				return (new StringBuilder()).append(super.getItemName())
+				return (new StringBuilder()).append(super.getUnlocalizedName())
 						.append(".").append(ls).toString();
 			} else {
 				// System.out.println(String.format("figua-e-id lost:%d",
@@ -97,7 +97,13 @@ public class IFI_ItemFigure extends Item {
 				itemstack.setItemDamage(0);
 			}
 		}
-		return super.getItemName();
+		return super.getUnlocalizedName();
+	}
+
+	@Override
+	public String getItemDisplayName(ItemStack par1ItemStack) {
+		// TODO Auto-generated method stub
+		return super.getItemDisplayName(par1ItemStack);
 	}
 
 	@Override

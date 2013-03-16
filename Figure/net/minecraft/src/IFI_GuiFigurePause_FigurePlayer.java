@@ -38,7 +38,7 @@ public class IFI_GuiFigurePause_FigurePlayer extends IFI_GuiFigurePause {
 	public void initGui() {
 		super.initGui();
 		String ls = playerIndex == 0 ? playerList.get(0) : efplayer.skinUser;
-		controlList.add(new GuiButton(100, width / 2 - 140, height / 6 + 0 + 12, 80, 20, ls));
+		buttonList.add(new GuiButton(100, width / 2 - 140, height / 6 + 0 + 12, 80, 20, ls));
 	}
 
 	@Override

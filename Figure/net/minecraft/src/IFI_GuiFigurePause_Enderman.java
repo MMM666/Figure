@@ -21,19 +21,19 @@ public class IFI_GuiFigurePause_Enderman extends IFI_GuiFigurePause {
 		if (carringid == 0) {
 			carringid = 2;
 		}
-		controlList.add(new GuiButton(102, width / 2 - 140,
+		buttonList.add(new GuiButton(102, width / 2 - 140,
 				height / 6 + 0 + 12, 80, 20,
 				button102[eenderman.isScreaming() ? 0 : 1]));
-		controlList.add(new GuiButton(103, width / 2 - 140,
+		buttonList.add(new GuiButton(103, width / 2 - 140,
 				height / 6 + 24 + 12, 80, 20,
 				button103[eenderman.getCarried() > 0 ? 0 : 1]));
 		
 		bt150 = new GuiButton(150, width / 2 - 120, height / 6 + 48 + 12, 40,
 				20, String.format("%d", carringid));
-		controlList.add(bt150);
-		controlList.add(new GuiButton(151, width / 2 - 140,
+		buttonList.add(bt150);
+		buttonList.add(new GuiButton(151, width / 2 - 140,
 				height / 6 + 48 + 12, 20, 20, "+"));
-		controlList.add(new GuiButton(152, width / 2 - 80,
+		buttonList.add(new GuiButton(152, width / 2 - 80,
 				height / 6 + 48 + 12, 20, 20, "-"));
 		
 	}

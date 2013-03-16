@@ -22,13 +22,16 @@ public class mod_IFI_Figure extends BaseMod {
 	public static float defaultZoomRate = 4F;
 	@MLProp()
 	public static boolean isDebugMessage = true;
-
+	@MLProp(info = "use Player Figure.")
+	public static boolean isFigurePlayer = false;
+	@MLProp(info = "EntityID. 0 is auto assigned.")
+	public static int UniqueEntityIdFigure = 224;
+	
 	public static Item figure;
 	public static Class classFigure;
 	public static Map<String, Class> guiClassMap = new HashMap<String, Class>();
 	public static Map<String, IFI_ServerFigure> serverMap = new HashMap<String, IFI_ServerFigure>();
 	public static IFI_ServerFigure defServerFigure;
-	public static boolean isFigurePlayer = false;
 
 
 	public static void Debug(String pText, Object... pData) {
@@ -40,7 +43,7 @@ public class mod_IFI_Figure extends BaseMod {
 
 	@Override
 	public String getVersion() {
-		return "1.4.7-2";
+		return "1.5.0-1";
 	}
 
 	@Override
@@ -55,47 +58,31 @@ public class mod_IFI_Figure extends BaseMod {
 
 	@Override
 	public void load() {
-		int licon;
-		if (MMM_Helper.isForge) {
-			licon = 17;
-		} else {
-			licon = !useIcon ? 11 : ModLoader.addOverride("/gui/items.png", "/item/figure.png");
-		}
-		figure = new IFI_ItemFigure(ItemID - 256).setIconIndex(licon).setItemName("Figure");
-		int lentityid = ModLoader.getUniqueEntityId();
-		classFigure = MMM_Helper.getEntityClass(this, "IFI_EntityFigure");
-		ModLoader.registerEntityID(classFigure, "Figure", lentityid);
+		figure = new IFI_ItemFigure(ItemID - 256).setUnlocalizedName("Figure");
+		UniqueEntityIdFigure = UniqueEntityIdFigure == 0 ? MMM_Helper.getNextEntityID() : UniqueEntityIdFigure;
+		classFigure = MMM_Helper.getForgeClass(this, "IFI_EntityFigure");
+		ModLoader.registerEntityID(classFigure, "Figure", UniqueEntityIdFigure);
 		// これはForge用ID的な意味で。
-		ModLoader.addEntityTracker(this, classFigure, lentityid, 64, 10, false);
-		MMM_Helper.setForgeIcon(figure);
+		ModLoader.addEntityTracker(this, classFigure, UniqueEntityIdFigure, 64, 10, false);
 		try {
 			IFI_ItemFigure.fentityFigure = getEntityFigure(null);
 		} catch (Exception e) {
 		}
 		
+		// レシピの追加
+		ModLoader.addShapelessRecipe(new ItemStack(figure, 1, 0), new Object[] {Item.stick, Item.clay});
+		ModLoader.addShapelessRecipe(new ItemStack(Item.clay), new Object[] { figure });
 		if (MMM_Helper.isClient) {
 			// 名称変換テーブルの追加
-			ModLoader.addLocalization(
-					(new StringBuilder()).append(figure.getItemName()).append(".name").toString(),
-					(new StringBuilder()).append("Figure").toString());
-			// レシピの追加
-			ModLoader.addShapelessRecipe(new ItemStack(figure, 1, 0), new Object[] {Item.stick, Item.clay});
-			ModLoader.addShapelessRecipe(new ItemStack(Item.clay), new Object[] { figure });
-			
+			ModLoader.addName(figure, "Figure");
 			// 倍率設定
 			IFI_Client.setZoomRate();
 		}
 		
 		// プレーヤースキン表示用MOBの追加
-		int li = -1;
-		if (MMM_Helper.isForge) {
-			li = ModLoader.getUniqueEntityId();
-		} else {
-			li = MMM_Helper.getNextEntityID();
-		}
-		if (li > -1) {
+		if (isFigurePlayer) {
+			int li = MMM_Helper.getNextEntityID();
 			ModLoader.registerEntityID(IFI_EntityFigurePlayer.class, "FigurePlayer", li);
-			isFigurePlayer = true;
 		}
 		
 		// パケットチャンネル追加

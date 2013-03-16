@@ -13,10 +13,9 @@ public class IFI_GuiFigurePause_Sheep extends IFI_GuiFigurePause {
 
 	public void initGui() {
 		super.initGui();
-		controlList
-				.add(new GuiButton(102, width / 2 - 140, height / 6 + 0 + 12, 80, 20, 
-						button102[es.getSheared() ? 0 : 1]));
-		controlList.add(new GuiButton(103, width / 2 - 140, height / 6 + 24 + 12, 80, 20,
+		buttonList.add(new GuiButton(102, width / 2 - 140, height / 6 + 0 + 12, 80, 20, 
+				button102[es.getSheared() ? 0 : 1]));
+		buttonList.add(new GuiButton(103, width / 2 - 140, height / 6 + 24 + 12, 80, 20,
 				String.format("Color : %x", es.getFleeceColor())));
 	}
 

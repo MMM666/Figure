@@ -15,12 +15,12 @@ public class IFI_GuiFigurePause_Ozelot extends IFI_GuiFigurePause {
 	@Override
 	public void initGui() {
 		super.initGui();
-		controlList.add(new GuiButton(102, width / 2 - 140,
+		buttonList.add(new GuiButton(102, width / 2 - 140,
 				height / 6 + 0 + 12, 80, 20, button102[eo.isTamed() ? 0 : 1]));
-		controlList
+		buttonList
 				.add(new GuiButton(103, width / 2 - 140, height / 6 + 24 + 12,
 						80, 20, button103[eo.isSitting() ? 0 : 1]));
-		controlList.add(new GuiButton(104, width / 2 - 140,
+		buttonList.add(new GuiButton(104, width / 2 - 140,
 				height / 6 + 48 + 12, 80, 20, button104[eo.getTameSkin()]));
 	}
 

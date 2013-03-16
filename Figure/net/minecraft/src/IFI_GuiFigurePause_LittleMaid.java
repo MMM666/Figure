@@ -43,19 +43,19 @@ public class IFI_GuiFigurePause_LittleMaid extends IFI_GuiFigurePause {
 		
 		bt100 = new GuiButton(100, width / 2 - 120, height / 6 + 120 + 12, 240, 20, elm.textureName);
 		bt101 = new GuiButton(101, width / 2 - 120, height / 6 + 144 + 12, 240, 20, elm.textureArmorName);
-		controlList.add(bt100);
-		controlList.add(bt101);
-		controlList.add(new GuiButton(160, width / 2 - 140, height / 6 + 0 + 12, 80, 20, "TextureSelect"));
-		controlList.add(new GuiButton(102, width / 2 - 140, height / 6 + 24 + 12, 80, 20, button102[elm.maidContract ? 0 : 1]));
+		buttonList.add(bt100);
+		buttonList.add(bt101);
+		buttonList.add(new GuiButton(160, width / 2 - 140, height / 6 + 0 + 12, 80, 20, "TextureSelect"));
+		buttonList.add(new GuiButton(102, width / 2 - 140, height / 6 + 24 + 12, 80, 20, button102[elm.maidContract ? 0 : 1]));
 		bt103 = new GuiButton(103, width / 2 - 140, height / 6 + 48 + 12, 80, 20, String.format("Color : %x", elm.maidColor));
-		controlList.add(bt103);
-		controlList.add(new GuiButton(104, width / 2 + 60, height / 6 + 96 + 12, 80, 20, button104[elm.isMaidWait() ? 0 : elm.mstatAimeBow ? 2 : 1]));
-
+		buttonList.add(bt103);
+		buttonList.add(new GuiButton(104, width / 2 + 60, height / 6 + 96 + 12, 80, 20, button104[elm.isMaidWait() ? 0 : elm.mstatAimeBow ? 2 : 1]));
+		
 		bt110 = new GuiButton(110, width / 2 - 120, height / 6 + 72 + 12, 40,
 				20, String.format("%d", armorDamage));
-		controlList.add(bt110);
-		controlList.add(new GuiButton(111, width / 2 - 140, height / 6 + 72 + 12, 20, 20, "+"));
-		controlList.add(new GuiButton(112, width / 2 - 80, height / 6 + 72 + 12, 20, 20, "-"));
+		buttonList.add(bt110);
+		buttonList.add(new GuiButton(111, width / 2 - 140, height / 6 + 72 + 12, 20, 20, "+"));
+		buttonList.add(new GuiButton(112, width / 2 - 80, height / 6 + 72 + 12, 20, 20, "-"));
 		
 //		elm.textureIndex = MMM_TextureManager.getStringToIndex(elm.textureName);
 //		elm.textureArmorIndex = MMM_TextureManager.getStringToIndex(elm.textureArmorName);

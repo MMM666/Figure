@@ -13,7 +13,7 @@ public class IFI_GuiFigurePause_Ghast extends IFI_GuiFigurePause {
 
 	public void initGui() {
 		super.initGui();
-		controlList.add(new GuiButton(102, width / 2 - 140, height / 6 + 0 + 12, 80, 20,
+		buttonList.add(new GuiButton(102, width / 2 - 140, height / 6 + 0 + 12, 80, 20,
 				button102[eg.dataWatcher.getWatchableObjectByte(16) != 1 ? 0 : 1]));
 	}
 

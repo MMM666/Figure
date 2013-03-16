@@ -23,7 +23,7 @@ public class IFI_GuiFigureSelect extends MMM_GuiMobSelect {
 	@Override
 	public void initGui() {
 		super.initGui();
-		controlList.add(new GuiButton(300, width / 2 - 60, height - 44, 120, 20, "Select"));
+		buttonList.add(new GuiButton(300, width / 2 - 60, height - 44, 120, 20, "Select"));
 	}
 
 	@Override

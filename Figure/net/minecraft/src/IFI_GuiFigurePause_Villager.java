@@ -14,8 +14,8 @@ public class IFI_GuiFigurePause_Villager extends IFI_GuiFigurePause {
 	@Override
 	public void initGui() {
 		super.initGui();
-
-		controlList.add(new GuiButton(100, width / 2 - 140, height / 6 + 0 + 12, 80, 20, sb100[efvillager.getProfession()]));
+		
+		buttonList.add(new GuiButton(100, width / 2 - 140, height / 6 + 0 + 12, 80, 20, sb100[efvillager.getProfession()]));
 	}
 
 	@Override

@@ -13,7 +13,7 @@ public class IFI_GuiFigurePause_Zombie extends IFI_GuiFigurePause {
 	@Override
 	public void initGui() {
 		super.initGui();
-		controlList.add(new GuiButton(100, width / 2 - 140, height / 6 + 0 + 12, 80, 20, efzombie.isVillager() ? "Villager" : "Crafter"));
+		buttonList.add(new GuiButton(100, width / 2 - 140, height / 6 + 0 + 12, 80, 20, efzombie.isVillager() ? "Villager" : "Crafter"));
 	}
 
 	@Override
