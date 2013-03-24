@@ -10,6 +10,7 @@ import org.lwjgl.opengl.ARBMultisample;
 import org.lwjgl.opengl.ARBMultitexture;
 import org.lwjgl.opengl.EXTRescaleNormal;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GLContext;
 
@@ -97,11 +98,16 @@ public class IFI_GuiFigurePause extends GuiScreen {
 		// System.out.println(String.format("f: %f, %f, %f", elt.rotationYaw,
 		// elt.prevRotationYaw, elt.renderYawOffset));
 		// 影だかバイオームだかの処理?
-		GL13.glMultiTexCoord2f(ARBMultitexture.GL_TEXTURE1_ARB, 240.0F, 240.0F);
+//		GL13.glMultiTexCoord2f(ARBMultitexture.GL_TEXTURE1_ARB, 240.0F, 240.0F);
 		GL11.glPopMatrix();
-		RenderHelper.disableStandardItemLighting();
-		GL11.glDisable(EXTRescaleNormal.GL_RESCALE_NORMAL_EXT);
+//		RenderHelper.disableStandardItemLighting();
+//		GL11.glDisable(EXTRescaleNormal.GL_RESCALE_NORMAL_EXT);
 
+		RenderHelper.disableStandardItemLighting();
+		GL11.glDisable(GL12.GL_RESCALE_NORMAL);
+		OpenGlHelper.setActiveTexture(OpenGlHelper.lightmapTexUnit);
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		OpenGlHelper.setActiveTexture(OpenGlHelper.defaultTexUnit);
 		super.drawScreen(i, j, f);
 	}
 

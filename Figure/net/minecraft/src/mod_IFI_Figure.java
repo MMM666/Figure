@@ -23,7 +23,7 @@ public class mod_IFI_Figure extends BaseMod {
 	@MLProp()
 	public static boolean isDebugMessage = true;
 	@MLProp(info = "use Player Figure.")
-	public static boolean isFigurePlayer = false;
+	public static boolean isFigurePlayer = true;
 	@MLProp(info = "EntityID. 0 is auto assigned.")
 	public static int UniqueEntityIdFigure = 224;
 	
@@ -122,7 +122,7 @@ public class mod_IFI_Figure extends BaseMod {
 						// ñºèÃÇÃí«â¡
 						ModLoader.addLocalization(
 								(new StringBuilder())
-										.append(figure.getItemName())
+										.append(figure.getUnlocalizedName())
 										.append(".").append(me.getKey())
 										.append(".name").toString(),
 								(new StringBuilder()).append("Figure ")

@@ -486,10 +486,7 @@ public class IFI_GuiItemSelect extends GuiContainer {
 	protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3) {
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		RenderHelper.enableGUIStandardItemLighting();
-		int var4 = this.mc.renderEngine.getTexture("/gui/allitems.png");
 		CreativeTabs var5 = CreativeTabs.creativeTabArray[selectedTabIndex];
-		int var6 = this.mc.renderEngine.getTexture(
-				"/gui/creative_inv/" + var5.getBackgroundImageName());
 		CreativeTabs[] var7 = CreativeTabs.creativeTabArray;
 		int var8 = var7.length;
 		int var9;
@@ -499,14 +496,14 @@ public class IFI_GuiItemSelect extends GuiContainer {
 			if (var10 == CreativeTabs.tabInventory) {
 				continue;
 			}
-			this.mc.renderEngine.bindTexture(var4);
+			this.mc.renderEngine.func_98187_b("/gui/allitems.png");
 
 			if (var10.getTabIndex() != selectedTabIndex) {
 				this.renderCreativeTab(var10);
 			}
 		}
 
-		this.mc.renderEngine.bindTexture(var6);
+		this.mc.renderEngine.func_98187_b("/gui/creative_inv/" + var5.getBackgroundImageName());
 		this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize,
 				this.ySize);
 		this.searchField.drawTextBox();
@@ -514,7 +511,7 @@ public class IFI_GuiItemSelect extends GuiContainer {
 		int var11 = this.guiLeft + 175;
 		var8 = this.guiTop + 18;
 		var9 = var8 + 112;
-		this.mc.renderEngine.bindTexture(var4);
+		this.mc.renderEngine.func_98187_b("/gui/allitems.png");
 
 		if (var5.shouldHidePlayerInventory()) {
 			this.drawTexturedModalRect(var11, var8
