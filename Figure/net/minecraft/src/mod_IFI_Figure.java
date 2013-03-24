@@ -25,7 +25,7 @@ public class mod_IFI_Figure extends BaseMod {
 	@MLProp(info = "use Player Figure.")
 	public static boolean isFigurePlayer = true;
 	@MLProp(info = "EntityID. 0 is auto assigned.")
-	public static int UniqueEntityIdFigure = 224;
+	public static int UniqueEntityIdFigurePlayer = 224;
 	
 	public static Item figure;
 	public static Class classFigure;
@@ -43,7 +43,7 @@ public class mod_IFI_Figure extends BaseMod {
 
 	@Override
 	public String getVersion() {
-		return "1.5.0-1";
+		return "1.5.1-1";
 	}
 
 	@Override
@@ -59,11 +59,11 @@ public class mod_IFI_Figure extends BaseMod {
 	@Override
 	public void load() {
 		figure = new IFI_ItemFigure(ItemID - 256).setUnlocalizedName("Figure");
-		UniqueEntityIdFigure = UniqueEntityIdFigure == 0 ? MMM_Helper.getNextEntityID() : UniqueEntityIdFigure;
+		int lentityid = MMM_Helper.getNextEntityID(false);
 		classFigure = MMM_Helper.getForgeClass(this, "IFI_EntityFigure");
-		ModLoader.registerEntityID(classFigure, "Figure", UniqueEntityIdFigure);
+		ModLoader.registerEntityID(classFigure, "Figure", lentityid);
 		// これはForge用ID的な意味で。
-		ModLoader.addEntityTracker(this, classFigure, UniqueEntityIdFigure, 64, 10, false);
+		ModLoader.addEntityTracker(this, classFigure, lentityid, 64, 10, false);
 		try {
 			IFI_ItemFigure.fentityFigure = getEntityFigure(null);
 		} catch (Exception e) {
@@ -81,8 +81,9 @@ public class mod_IFI_Figure extends BaseMod {
 		
 		// プレーヤースキン表示用MOBの追加
 		if (isFigurePlayer) {
-			int li = MMM_Helper.getNextEntityID();
-			ModLoader.registerEntityID(IFI_EntityFigurePlayer.class, "FigurePlayer", li);
+			UniqueEntityIdFigurePlayer = UniqueEntityIdFigurePlayer == 0 ?
+					MMM_Helper.getNextEntityID(true) : UniqueEntityIdFigurePlayer;
+			ModLoader.registerEntityID(IFI_EntityFigurePlayer.class, "FigurePlayer", UniqueEntityIdFigurePlayer);
 		}
 		
 		// パケットチャンネル追加
