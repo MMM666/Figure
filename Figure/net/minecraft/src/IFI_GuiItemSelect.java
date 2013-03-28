@@ -32,8 +32,8 @@ public class IFI_GuiItemSelect extends GuiContainer {
 	public static boolean isChange = false;
 
 
-	public IFI_GuiItemSelect(GuiScreen pOwner, EntityLiving pTarget) {
-		super(new IFI_ContainerItemSelect());
+	public IFI_GuiItemSelect(GuiScreen pOwner, EntityLiving pTarget, EntityPlayer pPlayer) {
+		super(new IFI_ContainerItemSelect(pPlayer));
 		this.allowUserInput = true;
 		this.ySize = 136;
 		this.xSize = 195;
@@ -44,58 +44,42 @@ public class IFI_GuiItemSelect extends GuiContainer {
 	@Override
 	protected void handleMouseClick(Slot par1Slot, int par2, int par3, int par4) {
 		this.field_74234_w = true;
-		boolean var5 = par4 == 1;
-		InventoryPlayer var6;
-		ItemStack var7;
-
+		boolean var5 = par4 == 1; // Shift
+		InventoryPlayer var6 = this.mc.thePlayer.inventory;
+		ItemStack var7 = var6.getItemStack();
+		mod_IFI_Figure.Debug("handolMouse.(%d, %d, %d)", par2, par3, par4);
+		
 		if (par1Slot != null) {
-			if (par1Slot == this.field_74235_v && var5) {
-//				for (int var10 = 0; var10 < this.mc.thePlayer.inventoryContainer
-//						.getInventory().size(); ++var10) {
-//					this.mc.playerController.sendSlotPacket((ItemStack) null,
-//							var10);
-//				}
-				/*
-			} else if (selectedTabIndex == CreativeTabs.tabInventory.getTabIndex()) {
-				if (par1Slot == this.field_74235_v) {
-					this.mc.thePlayer.inventory.setItemStack((ItemStack) null);
+			if (var5) {
+				// Shiftが押されている
+				if (var7 != null) {
+					var6.setItemStack(par1Slot.getStack());
+					par1Slot.putStack(var7);
 				} else {
-					this.mc.thePlayer.inventoryContainer.slotClick(
-							SlotCreativeInventory.func_75240_a(
-									(SlotCreativeInventory) par1Slot).slotNumber,
-									par3, par4, this.mc.thePlayer);
-					this.mc.thePlayer.inventoryContainer.detectAndSendChanges();
+					var7 = par1Slot.getStack();
+					if (var7 != null) {
+						var7 = var7.splitStack(1);
+					}
 				}
-				*/
 			} else if (par1Slot.inventory == inventory) {
-				var6 = this.mc.thePlayer.inventory;
-				var7 = var6.getItemStack();
+				// Creativeエリアの処理
 				ItemStack var8 = par1Slot.getStack();
 				ItemStack var9;
-
+				
 				if (par4 == 2) {
-//					if (var8 != null && par3 >= 0 && par3 < 9) {
-//						var9 = var8.copy();
-//						var9.stackSize = var9.getMaxStackSize();
-//						this.mc.thePlayer.inventory.setInventorySlotContents(
-//								par3, var9);
-//						this.mc.thePlayer.inventoryContainer
-//								.detectAndSendChanges();
-//					}
-
 					return;
 				}
-
+				
 				if (par4 == 3) {
 					if (var6.getItemStack() == null && par1Slot.getHasStack()) {
 						var9 = par1Slot.getStack().copy();
 						var9.stackSize = var9.getMaxStackSize();
 						var6.setItemStack(var9);
 					}
-
+					
 					return;
 				}
-
+				
 				if (var7 != null && var8 != null && var7.isItemEqual(var8)) {
 					if (par3 == 0) {
 						if (var5) {
@@ -111,7 +95,7 @@ public class IFI_GuiItemSelect extends GuiContainer {
 				} else if (var8 != null && var7 == null) {
 					var6.setItemStack(ItemStack.copyItemStack(var8));
 					var7 = var6.getItemStack();
-
+					
 					if (var5) {
 						var7.stackSize = var7.getMaxStackSize();
 					}
@@ -119,43 +103,16 @@ public class IFI_GuiItemSelect extends GuiContainer {
 					var6.setItemStack((ItemStack) null);
 				}
 			} else {
-				var6 = this.mc.thePlayer.inventory;
-				var7 = var6.getItemStack();
-				ItemStack var8 = par1Slot.getStack();
-//				ItemStack var9;
-				if (par1Slot.isItemValid(var7) || var7 == null) {
-					par1Slot.putStack(var7);
-					var6.setItemStack(var8);
-				}
-				
-				
-//				this.inventorySlots.slotClick(par1Slot.slotNumber, par3, par4,
-//						this.mc.thePlayer);
-//				ItemStack var11 = this.inventorySlots.getSlot(
-//						par1Slot.slotNumber).getStack();
-//				this.mc.playerController.sendSlotPacket(var11, par1Slot.slotNumber
-//								- this.inventorySlots.inventorySlots.size() + 9 + 36);
+				// 装備品欄
+				this.inventorySlots.slotClick(par1Slot == null ? par2 : par1Slot.slotNumber, par3, par4, this.mc.thePlayer);
 			}
 		} else {
-			var6 = this.mc.thePlayer.inventory;
-
-			if (var6.getItemStack() != null) {
-				if (par3 == 0) {
-					this.mc.thePlayer.dropPlayerItem(var6.getItemStack());
-					this.mc.playerController.func_78752_a(var6.getItemStack());
-					var6.setItemStack((ItemStack) null);
-				}
-
-				if (par3 == 1) {
-					var7 = var6.getItemStack().splitStack(1);
-					this.mc.thePlayer.dropPlayerItem(var7);
-					this.mc.playerController.func_78752_a(var7);
-
-					if (var6.getItemStack().stackSize == 0) {
-						var6.setItemStack((ItemStack) null);
-					}
-				}
-			}
+			// スロットをクリックしなかった
+			mod_IFI_Figure.Debug("Drop.(%d, %d, %d)", par2, par3, par4);
+			this.mc.thePlayer.dropPlayerItem(var6.getItemStack());
+			this.mc.playerController.func_78752_a(var6.getItemStack());
+			
+			var6.setItemStack((ItemStack) null);
 		}
 	}
 

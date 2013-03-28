@@ -9,9 +9,11 @@ import java.util.List;
 public class IFI_ContainerItemSelect extends Container {
 
 	public List itemList = new ArrayList();
+	public EntityPlayer openPlayer;
 
-	public IFI_ContainerItemSelect() {
+	public IFI_ContainerItemSelect(EntityPlayer pPlayer) {
 		int var3;
+		openPlayer = pPlayer;
 		
 		for (var3 = 0; var3 < 5; ++var3) {
 			for (int var4 = 0; var4 < 9; ++var4) {
@@ -67,17 +69,22 @@ public class IFI_ContainerItemSelect extends Container {
 
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int par2) {
-		/*
-		if (par2 >= this.inventorySlots.size() - 9
-				&& par2 < this.inventorySlots.size()) {
-			Slot var3 = (Slot) this.inventorySlots.get(par2);
-			
-			if (var3 != null && var3.getHasStack()) {
-				var3.putStack((ItemStack) null);
-			}
-		}
-		*/
 		return null;
+	}
+
+	public boolean func_94530_a(ItemStack par1ItemStack, Slot par2Slot) {
+		return par2Slot.yDisplayPosition > 90;
+	}
+
+	public boolean func_94531_b(Slot par1Slot) {
+		return false;
+//		return par1Slot.inventory instanceof InventoryPlayer || par1Slot.yDisplayPosition > 90 && par1Slot.xDisplayPosition <= 162;
+	}
+
+	@Override
+	public void putStackInSlot(int par1, ItemStack par2ItemStack) {
+		// GUIを開いている時にアイテムを回収した時の処理
+		openPlayer.inventoryContainer.getSlot(par1).putStack(par2ItemStack);
 	}
 
 }

@@ -134,7 +134,8 @@ public class IFI_GuiFigurePause extends GuiScreen {
 		buttonList.add(new GuiButton(17, width / 2 - 140, height / 6 + 96 + 12, 80, 20,
 				stringtranslate.translateKey("EquipSelect")));
 		figureYaw = new MMM_GuiSlider(15, width / 2 - 50, height / 6 + 96 + 12,
-				String.format("%.2f", targetEntity.additionalYaw), (targetEntity.additionalYaw + 180F) / 360F);
+//				String.format("%.2f", targetEntity.additionalYaw),
+				"", (targetEntity.additionalYaw + 180F) / 360F, 360F, -180F).setStrFormat("%s%.2f").setDisplayString();
 		buttonList.add(figureYaw);
 		
 		buttonList.add(new GuiButton(20, width / 2 + 80, height / 6 + 24 + 12,
@@ -212,7 +213,7 @@ public class IFI_GuiFigurePause extends GuiScreen {
 			// ëïîıïiÇÃê›íË
 			IFI_GuiItemSelect.clearInventory();
 			getItems();
-			mc.displayGuiScreen(new IFI_GuiItemSelect(this, targetEntity.renderEntity));
+			mc.displayGuiScreen(new IFI_GuiItemSelect(this, targetEntity.renderEntity, MMM_Helper.mc.thePlayer));
 		}
 		
 		if (guibutton.id == 20) {
