@@ -23,8 +23,8 @@ public class IFI_PacketFigureSpawn extends Packet23VehicleSpawn {
 		this.xPosition = par1DataInputStream.readInt();
 		this.yPosition = par1DataInputStream.readInt();
 		this.zPosition = par1DataInputStream.readInt();
-		this.field_92077_h = par1DataInputStream.readByte();
-		this.field_92078_i = par1DataInputStream.readByte();
+		this.pitch = par1DataInputStream.readByte();
+		this.yaw = par1DataInputStream.readByte();
 		this.figureID = par1DataInputStream.readInt();
 	}
 
@@ -35,8 +35,8 @@ public class IFI_PacketFigureSpawn extends Packet23VehicleSpawn {
 		par1DataOutputStream.writeInt(this.xPosition);
 		par1DataOutputStream.writeInt(this.yPosition);
 		par1DataOutputStream.writeInt(this.zPosition);
-		par1DataOutputStream.writeByte(this.field_92077_h);
-		par1DataOutputStream.writeByte(this.field_92078_i);
+		par1DataOutputStream.writeByte(this.pitch);
+		par1DataOutputStream.writeByte(this.yaw);
 		par1DataOutputStream.writeInt(this.figureID);
 	}
 
@@ -55,8 +55,8 @@ public class IFI_PacketFigureSpawn extends Packet23VehicleSpawn {
 			lentity.serverPosX = xPosition;
 			lentity.serverPosY = yPosition;
 			lentity.serverPosZ = zPosition;
-			lentity.rotationPitch = (float) (field_92077_h * 360) / 256.0F;
-			lentity.rotationYaw = (float) (field_92078_i * 360) / 256.0F;
+			lentity.rotationPitch = (float) (pitch * 360) / 256.0F;
+			lentity.rotationYaw = (float) (yaw * 360) / 256.0F;
 			lentity.setPositionAndRotation2(lx, ly, lz, lentity.rotationYaw, lentity.rotationPitch, 1);
 			Entity[] var13 = lentity.getParts();
 			
