@@ -14,8 +14,6 @@ public class mod_IFI_Figure extends BaseMod {
 
 	@MLProp(info = "ItemID(shiftIndex = ItemID - 256)", min = 256, max = 32000)
 	public static int ItemID = 22203;
-	@MLProp(info = "Override Icon.(false = Icon:GoldenApple)")
-	public static boolean useIcon = true;
 	@MLProp(info = "Zoom rate.")
 	public static String zoomRate = "1, 2, 4, 6";
 	@MLProp(info = "default Zoom rate.")
@@ -42,11 +40,6 @@ public class mod_IFI_Figure extends BaseMod {
 	}
 
 	@Override
-	public String getVersion() {
-		return "1.5.1-1";
-	}
-
-	@Override
 	public String getName() {
 		return "Figure";
 	}
@@ -57,7 +50,15 @@ public class mod_IFI_Figure extends BaseMod {
 	}
 
 	@Override
+	public String getVersion() {
+		return "1.5.1-2";
+	}
+
+	@Override
 	public void load() {
+		// MMMLibのRevisionチェック
+		MMM_Helper.checkRevision("4");
+		
 		figure = new IFI_ItemFigure(ItemID - 256).setUnlocalizedName("Figure");
 		int lentityid = MMM_Helper.getNextEntityID(false);
 		classFigure = MMM_Helper.getForgeClass(this, "IFI_EntityFigure");
@@ -139,7 +140,7 @@ public class mod_IFI_Figure extends BaseMod {
 		}
 		// 分解レシピの追加
 		ModLoader.addShapelessRecipe(new ItemStack(Item.clay),
-				new Object[] { new ItemStack(figure, 1, -1) });
+				new Object[] { new ItemStack(figure, 1, Short.MAX_VALUE) });
 	}
 
 	public void addGui(String pPackegeName, String pName) {

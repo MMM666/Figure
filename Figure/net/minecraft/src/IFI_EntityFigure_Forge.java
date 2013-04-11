@@ -20,15 +20,18 @@ public class IFI_EntityFigure_Forge extends IFI_EntityFigure
 
 	@Override
 	public void writeSpawnData(ByteArrayDataOutput data) {
-		data.writeInt(mobIndex);
+//		data.writeInt(mobIndex);
 		data.writeFloat(rotationYaw);
 		data.writeFloat(rotationPitch);
+		data.writeUTF(mobString);
 	}
 
 	@Override
 	public void readSpawnData(ByteArrayDataInput data) {
-		Entity lentity = EntityList.createEntityByID(data.readInt(), worldObj);
+		Entity lentity;
+//		lentity = EntityList.createEntityByID(data.readInt(), worldObj);
 		setRotation(data.readFloat(), data.readFloat());
+		lentity = EntityList.createEntityByName(data.readUTF(), worldObj);
 		setRenderEntity((EntityLiving) lentity);
 		IFI_Client.getGui(this);
 	}
