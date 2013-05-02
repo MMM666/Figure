@@ -128,6 +128,7 @@ public class IFI_Client {
 
 	public static boolean renderItem(EntityLiving pEntity, ItemStack pItemstack, int pIndex) {
 		//ì¡éÍÉåÉìÉ_Å[Ç÷
+//		if (pItemstack.getItemDamage() == 0 || IFI_ItemFigure.fentityFigure.renderEntity == null) {
 		if (pItemstack.getItemDamage() == 0) {
 			return false;
 		}
@@ -146,10 +147,10 @@ public class IFI_Client {
 		
 		IFI_ItemFigure.fentityFigure.setWorld(MMM_Helper.mc.theWorld);
 		IFI_ItemFigure.fentityFigure.setPositionAndRotation(0, 0, 0, 0F, 0F);
+		IFI_ItemFigure.fentityFigure.setRenderEntity(IFI_ItemFigure.getEntityFromID(pItemstack.getItemDamage()));
 		IFI_ItemFigure.fentityFigure.renderEntity.setPositionAndRotation(0, 0, 0, 0F, 0F);
 		IFI_ItemFigure.fentityFigure.renderEntity.prevRotationYawHead =
 				IFI_ItemFigure.fentityFigure.renderEntity.rotationYawHead = 0F;
-		IFI_ItemFigure.fentityFigure.setRenderEntity(IFI_ItemFigure.getEntityFromID(pItemstack.getItemDamage()));
 		RenderManager.instance.renderEntityWithPosYaw(IFI_ItemFigure.fentityFigure, 0, 0, 0, 0, 0);
 		IFI_Client.callAfterRender(IFI_ItemFigure.fentityFigure);
 		
