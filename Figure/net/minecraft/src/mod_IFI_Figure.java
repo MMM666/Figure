@@ -51,13 +51,13 @@ public class mod_IFI_Figure extends BaseMod {
 
 	@Override
 	public String getVersion() {
-		return "1.5.1-3";
+		return "1.5.2-1";
 	}
 
 	@Override
 	public void load() {
 		// MMMLibのRevisionチェック
-		MMM_Helper.checkRevision("5");
+		MMM_Helper.checkRevision("1");
 		
 		figure = new IFI_ItemFigure(ItemID - 256).setUnlocalizedName("Figure");
 		int lentityid = MMM_Helper.getNextEntityID(false);
@@ -171,10 +171,10 @@ public class mod_IFI_Figure extends BaseMod {
 					guiClassMap.put(pName, lclass1);
 				}
 				serverMap.put(pName, lserver);
-				Debug("success:%s", pName);
+				Debug("LoadGUI success:%s", pName);
 				return;
 			}
-			Debug("fali:%s", pName);
+			Debug("LoadGUI fali:%s", pName);
 		}
 	}
 
