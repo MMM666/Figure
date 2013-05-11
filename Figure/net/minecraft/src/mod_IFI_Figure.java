@@ -89,6 +89,8 @@ public class mod_IFI_Figure extends BaseMod {
 		
 		// パケットチャンネル追加
 		ModLoader.registerPacketChannel(this, "IFI|Upd");
+		// 特殊レンダラの追加
+		MMM_ItemRenderManager.setEXRender(figure, IFI_Client.instance);
 	}
 
 	@Override

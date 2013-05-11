@@ -129,26 +129,4 @@ public class IFI_ItemFigure extends Item {
 		return (EntityLiving)entityStringMap.get(EntityList.getStringFromID(pIndex));
 	}
 
-	// “ÁêƒŒƒ“ƒ_[
-	public boolean renderItem(EntityLiving pEntity, ItemStack pItemstack, int pIndex) {
-		return IFI_Client.renderItem(pEntity, pItemstack, pIndex);
-	}
-
-	public boolean renderItemInFirstPerson(float pDelta, MMM_IItemRenderer pItemRenderer) {
-		firstPerson = pItemRenderer.getItemToRender();
-		return IFI_Client.renderItemInFirstPerson(pDelta, pItemRenderer);
-	}
-
-	public String getRenderTexture() {
-		return null;
-	}
-
-	public boolean drawItemIntoGui(FontRenderer fontrenderer, RenderEngine renderengine, int i, int j, int k, int l, int i1) {
-		return IFI_Client.drawItemIntoGui(fontrenderer, renderengine, i, j, k, l, i1);
-	}
-
-	public boolean isRenderItemWorld() {
-		return true;
-	}
-
 }

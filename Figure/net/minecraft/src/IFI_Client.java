@@ -12,7 +12,11 @@ import org.lwjgl.opengl.GL11;
 /**
  * Client側専用の処理
  */
-public class IFI_Client {
+public class IFI_Client implements MMM_IItemRenderManager {
+
+	public static IFI_Client instance = new IFI_Client();
+
+
 
 	public static void setZoomRate() {
 		String s[] = mod_IFI_Figure.zoomRate.split(",");
@@ -126,7 +130,8 @@ public class IFI_Client {
 		ModLoader.openGUI(pPlayer, IFI_Client.getGui(pFigure));
 	}
 
-	public static boolean renderItem(EntityLiving pEntity, ItemStack pItemstack, int pIndex) {
+	@Override
+	public boolean renderItem(EntityLiving pEntity, ItemStack pItemstack, int pIndex) {
 		//特殊レンダーへ
 //		if (pItemstack.getItemDamage() == 0 || IFI_ItemFigure.fentityFigure.renderEntity == null) {
 		if (pItemstack.getItemDamage() == 0) {
@@ -160,12 +165,18 @@ public class IFI_Client {
 		return true;
 	}
 
-	public static boolean renderItemInFirstPerson(float pDelta, MMM_IItemRenderer pItemRenderer) {
+	@Override
+	public boolean renderItemInFirstPerson(float pDelta, MMM_ItemRenderer pItemRenderer) {
 		// 元のコード丸パクリ
+		IFI_ItemFigure.firstPerson = pItemRenderer.getItemToRender();
 		return false;
 	}
 
-	public static boolean drawItemIntoGui(FontRenderer fontrenderer, RenderEngine renderengine, int i, int j, int k, int l, int i1) {
+	public String getRenderTexture() {
+		return null;
+	}
+
+	public boolean drawItemIntoGui(FontRenderer fontrenderer, RenderEngine renderengine, int i, int j, int k, int l, int i1) {
 		if  (j != 0) {
 			// 特殊レンダーGUI内部
 			GL11.glPushMatrix();
@@ -187,6 +198,10 @@ public class IFI_Client {
 		} else {
 			return false;
 		}
+	}
+
+	public boolean isRenderItemWorld() {
+		return true;
 	}
 
 }
