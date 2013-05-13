@@ -16,8 +16,8 @@ public class IFI_ServerFigure_LittleMaid extends IFI_ServerFigure {
 				(lentity.mstatAimeBow ? 4 : 0);
 		pData.writeByte(lf);
 		pData.writeByte(lentity.maidColor);
-		lentity.textureIndex = MMM_TextureManager.getStringToIndex(lentity.textureName);
-		lentity.textureArmorIndex = MMM_TextureManager.getStringToIndex(lentity.textureArmorName);
+		lentity.textureIndex = MMM_TextureManager.getIndexTextureBoxServer(lentity, lentity.textureName);
+		lentity.textureArmorIndex = MMM_TextureManager.getIndexTextureBoxServer(lentity, lentity.textureArmorName);
 		pData.writeInt(lentity.textureIndex);
 		pData.writeInt(lentity.textureArmorIndex);
 		mod_IFI_Figure.Debug("tex-s: %d,  %d : %d", lentity.textureArmorIndex, lentity.textureArmorIndex, lentity.maidColor);
@@ -35,8 +35,8 @@ public class IFI_ServerFigure_LittleMaid extends IFI_ServerFigure {
 		lentity.setOwner(lentity.maidContract ? "Figure" : "");
 		lentity.mstatAimeBow = (lf & 4) != 0;
 		lentity.updateAimebow();
-		lentity.maidColor = pData.readByte();
-		lentity.setTextureIndex(pData.readInt(), pData.readInt());
+//		lentity.maidColor = pData.readByte();
+		lentity.setTexturePackIndex(pData.readByte(), new int[] {pData.readInt(), pData.readInt()});
 		mod_IFI_Figure.Debug("tex-r: %d,  %d : %d", lentity.textureArmorIndex, lentity.textureArmorIndex, lentity.maidColor);
 		LMM_Client.setTextureValue(lentity);
 		
