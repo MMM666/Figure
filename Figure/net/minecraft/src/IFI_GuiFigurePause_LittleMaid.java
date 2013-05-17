@@ -41,8 +41,8 @@ public class IFI_GuiFigurePause_LittleMaid extends IFI_GuiFigurePause {
 			}
 		}
 		
-		bt100 = new GuiButton(100, width / 2 - 120, height / 6 + 120 + 12, 240, 20, elm.textureName);
-		bt101 = new GuiButton(101, width / 2 - 120, height / 6 + 144 + 12, 240, 20, elm.textureArmorName);
+		bt100 = new GuiButton(100, width / 2 - 120, height / 6 + 120 + 12, 240, 20, elm.textureBox[0].textureName);
+		bt101 = new GuiButton(101, width / 2 - 120, height / 6 + 144 + 12, 240, 20, elm.textureBox[1].textureName);
 		buttonList.add(bt100);
 		buttonList.add(bt101);
 		buttonList.add(new GuiButton(160, width / 2 - 140, height / 6 + 0 + 12, 80, 20, "TextureSelect"));
@@ -75,21 +75,21 @@ public class IFI_GuiFigurePause_LittleMaid extends IFI_GuiFigurePause {
 		}
 		if (guibutton.id == 100) {
 			if (Keyboard.isKeyDown(42) || Keyboard.isKeyDown(54)) {
-				LMM_Client.setPrevTexturePackege(elm, 0);
+				elm.setPrevTexturePackege(0);
 			} else {
-				LMM_Client.setNextTexturePackege(elm, 0);
+				elm.setNextTexturePackege(0);
 			}
 		}
 		if (guibutton.id == 101) {
 			if (Keyboard.isKeyDown(42) || Keyboard.isKeyDown(54)) {
-				LMM_Client.setPrevTexturePackege(elm, 1);
+				elm.setPrevTexturePackege(1);
 			} else {
-				LMM_Client.setNextTexturePackege(elm, 1);
+				elm.setNextTexturePackege(1);
 			}
 		}
 		if (guibutton.id == 102) {
 			// êFÇ™Ç†ÇÈÇ©Çåüçı
-			MMM_TextureBox lbox = MMM_TextureManager.getTextureBox(elm.textureName);
+			MMM_TextureBox lbox = MMM_TextureManager.getTextureBox(elm.textureBox[0].textureName);
 			int i = 0;
 			int j = !elm.maidContract ? 0 : MMM_TextureManager.tx_wild;
 			for (i = elm.maidColor; i < 16; i++) {
@@ -124,7 +124,7 @@ public class IFI_GuiFigurePause_LittleMaid extends IFI_GuiFigurePause {
 			}
 		}
 		if (guibutton.id == 103) {
-			MMM_TextureBox lbox = MMM_TextureManager.getTextureBox(elm.textureName);
+			MMM_TextureBox lbox = MMM_TextureManager.getTextureBox(elm.textureBox[0].textureName);
 			
 			int i = 0;
 			int j = elm.maidContract ? 0 : MMM_TextureManager.tx_wild;
@@ -191,9 +191,9 @@ public class IFI_GuiFigurePause_LittleMaid extends IFI_GuiFigurePause {
 			guibutton.displayString = "texture";
 		}
 
-		bt100.displayString = elm.textureName;
-		bt101.displayString = elm.textureArmorName;
-		LMM_Client.setTextureValue(elm);
+		bt100.displayString = elm.textureBox[0].textureName;
+		bt101.displayString = elm.textureBox[1].textureName;
+		elm.setTextureNames();
 	}
 
 	@Override
