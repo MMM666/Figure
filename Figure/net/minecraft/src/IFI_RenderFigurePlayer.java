@@ -1,5 +1,7 @@
 package net.minecraft.src;
 
+import org.lwjgl.opengl.GL11;
+
 public class IFI_RenderFigurePlayer extends RenderBiped {
 
 	private ModelBiped modelBipedMain;
@@ -12,6 +14,13 @@ public class IFI_RenderFigurePlayer extends RenderBiped {
 		modelBipedMain = (ModelBiped) mainModel;
 		modelArmorChestplate = new ModelBiped(1.0F);
 		modelArmor = new ModelBiped(0.5F);
+	}
+
+	@Override
+	protected void preRenderCallback(EntityLiving par1EntityLiving, float par2) {
+		super.preRenderCallback(par1EntityLiving, par2);
+		float var3 = 0.9375F;
+		GL11.glScalef(var3, var3, var3);
 	}
 
 	public void doRenderFigurePlayer(IFI_EntityFigurePlayer entityfigureplayer,

@@ -20,7 +20,8 @@ public class IFI_ServerFigure_LittleMaid extends IFI_ServerFigure {
 		lentity.textureIndex[1] = MMM_TextureManager.getIndexTextureBoxServer(lentity, lentity.textureBox[1].textureName);
 		pData.writeInt(lentity.textureIndex[0]);
 		pData.writeInt(lentity.textureIndex[1]);
-		mod_IFI_Figure.Debug("tex-s: %d,  %d : %d", lentity.textureIndex[0], lentity.textureIndex[1], lentity.maidColor);
+		mod_IFI_Figure.Debug("tex-s(%s): %d,  %d : %d", pFigure.worldObj.isRemote ? "CL->SV" : "SV->CL", 
+				lentity.textureIndex[0], lentity.textureIndex[1], lentity.maidColor);
 	}
 
 	@Override
@@ -35,10 +36,19 @@ public class IFI_ServerFigure_LittleMaid extends IFI_ServerFigure {
 		lentity.setOwner(lentity.maidContract ? "Figure" : "");
 		lentity.mstatAimeBow = (lf & 4) != 0;
 		lentity.updateAimebow();
-//		lentity.maidColor = pData.readByte();
-		lentity.setTexturePackIndex(pData.readByte(), new int[] {pData.readInt(), pData.readInt()});
-		mod_IFI_Figure.Debug("tex-r: %d,  %d : %d", lentity.textureIndex[0], lentity.textureIndex[1], lentity.maidColor);
-		lentity.setTextureNames();
+		lentity.maidColor = pData.readByte();
+		lentity.textureIndex[0] = pData.readInt();
+		lentity.textureIndex[1] = pData.readInt();
+		if (pFigure.worldObj.isRemote) {
+			// Client
+			MMM_TextureManager.postGetTexturePack(lentity, lentity.textureIndex);
+		} else {
+			// Server
+			lentity.setTexturePackIndex(lentity.maidColor, lentity.textureIndex);
+		}
+		mod_IFI_Figure.Debug("tex-r(%s): %d,  %d : %d",
+				pFigure.worldObj.isRemote ? "SV->CL" : "CL->SV",
+				lentity.textureIndex[0], lentity.textureIndex[1], lentity.maidColor);
 		
 //		lentity.setDominantArm(0);
 //		lentity.setEquipItem(0, 0);

@@ -36,6 +36,7 @@ public class IFI_ServerFigure {
 			sendData(pFigure, lds);
 			return lba.toByteArray();
 		} catch (Exception e) {
+			e.printStackTrace();
 			return null;
 		}
 	}
@@ -64,6 +65,8 @@ public class IFI_ServerFigure {
 				reciveData(pFigure, lds);
 				pFigure.setZoom(pFigure.zoom);
 			} catch (Exception e) {
+				e.printStackTrace();
+//				mod_IFI_Figure.Debug("reciveData abort.");
 			}
 		}
 	}
@@ -82,12 +85,14 @@ public class IFI_ServerFigure {
 			if (pClient) {
 				IFI_Client.sendToServer(lpacket);
 				mod_IFI_Figure.Debug("ItemSet ID:%d, Slot:%d, Item:%s Client.",
-						pFigure.entityId, pIndex, litemstack.toString());
+						pFigure.entityId, pIndex,
+						litemstack == null ? "NULL" : litemstack.toString());
 			} else {
 				((WorldServer)pFigure.worldObj).getEntityTracker().sendPacketToAllPlayersTrackingEntity(pFigure, lpacket);
 				mod_IFI_Figure.Debug("ItemSetToAllClient.");
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -102,8 +107,10 @@ public class IFI_ServerFigure {
 			lslotid3 = ldi3.readByte();
 			lis3 = Packet.readItemStack(ldi3);
 			pFigure.renderEntity.setCurrentItemOrArmor(lslotid3, lis3);
-			mod_IFI_Figure.Debug("ItemSet ID:%d, Slot:%d, Item:%s", pFigure.entityId, lslotid3, lis3.toString());
+			mod_IFI_Figure.Debug("ItemSet ID:%d, Slot:%d, Item:%s",
+					pFigure.entityId, lslotid3, lis3 == null ? "NULL" : lis3.toString());
 		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 

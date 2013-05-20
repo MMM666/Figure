@@ -57,14 +57,14 @@ public class IFI_GuiFigurePause_LittleMaid extends IFI_GuiFigurePause {
 		buttonList.add(new GuiButton(111, width / 2 - 140, height / 6 + 72 + 12, 20, 20, "+"));
 		buttonList.add(new GuiButton(112, width / 2 - 80, height / 6 + 72 + 12, 20, 20, "-"));
 		
-//		elm.textureIndex = MMM_TextureManager.getStringToIndex(elm.textureName);
-//		elm.textureArmorIndex = MMM_TextureManager.getStringToIndex(elm.textureArmorName);
 		elm.mstatMaskSelect = 16;
 		elm.setDominantArm(0);
 		elm.setEquipItem(0, 0);
 		elm.setEquipItem(1, 1);
 		elm.checkMaskedMaid();
 		elm.checkHeadMount();
+		elm.sendTextureToServer();
+//		elm.setTexturePackName(elm.textureBox);
 	}
 
 	protected void actionPerformed(GuiButton guibutton) {
@@ -107,15 +107,6 @@ public class IFI_GuiFigurePause_LittleMaid extends IFI_GuiFigurePause {
 			if (i < 16) {
 				// Œ_–ñó‘ÔÝ’è
 				elm.maidContract = !elm.maidContract;
-				// elm.setMaidContract(!elm.isMaidContract());// —Ž‚¿‚é
-				// byte byte0 = elm.dataWatcher.getWatchableObjectByte(16);
-				// if(!elm.isMaidContract()) {
-				// elm.dataWatcher.updateObject(16, Byte.valueOf((byte)(byte0 |
-				// 4)));
-				// } else {
-				// elm.dataWatcher.updateObject(16, Byte.valueOf((byte)(byte0 &
-				// -5)));
-				// }
 				elm.setOwner(elm.maidContract ? "Figure" : "");
 				guibutton.displayString = button102[elm.maidContract ? 0 : 1];
 				elm.setMaidColor(i);
@@ -129,7 +120,7 @@ public class IFI_GuiFigurePause_LittleMaid extends IFI_GuiFigurePause {
 			int i = 0;
 			int j = elm.maidContract ? 0 : MMM_TextureManager.tx_wild;
 			if (Keyboard.isKeyDown(42) || Keyboard.isKeyDown(54)) {
-				for (i = elm.getMaidColor() - 1; i >= 0; i--) {
+				for (i = elm.maidColor - 1; i >= 0; i--) {
 					if (lbox.hasColor(i + j)) {
 						break;
 					}
@@ -142,7 +133,7 @@ public class IFI_GuiFigurePause_LittleMaid extends IFI_GuiFigurePause {
 					}
 				}
 			} else {
-				for (i = elm.getMaidColor() + 1; i < 16; i++) {
+				for (i = elm.maidColor + 1; i < 16; i++) {
 					if (lbox.hasColor(i + j)) {
 						break;
 					}
@@ -156,7 +147,8 @@ public class IFI_GuiFigurePause_LittleMaid extends IFI_GuiFigurePause {
 				}
 			}
 			elm.setMaidColor(i);
-			bt103.displayString = String.format("Color : %x", elm.getMaidColor());
+			elm.setTextureNames();
+			bt103.displayString = String.format("Color : %x", elm.maidColor);
 		}
 		if (guibutton.id == 104) {
 			if (elm.isMaidWait()) {
@@ -185,12 +177,11 @@ public class IFI_GuiFigurePause_LittleMaid extends IFI_GuiFigurePause {
 				armorDamage--;
 		}
 		bt110.displayString = String.format("%d", armorDamage);
-
+		
 		if (guibutton.id == 160) {
 			mc.displayGuiScreen(new LMM_GuiTextureSelect(this, elm, 0xffff, false));
-			guibutton.displayString = "texture";
 		}
-
+		
 		bt100.displayString = elm.textureBox[0].textureName;
 		bt101.displayString = elm.textureBox[1].textureName;
 		elm.setTextureNames();

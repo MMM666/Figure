@@ -51,20 +51,21 @@ public class mod_IFI_Figure extends BaseMod {
 
 	@Override
 	public String getVersion() {
-		return "1.5.2-1";
+		return "1.5.2-2";
 	}
 
 	@Override
 	public void load() {
 		// MMMLibのRevisionチェック
-		MMM_Helper.checkRevision("1");
+		MMM_Helper.checkRevision("2");
 		
 		figure = new IFI_ItemFigure(ItemID - 256).setUnlocalizedName("Figure");
-		int lentityid = MMM_Helper.getNextEntityID(false);
 		classFigure = MMM_Helper.getForgeClass(this, "IFI_EntityFigure");
-		ModLoader.registerEntityID(classFigure, "Figure", lentityid);
+		MMM_Helper.registerEntity(classFigure, "Figure", 0, this, 80, 10, false);
+//		int lentityid = MMM_Helper.getNextEntityID(false);
+//		ModLoader.registerEntityID(classFigure, "Figure", lentityid);
 		// これはForge用ID的な意味で。
-		ModLoader.addEntityTracker(this, classFigure, lentityid, 64, 10, false);
+//		ModLoader.addEntityTracker(this, classFigure, lentityid, 64, 10, false);
 		try {
 			IFI_ItemFigure.fentityFigure = getEntityFigure(null);
 		} catch (Exception e) {
@@ -82,9 +83,10 @@ public class mod_IFI_Figure extends BaseMod {
 		
 		// プレーヤースキン表示用MOBの追加
 		if (isFigurePlayer) {
-			UniqueEntityIdFigurePlayer = UniqueEntityIdFigurePlayer == 0 ?
-					MMM_Helper.getNextEntityID(true) : UniqueEntityIdFigurePlayer;
-			ModLoader.registerEntityID(IFI_EntityFigurePlayer.class, "FigurePlayer", UniqueEntityIdFigurePlayer);
+			MMM_Helper.registerEntity(IFI_EntityFigurePlayer.class, "FigurePlayer", UniqueEntityIdFigurePlayer, this, 64, 10, false);
+//			UniqueEntityIdFigurePlayer = UniqueEntityIdFigurePlayer == 0 ?
+//					MMM_Helper.getNextEntityID(true) : UniqueEntityIdFigurePlayer;
+//			ModLoader.registerEntityID(IFI_EntityFigurePlayer.class, "FigurePlayer", UniqueEntityIdFigurePlayer);
 		}
 		
 		// パケットチャンネル追加

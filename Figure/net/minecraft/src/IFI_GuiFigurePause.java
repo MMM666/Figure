@@ -24,6 +24,7 @@ public class IFI_GuiFigurePause extends GuiScreen {
 	protected String button16[] = { "A", "C" };
 	protected MMM_GuiSlider figureYaw;
 
+
 	public IFI_GuiFigurePause(IFI_EntityFigure entityfigure) {
 		screenTitle = "Figure Pause";
 		targetEntity = entityfigure;
@@ -43,7 +44,6 @@ public class IFI_GuiFigurePause extends GuiScreen {
 					mod_IFI_Figure.getServerFigure(targetEntity).getData(targetEntity)));
 			mod_IFI_Figure.Debug("DataSendToServer.");
 			mod_IFI_Figure.getServerFigure(targetEntity).sendItems(targetEntity, true);
-//			targetEntity.setPosition(targetEntity.posX, targetEntity.posY, targetEntity.posZ);
 		}
 		super.keyTyped(par1, par2);
 	}
