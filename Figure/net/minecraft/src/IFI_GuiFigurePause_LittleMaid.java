@@ -74,18 +74,42 @@ public class IFI_GuiFigurePause_LittleMaid extends IFI_GuiFigurePause {
 			return;
 		}
 		if (guibutton.id == 100) {
+			MMM_TextureBox lbox[] = new MMM_TextureBox[2];
 			if (Keyboard.isKeyDown(42) || Keyboard.isKeyDown(54)) {
+				elm.setPrevTexturePackege(0);
+				lbox[0] = (MMM_TextureBox)elm.textureBox[0];
+				lbox[1] = (MMM_TextureBox)elm.textureBox[1];
 				elm.setPrevTexturePackege(0);
 			} else {
 				elm.setNextTexturePackege(0);
+				lbox[0] = (MMM_TextureBox)elm.textureBox[0];
+				lbox[1] = (MMM_TextureBox)elm.textureBox[1];
+				elm.setPrevTexturePackege(0);
 			}
+			MMM_TextureManager.checkTextureBoxServer((MMM_TextureBox)elm.textureBox[0]);
+			elm.textureBox[0] = lbox[0];
+			elm.textureBox[1] = lbox[1];
+			elm.textureIndex[0] = MMM_TextureManager.getIndexTextureBoxServerIndex(lbox[0]);
+			elm.textureIndex[1] = MMM_TextureManager.getIndexTextureBoxServerIndex(lbox[1]);
 		}
 		if (guibutton.id == 101) {
+			MMM_TextureBox lbox[] = new MMM_TextureBox[2];
 			if (Keyboard.isKeyDown(42) || Keyboard.isKeyDown(54)) {
+				elm.setPrevTexturePackege(1);
+				lbox[0] = (MMM_TextureBox)elm.textureBox[0];
+				lbox[1] = (MMM_TextureBox)elm.textureBox[1];
 				elm.setPrevTexturePackege(1);
 			} else {
 				elm.setNextTexturePackege(1);
+				lbox[0] = (MMM_TextureBox)elm.textureBox[0];
+				lbox[1] = (MMM_TextureBox)elm.textureBox[1];
+				elm.setPrevTexturePackege(1);
 			}
+			MMM_TextureManager.checkTextureBoxServer((MMM_TextureBox)elm.textureBox[1]);
+			elm.textureBox[0] = lbox[0];
+			elm.textureBox[1] = lbox[1];
+			elm.textureIndex[0] = MMM_TextureManager.getIndexTextureBoxServerIndex(lbox[0]);
+			elm.textureIndex[1] = MMM_TextureManager.getIndexTextureBoxServerIndex(lbox[1]);
 		}
 		if (guibutton.id == 102) {
 			// êFÇ™Ç†ÇÈÇ©Çåüçı

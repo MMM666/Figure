@@ -91,8 +91,10 @@ public class mod_IFI_Figure extends BaseMod {
 		
 		// パケットチャンネル追加
 		ModLoader.registerPacketChannel(this, "IFI|Upd");
-		// 特殊レンダラの追加
-		MMM_ItemRenderManager.setEXRender(figure, IFI_Client.instance);
+		if (MMM_Helper.isClient) {
+			// 特殊レンダラの追加
+			MMM_ItemRenderManager.setEXRender(figure, IFI_Client.instance);
+		}
 	}
 
 	@Override
@@ -170,7 +172,7 @@ public class mod_IFI_Figure extends BaseMod {
 				lserver = (IFI_ServerFigure)lclass2.newInstance();
 			} catch (Exception e) {
 			}
-			if ((MMM_Helper.isClient || lclass1 != null) && lserver != null) {
+			if ((!MMM_Helper.isClient || lclass1 != null) && lserver != null) {
 				if (MMM_Helper.isClient) {
 					guiClassMap.put(pName, lclass1);
 				}
@@ -250,6 +252,7 @@ public class mod_IFI_Figure extends BaseMod {
 			
 		case IFI_Server_UpadteFigure:
 			// クライアントから姿勢制御データ要求を受信
+			Debug("RequestFromClient(%d:%s).", lfigure.entityId, lserver.getClass().getSimpleName());
 			ModLoader.serverSendPacket(var1, 
 					new Packet250CustomPayload("IFI|Upd", lserver.getData(lfigure)));
 			Debug("DataSendToClient.");

@@ -47,9 +47,9 @@ public class IFI_ServerFigure {
 				ByteArrayInputStream lba = new ByteArrayInputStream(pData);
 				DataInputStream lds = new DataInputStream(lba);
 				EntityLiving lel = pFigure.renderEntity;
-				lds.readByte(); // IFI_Packet_Data);
-				lds.readInt(); // pFigure.entityId;
-				lds.readByte(); // UpdateCount
+				lds.readByte();	// IFI_Packet_Data);
+				lds.readInt();	// pFigure.entityId;
+				lds.readByte();	// UpdateCount
 				pFigure.additionalYaw = lds.readFloat();
 				pFigure.zoom = lds.readFloat();
 				int lf = lds.readByte(); // Flags

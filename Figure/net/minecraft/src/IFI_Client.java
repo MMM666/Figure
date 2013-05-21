@@ -46,8 +46,8 @@ public class IFI_Client implements MMM_IItemRenderManager {
 		switch (var2.data[0]) {
 		case IFI_Packet_Data:
 			// サーバーから姿勢制御データ等を受信
+			mod_IFI_Figure.Debug("DataSet ID:%d(size:%d) Client.", lentity.entityId, var2.data.length);
 			lserver.setData((IFI_EntityFigure)lentity, var2.data);
-			mod_IFI_Figure.Debug("DataSet ID:%d Client.", lentity.entityId);
 			break;
 			
 		case IFI_Packet_UpadteItem:

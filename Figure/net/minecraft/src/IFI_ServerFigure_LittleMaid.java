@@ -16,8 +16,8 @@ public class IFI_ServerFigure_LittleMaid extends IFI_ServerFigure {
 				(lentity.mstatAimeBow ? 4 : 0);
 		pData.writeByte(lf);
 		pData.writeByte(lentity.maidColor);
-		lentity.textureIndex[0] = MMM_TextureManager.getIndexTextureBoxServer(lentity, lentity.textureBox[0].textureName);
-		lentity.textureIndex[1] = MMM_TextureManager.getIndexTextureBoxServer(lentity, lentity.textureBox[1].textureName);
+//		lentity.textureIndex[0] = MMM_TextureManager.getIndexTextureBoxServer(lentity, lentity.textureBox[0].textureName);
+//		lentity.textureIndex[1] = MMM_TextureManager.getIndexTextureBoxServer(lentity, lentity.textureBox[1].textureName);
 		pData.writeInt(lentity.textureIndex[0]);
 		pData.writeInt(lentity.textureIndex[1]);
 		mod_IFI_Figure.Debug("tex-s(%s): %d,  %d : %d", pFigure.worldObj.isRemote ? "CL->SV" : "SV->CL", 
