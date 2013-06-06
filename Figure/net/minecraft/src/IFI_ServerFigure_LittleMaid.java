@@ -41,7 +41,7 @@ public class IFI_ServerFigure_LittleMaid extends IFI_ServerFigure {
 		lentity.textureIndex[1] = pData.readInt();
 		if (pFigure.worldObj.isRemote) {
 			// Client
-			MMM_TextureManager.postGetTexturePack(lentity, lentity.textureIndex);
+			MMM_TextureManager.instance.postGetTexturePack(lentity, lentity.textureIndex);
 		} else {
 			// Server
 			lentity.setTexturePackIndex(lentity.maidColor, lentity.textureIndex);

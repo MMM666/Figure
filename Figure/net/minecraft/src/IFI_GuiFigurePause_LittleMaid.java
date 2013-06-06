@@ -86,11 +86,11 @@ public class IFI_GuiFigurePause_LittleMaid extends IFI_GuiFigurePause {
 				lbox[1] = (MMM_TextureBox)elm.textureBox[1];
 				elm.setPrevTexturePackege(0);
 			}
-			MMM_TextureManager.checkTextureBoxServer((MMM_TextureBox)elm.textureBox[0]);
+			MMM_TextureManager.instance.checkTextureBoxServer((MMM_TextureBox)elm.textureBox[0]);
 			elm.textureBox[0] = lbox[0];
 			elm.textureBox[1] = lbox[1];
-			elm.textureIndex[0] = MMM_TextureManager.getIndexTextureBoxServerIndex(lbox[0]);
-			elm.textureIndex[1] = MMM_TextureManager.getIndexTextureBoxServerIndex(lbox[1]);
+			elm.textureIndex[0] = MMM_TextureManager.instance.getIndexTextureBoxServerIndex(lbox[0]);
+			elm.textureIndex[1] = MMM_TextureManager.instance.getIndexTextureBoxServerIndex(lbox[1]);
 		}
 		if (guibutton.id == 101) {
 			MMM_TextureBox lbox[] = new MMM_TextureBox[2];
@@ -105,15 +105,15 @@ public class IFI_GuiFigurePause_LittleMaid extends IFI_GuiFigurePause {
 				lbox[1] = (MMM_TextureBox)elm.textureBox[1];
 				elm.setPrevTexturePackege(1);
 			}
-			MMM_TextureManager.checkTextureBoxServer((MMM_TextureBox)elm.textureBox[1]);
+			MMM_TextureManager.instance.checkTextureBoxServer((MMM_TextureBox)elm.textureBox[1]);
 			elm.textureBox[0] = lbox[0];
 			elm.textureBox[1] = lbox[1];
-			elm.textureIndex[0] = MMM_TextureManager.getIndexTextureBoxServerIndex(lbox[0]);
-			elm.textureIndex[1] = MMM_TextureManager.getIndexTextureBoxServerIndex(lbox[1]);
+			elm.textureIndex[0] = MMM_TextureManager.instance.getIndexTextureBoxServerIndex(lbox[0]);
+			elm.textureIndex[1] = MMM_TextureManager.instance.getIndexTextureBoxServerIndex(lbox[1]);
 		}
 		if (guibutton.id == 102) {
 			// êFÇ™Ç†ÇÈÇ©Çåüçı
-			MMM_TextureBox lbox = MMM_TextureManager.getTextureBox(elm.textureBox[0].textureName);
+			MMM_TextureBox lbox = MMM_TextureManager.instance.getTextureBox(elm.textureBox[0].textureName);
 			int i = 0;
 			int j = !elm.maidContract ? 0 : MMM_TextureManager.tx_wild;
 			for (i = elm.maidColor; i < 16; i++) {
@@ -139,7 +139,7 @@ public class IFI_GuiFigurePause_LittleMaid extends IFI_GuiFigurePause {
 			}
 		}
 		if (guibutton.id == 103) {
-			MMM_TextureBox lbox = MMM_TextureManager.getTextureBox(elm.textureBox[0].textureName);
+			MMM_TextureBox lbox = MMM_TextureManager.instance.getTextureBox(elm.textureBox[0].textureName);
 			
 			int i = 0;
 			int j = elm.maidContract ? 0 : MMM_TextureManager.tx_wild;
