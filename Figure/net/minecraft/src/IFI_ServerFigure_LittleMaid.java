@@ -12,12 +12,15 @@ public class IFI_ServerFigure_LittleMaid extends IFI_ServerFigure {
 		super.sendData(pFigure, pData);
 		LMM_EntityLittleMaid lentity = (LMM_EntityLittleMaid)pFigure.renderEntity;
 		int lf = (lentity.maidWait ? 1 : 0) |
-				(lentity.isMaidContract() ? 2 : 0) |
+				(lentity.isContract() ? 2 : 0) |
 				(lentity.mstatAimeBow ? 4 : 0);
 		pData.writeByte(lf);
 		pData.writeByte(lentity.maidColor);
-//		lentity.textureIndex[0] = MMM_TextureManager.getIndexTextureBoxServer(lentity, lentity.textureBox[0].textureName);
-//		lentity.textureIndex[1] = MMM_TextureManager.getIndexTextureBoxServer(lentity, lentity.textureBox[1].textureName);
+		if (pFigure.worldObj.isRemote) {
+			lentity.textureIndex[0] = MMM_TextureManager.instance.getIndexTextureBoxServerIndex((MMM_TextureBox)lentity.textureBox[0]);
+			lentity.textureIndex[1] = MMM_TextureManager.instance.getIndexTextureBoxServerIndex((MMM_TextureBox)lentity.textureBox[1]);
+//			lentity.textureIndex[1] = MMM_TextureManager.instance.getIndexTextureBoxServer(lentity, lentity.textureBox[1].textureName);
+		}
 		pData.writeInt(lentity.textureIndex[0]);
 		pData.writeInt(lentity.textureIndex[1]);
 		mod_IFI_Figure.Debug("tex-s(%s): %d,  %d : %d", pFigure.worldObj.isRemote ? "CL->SV" : "SV->CL", 
@@ -32,7 +35,7 @@ public class IFI_ServerFigure_LittleMaid extends IFI_ServerFigure {
 		int lf = pData.readByte();
 		lentity.setMaidWait((lf & 1) != 0);
 		lentity.maidContract = (lf & 2) != 0;
-		lentity.setMaidContract(lentity.maidContract);
+		lentity.setContract(lentity.maidContract);
 		lentity.setOwner(lentity.maidContract ? "Figure" : "");
 		lentity.mstatAimeBow = (lf & 4) != 0;
 		lentity.updateAimebow();
@@ -67,6 +70,7 @@ public class IFI_ServerFigure_LittleMaid extends IFI_ServerFigure {
 		lentity.setEquipItem(1, 1);
 		lentity.checkMaskedMaid();
 		lentity.checkHeadMount();
+//		lentity.setTextureNames();
 	}
 
 	@Override

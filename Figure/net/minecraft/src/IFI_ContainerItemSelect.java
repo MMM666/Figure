@@ -21,10 +21,10 @@ public class IFI_ContainerItemSelect extends Container {
 						var3 * 9 + var4, 9 + var4 * 18, 18 + var3 * 18));
 			}
 		}
-		this.addSlotToContainer(new SlotArmor(null, IFI_GuiItemSelect.inventoryItem, 0, 9 + 0 * 18, 112, 0));
-		this.addSlotToContainer(new SlotArmor(null, IFI_GuiItemSelect.inventoryItem, 1, 9 + 1 * 18, 112, 1));
-		this.addSlotToContainer(new SlotArmor(null, IFI_GuiItemSelect.inventoryItem, 2, 9 + 2 * 18, 112, 2));
-		this.addSlotToContainer(new SlotArmor(null, IFI_GuiItemSelect.inventoryItem, 3, 9 + 3 * 18, 112, 3));
+		this.addSlotToContainer(new MMM_SlotArmor(this, IFI_GuiItemSelect.inventoryItem, 0, 9 + 0 * 18, 112, 0));
+		this.addSlotToContainer(new MMM_SlotArmor(this, IFI_GuiItemSelect.inventoryItem, 1, 9 + 1 * 18, 112, 1));
+		this.addSlotToContainer(new MMM_SlotArmor(this, IFI_GuiItemSelect.inventoryItem, 2, 9 + 2 * 18, 112, 2));
+		this.addSlotToContainer(new MMM_SlotArmor(this, IFI_GuiItemSelect.inventoryItem, 3, 9 + 3 * 18, 112, 3));
 		for (var3 = 4; var3 < 9; ++var3) {
 			this.addSlotToContainer(new Slot(IFI_GuiItemSelect.inventoryItem, var3, 9 + var3 * 18, 112));
 		}

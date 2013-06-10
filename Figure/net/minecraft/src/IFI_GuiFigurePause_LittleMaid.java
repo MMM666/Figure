@@ -133,9 +133,8 @@ public class IFI_GuiFigurePause_LittleMaid extends IFI_GuiFigurePause {
 				elm.maidContract = !elm.maidContract;
 				elm.setOwner(elm.maidContract ? "Figure" : "");
 				guibutton.displayString = button102[elm.maidContract ? 0 : 1];
-				elm.setMaidColor(i);
-				bt103.displayString = String.format("Color : %x",
-						elm.getMaidColor());
+				elm.setColor(i);
+				bt103.displayString = String.format("Color : %x", elm.getColor());
 			}
 		}
 		if (guibutton.id == 103) {
@@ -170,7 +169,7 @@ public class IFI_GuiFigurePause_LittleMaid extends IFI_GuiFigurePause {
 					}
 				}
 			}
-			elm.setMaidColor(i);
+			elm.setColor(i);
 			elm.setTextureNames();
 			bt103.displayString = String.format("Color : %x", elm.maidColor);
 		}
@@ -203,7 +202,7 @@ public class IFI_GuiFigurePause_LittleMaid extends IFI_GuiFigurePause {
 		bt110.displayString = String.format("%d", armorDamage);
 		
 		if (guibutton.id == 160) {
-			mc.displayGuiScreen(new LMM_GuiTextureSelect(this, elm, 0xffff, false));
+			mc.displayGuiScreen(new MMM_GuiTextureSelect(this, elm, 0xffff, false));
 		}
 		
 		bt100.displayString = elm.textureBox[0].textureName;
@@ -215,7 +214,7 @@ public class IFI_GuiFigurePause_LittleMaid extends IFI_GuiFigurePause {
 	public void onGuiClosed() {
 //		elm.textureIndex = MMM_TextureManager.getStringToIndex(elm.textureName);
 //		elm.textureArmorIndex = MMM_TextureManager.getStringToIndex(elm.textureArmorName);
-		elm.setMaidContract(elm.maidContract);
+		elm.setContract(elm.maidContract);
 		super.onGuiClosed();
 	}
 
