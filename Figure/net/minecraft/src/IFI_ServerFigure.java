@@ -20,7 +20,7 @@ public class IFI_ServerFigure {
 		try {
 			ByteArrayOutputStream lba = new ByteArrayOutputStream();
 			DataOutputStream lds = new DataOutputStream(lba);
-			EntityLiving lentity = pFigure.renderEntity;
+			EntityLivingBase lentity = pFigure.renderEntity;
 			lds.writeByte(IFI_Packet_Data);
 			lds.writeInt(pFigure.entityId);
 			lds.writeByte(0); // UpdateCount
@@ -46,7 +46,7 @@ public class IFI_ServerFigure {
 			try {
 				ByteArrayInputStream lba = new ByteArrayInputStream(pData);
 				DataInputStream lds = new DataInputStream(lba);
-				EntityLiving lel = pFigure.renderEntity;
+				EntityLivingBase lel = pFigure.renderEntity;
 				lds.readByte();	// IFI_Packet_Data);
 				lds.readInt();	// pFigure.entityId;
 				lds.readByte();	// UpdateCount

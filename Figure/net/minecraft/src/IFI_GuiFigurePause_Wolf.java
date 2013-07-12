@@ -23,7 +23,7 @@ public class IFI_GuiFigurePause_Wolf extends IFI_GuiFigurePause {
 				height / 6 + 48 + 12, 80, 20, button104[ew.isAngry() ? 0 : 1]));
 
 		buttonList.add(new GuiButton(150, width / 2 - 120,
-				height / 6 + 72 + 12, 40, 20, String.format("%d", ew.health)));
+				height / 6 + 72 + 12, 40, 20, String.format("%d", (int)ew.func_110143_aJ())));
 		buttonList.add(new GuiButton(151, width / 2 - 140,
 				height / 6 + 72 + 12, 20, 20, "+"));
 		buttonList.add(new GuiButton(152, width / 2 - 80,
@@ -53,23 +53,24 @@ public class IFI_GuiFigurePause_Wolf extends IFI_GuiFigurePause {
 			guibutton.displayString = button104[ew.isAngry() ? 0 : 1];
 			break;
 		}
-
+		
+		float lhealth = ew.func_110143_aJ();
 		if (guibutton.id == 150) {
-			ew.health = 10;
+			ew.setEntityHealth(10F);
 		}
 		if (guibutton.id == 151) {
-			if (ew.health < ew.getMaxHealth())
-				ew.health++;
+			if (lhealth < ew.func_110138_aP())
+				ew.heal(1);
 		}
 		if (guibutton.id == 152) {
-			if (ew.health > 0)
-				ew.health--;
+			if (lhealth > 0)
+				ew.heal(-1);
 		}
 		for (int k = 0; k < buttonList.size(); k++) {
 			GuiButton gb = (GuiButton) buttonList.get(k);
 			if (gb.id == 150) {
-				ew.dataWatcher.updateObject(18, Integer.valueOf(ew.health));
-				gb.displayString = String.format("%d", ew.health);
+//				ew.dataWatcher.updateObject(18, Integer.valueOf(ew.health));
+				gb.displayString = String.format("%d", (int)ew.func_110143_aJ());
 			}
 		}
 

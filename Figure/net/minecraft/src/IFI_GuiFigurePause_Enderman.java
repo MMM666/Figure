@@ -50,7 +50,7 @@ public class IFI_GuiFigurePause_Enderman extends IFI_GuiFigurePause {
 		if (guibutton.id == 151) {
 			try {
 				boolean canpic[] = (boolean[]) ModLoader.getPrivateValue(
-						EntityEnderman.class, null, 0);
+						EntityEnderman.class, null, 2);
 				int i = (carringid + 1) & 0xff;
 				while (i != carringid) {
 					if (canpic[i]) {
@@ -65,7 +65,7 @@ public class IFI_GuiFigurePause_Enderman extends IFI_GuiFigurePause {
 		if (guibutton.id == 152) {
 			try {
 				boolean canpic[] = (boolean[]) ModLoader.getPrivateValue(
-						EntityEnderman.class, null, 0);
+						EntityEnderman.class, null, 2);
 				int i = (carringid - 1) & 0xff;
 				while (i != carringid) {
 					if (canpic[i]) {

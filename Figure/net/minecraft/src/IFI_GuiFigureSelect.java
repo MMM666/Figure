@@ -59,7 +59,7 @@ public class IFI_GuiFigureSelect extends MMM_GuiMobSelect {
 	}
 
 	@Override
-	public void clickSlot(int pIndex, boolean pDoubleClick, String pName, EntityLiving pEntity) {
+	public void clickSlot(int pIndex, boolean pDoubleClick, String pName, EntityLivingBase pEntity) {
 		targetFigure.setRenderEntity(pEntity);
 	}
 

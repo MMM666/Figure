@@ -20,8 +20,6 @@ public class IFI_ServerFigure_Ghast extends IFI_ServerFigure {
 		super.reciveData(pFigure, pData);
 		EntityGhast lentity = (EntityGhast)pFigure.renderEntity;
 		lentity.dataWatcher.updateObject(16, (byte)pData.readByte());
-		lentity.texture = lentity.dataWatcher.getWatchableObjectByte(16) != 1
-				? "/mob/ghast.png" : "/mob/ghast_fire.png";
 	}
 
 	@Override

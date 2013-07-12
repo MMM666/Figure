@@ -4,6 +4,8 @@ import org.lwjgl.opengl.GL11;
 
 public class IFI_RenderFigurePlayer extends RenderBiped {
 
+	ResourceLocation ftexDef = new ResourceLocation("assets/minecraft/textures/entity/steve.png");
+
 	private ModelBiped modelBipedMain;
 	private ModelBiped modelArmorChestplate;
 	private ModelBiped modelArmor;
@@ -16,8 +18,12 @@ public class IFI_RenderFigurePlayer extends RenderBiped {
 		modelArmor = new ModelBiped(0.5F);
 	}
 
+	protected ResourceLocation func_110856_a(EntityLiving par1EntityLiving) {
+		return ftexDef;
+	}
+
 	@Override
-	protected void preRenderCallback(EntityLiving par1EntityLiving, float par2) {
+	protected void preRenderCallback(EntityLivingBase par1EntityLiving, float par2) {
 		super.preRenderCallback(par1EntityLiving, par2);
 		float var3 = 0.9375F;
 		GL11.glScalef(var3, var3, var3);

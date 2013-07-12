@@ -131,7 +131,7 @@ public class IFI_Client implements MMM_IItemRenderManager {
 	}
 
 	@Override
-	public boolean renderItem(EntityLiving pEntity, ItemStack pItemstack, int pIndex) {
+	public boolean renderItem(EntityLivingBase pEntity, ItemStack pItemstack, int pIndex) {
 		//特殊レンダーへ
 //		if (pItemstack.getItemDamage() == 0 || IFI_ItemFigure.fentityFigure.renderEntity == null) {
 		if (pItemstack.getItemDamage() == 0) {
@@ -172,10 +172,11 @@ public class IFI_Client implements MMM_IItemRenderManager {
 		return false;
 	}
 
-	public String getRenderTexture() {
+	@Override
+	public ResourceLocation getRenderTexture() {
 		return null;
 	}
-
+/*
 	public boolean drawItemIntoGui(FontRenderer fontrenderer, RenderEngine renderengine, int i, int j, int k, int l, int i1) {
 		if  (j != 0) {
 			// 特殊レンダーGUI内部
@@ -199,7 +200,8 @@ public class IFI_Client implements MMM_IItemRenderManager {
 			return false;
 		}
 	}
-
+*/
+	@Override
 	public boolean isRenderItemWorld() {
 		return true;
 	}

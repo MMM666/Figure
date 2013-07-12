@@ -11,7 +11,7 @@ public class IFI_ServerFigure_Wolf extends IFI_ServerFigure {
 			throws IOException {
 		super.sendData(pFigure, pData);
 		EntityWolf lentity = (EntityWolf)pFigure.renderEntity;
-		pData.writeInt(lentity.getHealth());
+		pData.writeFloat(lentity.func_110143_aJ());
 		int lf = (lentity.isTamed() ? 1 : 0) |
 				(lentity.isAngry() ? 2 : 0);
 		pData.writeByte(lf);
@@ -22,7 +22,7 @@ public class IFI_ServerFigure_Wolf extends IFI_ServerFigure {
 			throws IOException {
 		super.reciveData(pFigure, pData);
 		EntityWolf lentity = (EntityWolf)pFigure.renderEntity;
-		lentity.setEntityHealth(pData.readInt());
+		lentity.setEntityHealth(pData.readFloat());
 		int lf = pData.readByte();
 		lentity.setTamed((lf & 1) != 0);
 		lentity.setAngry((lf & 2) != 0);

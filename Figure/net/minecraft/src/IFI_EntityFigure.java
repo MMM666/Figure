@@ -5,7 +5,7 @@ import java.util.List;
 
 public class IFI_EntityFigure extends Entity {
 
-	public EntityLiving renderEntity;
+	public EntityLivingBase renderEntity;
 	public float zoom;
 	public String mobString;
 	public int mobIndex;
@@ -29,10 +29,10 @@ public class IFI_EntityFigure extends Entity {
 	public IFI_EntityFigure(World world, Entity entity) {
 		this(world);
 		
-		if (!(entity instanceof EntityLiving)) {
+		if (!(entity instanceof EntityLivingBase)) {
 			entity = EntityList.createEntityByName("Zombie", world);
 		}
-		setRenderEntity((EntityLiving) entity);
+		setRenderEntity((EntityLivingBase) entity);
 		IFI_Client.getGui(this);
 	}
 
@@ -54,15 +54,15 @@ public class IFI_EntityFigure extends Entity {
 		if (s != null) {
 			Entity lentity = EntityList.createEntityByName(
 					nbttagcompound.getString("mobString"), worldObj);
-			if (lentity == null || !(lentity instanceof EntityLiving)) {
+			if (lentity == null || !(lentity instanceof EntityLivingBase)) {
 				// ë∂ç›ÇµÇ»Ç¢MOB
 				System.out.println(String.format("figua-lost:%s",
 						nbttagcompound.getString("mobString")));
 //				IFI_ItemFigure.checkCreateEntity(worldObj);
 				lentity = (Entity) IFI_ItemFigure.entityStringMap.values().toArray()[0];
 			}
-			if (lentity instanceof EntityLiving) {
-				EntityLiving lel = (EntityLiving)lentity;
+			if (lentity instanceof EntityLivingBase) {
+				EntityLivingBase lel = (EntityLivingBase)lentity;
 				lel.readFromNBT(nbttagcompound.getCompoundTag("Entity"));
 				lel.dataWatcher.updateObject(0, nbttagcompound.getByte("DataWatcher0"));
 				lel.prevRotationPitch = nbttagcompound.getFloat("prevPitch");
@@ -127,7 +127,7 @@ public class IFI_EntityFigure extends Entity {
 	// }
 
 	@Override
-	public boolean attackEntityFrom(DamageSource damagesource, int i) {
+	public boolean attackEntityFrom(DamageSource damagesource, float i) {
 		Entity entity = damagesource.getEntity();
 		if (worldObj.isRemote || isDead) {
 			return true;
@@ -201,7 +201,7 @@ public class IFI_EntityFigure extends Entity {
 	}
 
 	@Override
-	public boolean interact(EntityPlayer entityplayer) {
+	public boolean func_130002_c(EntityPlayer entityplayer) {
 		if (worldObj.isRemote) {
 			// Client
 			IFI_Client.openGuiPause(entityplayer, this);
@@ -210,7 +210,7 @@ public class IFI_EntityFigure extends Entity {
 		return true;
 	}
 
-	public void setRenderEntity(EntityLiving entity) {
+	public void setRenderEntity(EntityLivingBase entity) {
 		renderEntity = entity;
 		if (renderEntity != null) {
 			renderEntity.setWorld(worldObj);

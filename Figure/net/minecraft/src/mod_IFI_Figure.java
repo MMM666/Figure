@@ -51,15 +51,15 @@ public class mod_IFI_Figure extends BaseMod {
 
 	@Override
 	public String getVersion() {
-		return "1.5.2-4";
+		return "1.6.2-1";
 	}
 
 	@Override
 	public void load() {
 		// MMMLibのRevisionチェック
-		MMM_Helper.checkRevision("5");
+		MMM_Helper.checkRevision("1");
 		
-		figure = new IFI_ItemFigure(ItemID - 256).setUnlocalizedName("Figure");
+		figure = new IFI_ItemFigure(ItemID - 256).setUnlocalizedName("Figure").func_111206_d("Figure");
 		classFigure = MMM_Helper.getForgeClass(this, "IFI_EntityFigure");
 		MMM_Helper.registerEntity(classFigure, "Figure", 0, this, 80, 10, false);
 //		int lentityid = MMM_Helper.getNextEntityID(false);

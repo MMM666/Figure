@@ -249,10 +249,10 @@ public class IFI_GuiFigurePause extends GuiScreen {
 	 * 現在のアイテムをGUIへ移す。
 	 */
 	public void getItems() {
-		IFI_GuiItemSelect.inventoryItem.setInventorySlotContents(0, targetEntity.renderEntity.getCurrentArmor(3));
-		IFI_GuiItemSelect.inventoryItem.setInventorySlotContents(1, targetEntity.renderEntity.getCurrentArmor(2));
-		IFI_GuiItemSelect.inventoryItem.setInventorySlotContents(2, targetEntity.renderEntity.getCurrentArmor(1));
-		IFI_GuiItemSelect.inventoryItem.setInventorySlotContents(3, targetEntity.renderEntity.getCurrentArmor(0));
+		IFI_GuiItemSelect.inventoryItem.setInventorySlotContents(0, targetEntity.renderEntity.getCurrentItemOrArmor(4));
+		IFI_GuiItemSelect.inventoryItem.setInventorySlotContents(1, targetEntity.renderEntity.getCurrentItemOrArmor(3));
+		IFI_GuiItemSelect.inventoryItem.setInventorySlotContents(2, targetEntity.renderEntity.getCurrentItemOrArmor(2));
+		IFI_GuiItemSelect.inventoryItem.setInventorySlotContents(3, targetEntity.renderEntity.getCurrentItemOrArmor(1));
 		IFI_GuiItemSelect.inventoryItem.setInventorySlotContents(4, targetEntity.renderEntity.getHeldItem());
 	}
 

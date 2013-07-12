@@ -41,4 +41,9 @@ public class IFI_RenderFigure extends Render {
 		}
 	}
 
+	@Override
+	protected ResourceLocation func_110775_a(Entity var1) {
+		return null;
+	}
+
 }

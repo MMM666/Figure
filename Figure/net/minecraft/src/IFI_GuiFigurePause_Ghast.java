@@ -32,8 +32,6 @@ public class IFI_GuiFigurePause_Ghast extends IFI_GuiFigurePause {
 			}
 			guibutton.displayString = button102[eg.dataWatcher
 					.getWatchableObjectByte(16) != 1 ? 0 : 1];
-			eg.texture = eg.dataWatcher.getWatchableObjectByte(16) != 1 ? "/mob/ghast.png"
-					: "/mob/ghast_fire.png";
 			break;
 		}
 	}

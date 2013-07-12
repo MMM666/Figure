@@ -11,6 +11,9 @@ import org.lwjgl.opengl.GL12;
 
 public class IFI_GuiItemSelect extends GuiContainer {
 
+	protected static final ResourceLocation ftexGui = new ResourceLocation("textures/gui/container/creative_inventory/tab_items.png");
+	protected static final ResourceLocation ftexTab = new ResourceLocation("textures/gui/container/creative_inventory/tabs.png");
+
 	public static InventoryBasic inventory = new InventoryBasic("tmp", false, 45);
 	public static InventoryBasic inventoryItem = new InventoryBasic("sel", false, 9);
 
@@ -28,11 +31,11 @@ public class IFI_GuiItemSelect extends GuiContainer {
 	private boolean field_74234_w = false;
 	private CreativeCrafting field_82324_x;
 	protected GuiScreen ownerScreen;
-	protected EntityLiving target;
+	protected EntityLivingBase target;
 	public static boolean isChange = false;
 
 
-	public IFI_GuiItemSelect(GuiScreen pOwner, EntityLiving pTarget, EntityPlayer pPlayer) {
+	public IFI_GuiItemSelect(GuiScreen pOwner, EntityLivingBase pTarget, EntityPlayer pPlayer) {
 		super(new IFI_ContainerItemSelect(pPlayer));
 		this.allowUserInput = true;
 		this.ySize = 136;
@@ -453,22 +456,22 @@ public class IFI_GuiItemSelect extends GuiContainer {
 			if (var10 == CreativeTabs.tabInventory) {
 				continue;
 			}
-			this.mc.renderEngine.bindTexture("/gui/allitems.png");
+			MMM_Client.setTexture(ftexTab);
 
 			if (var10.getTabIndex() != selectedTabIndex) {
 				this.renderCreativeTab(var10);
 			}
 		}
 
-		this.mc.renderEngine.bindTexture("/gui/creative_inv/" + var5.getBackgroundImageName());
-		this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize,
-				this.ySize);
+		MMM_Client.setTexture(ftexGui);
+//		this.mc.renderEngine.bindTexture("/gui/creative_inv/" + var5.getBackgroundImageName());
+		this.drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 		this.searchField.drawTextBox();
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		int var11 = this.guiLeft + 175;
 		var8 = this.guiTop + 18;
 		var9 = var8 + 112;
-		this.mc.renderEngine.bindTexture("/gui/allitems.png");
+		MMM_Client.setTexture(ftexTab);
 
 		if (var5.shouldHidePlayerInventory()) {
 			this.drawTexturedModalRect(var11, var8
@@ -575,9 +578,11 @@ public class IFI_GuiItemSelect extends GuiContainer {
 		GL11.glEnable(GL12.GL_RESCALE_NORMAL);
 		ItemStack var10 = new ItemStack(par1CreativeTabs.getTabIconItem());
 		itemRenderer.renderItemAndEffectIntoGUI(this.fontRenderer,
-				this.mc.renderEngine, var10, var7, var8);
+				this.mc.func_110434_K(), var10, var7, var8);
 		itemRenderer.renderItemOverlayIntoGUI(this.fontRenderer,
-				this.mc.renderEngine, var10, var7, var8);
+				this.mc.func_110434_K(), var10, var7, var8);
+
+		
 		GL11.glDisable(GL11.GL_LIGHTING);
 		itemRenderer.zLevel = 0.0F;
 		this.zLevel = 0.0F;

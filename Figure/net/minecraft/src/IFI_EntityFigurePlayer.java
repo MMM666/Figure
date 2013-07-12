@@ -26,18 +26,13 @@ public class IFI_EntityFigurePlayer extends EntityMob {
 		}
 	}
 
-	@Override
-	public int getMaxHealth() {
-		return 20;
-	}
-
 	public void setURLSkin() {
 		// URLƒXƒLƒ“‚ð—LŒø‚É‚·‚é
 		if (!MMM_Helper.isClient) return;
 		if (skinUser == null || skinUser.isEmpty()) {
-			skinUrl = null;
+//			skinUrl = null;
 		} else {
-			skinUrl = "http://skins.minecraft.net/MinecraftSkins/" + StringUtils.stripControlCodes(skinUser) + ".png";
+//			skinUrl = "http://skins.minecraft.net/MinecraftSkins/" + StringUtils.stripControlCodes(skinUser) + ".png";
 //			skinUrl = (new StringBuilder()).append("http://s3.amazonaws.com/MinecraftSkins/").append(ModLoader.getMinecraftInstance().session.username).append(".png").toString();
 		}
 	}
