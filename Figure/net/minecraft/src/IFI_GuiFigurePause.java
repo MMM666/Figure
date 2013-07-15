@@ -159,15 +159,18 @@ public class IFI_GuiFigurePause extends GuiScreen {
 			return;
 		}
 		if (guibutton.id == 10) {
-			if (targetEntity.renderEntity.isRiding()) {
+			if (targetEntity.isFigureRide) {
 				// Ú‚Á‚Ä‚é
-				targetEntity.renderEntity.setFlag(2, false);
+//				targetEntity.renderEntity.setFlag(2, false);
+				targetEntity.renderEntity.ridingEntity = null;
 				guibutton.displayString = button10[0];
 			} else {
 				// Ú‚Á‚Ä‚È‚¢
-				targetEntity.renderEntity.setFlag(2, true);
+//				targetEntity.renderEntity.setFlag(2, true);
+				targetEntity.renderEntity.ridingEntity = targetEntity;
 				guibutton.displayString = button10[1];
 			}
+			targetEntity.isFigureRide = !targetEntity.isFigureRide;
 		}
 		if (guibutton.id == 11) {
 			if (targetEntity.renderEntity.isSneaking()) {

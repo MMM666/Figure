@@ -15,6 +15,7 @@ public class IFI_EntityFigure extends Entity {
 	public byte changeCount;
 	public float fyOffset;
 	protected boolean isFirst = false;
+	protected boolean isFigureRide = false;
 
 
 	public IFI_EntityFigure(World world) {
@@ -68,6 +69,7 @@ public class IFI_EntityFigure extends Entity {
 				lel.prevRotationPitch = nbttagcompound.getFloat("prevPitch");
 				lel.prevRotationYaw = nbttagcompound.getFloat("prevYaw");
 				lel.prevRotationYawHead = lel.rotationYawHead = lel.prevRotationYaw;
+				isFigureRide = nbttagcompound.getBoolean("isFigureRide");
 				setRenderEntity(lel);
 			}
 			fyOffset = nbttagcompound.getFloat("yOffset");
@@ -91,6 +93,7 @@ public class IFI_EntityFigure extends Entity {
 			nbttagcompound.setFloat("prevPitch", renderEntity.prevRotationPitch);
 			nbttagcompound.setFloat("prevYaw", renderEntity.prevRotationYaw);
 			nbttagcompound.setFloat("yOffset", fyOffset);
+			nbttagcompound.setBoolean("isFigureRide", isFigureRide);
 			mod_IFI_Figure.getServerFigure(this).writeEntityToNBT(this, nbttagcompound);
 		}
 		nbttagcompound.setCompoundTag("Entity", lnbt);

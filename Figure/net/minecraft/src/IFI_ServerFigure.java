@@ -26,9 +26,12 @@ public class IFI_ServerFigure {
 			lds.writeByte(0); // UpdateCount
 			lds.writeFloat(pFigure.additionalYaw);
 			lds.writeFloat(pFigure.zoom);
-			int lf = (lentity.isRiding() ? 1 : 0) |
+			int lf = (pFigure.isFigureRide ? 1 : 0) |
 					(lentity.isSneaking() ? 2 : 0) |
 					(lentity.isChild() ? 4 : 0);
+//			int lf = (lentity.isRiding() ? 1 : 0) |
+//					(lentity.isSneaking() ? 2 : 0) |
+//					(lentity.isChild() ? 4 : 0);
 			lds.writeByte(lf); // Flags
 			lds.writeFloat(lentity.rotationYaw);
 			lds.writeFloat(lentity.rotationPitch);
@@ -53,7 +56,14 @@ public class IFI_ServerFigure {
 				pFigure.additionalYaw = lds.readFloat();
 				pFigure.zoom = lds.readFloat();
 				int lf = lds.readByte(); // Flags
-				lel.setFlag(2, (lf & 1) != 0);
+//				lel.setFlag(2, (lf & 1) != 0);
+				pFigure.isFigureRide = (lf & 1) != 0;
+				if (pFigure.worldObj.isRemote) {
+					// Client
+					lel.ridingEntity = pFigure.isFigureRide ? pFigure : null;
+				} else {
+					// Seerver
+				}
 				lel.setSneaking((lf & 2) != 0);
 				if (lel instanceof EntityAgeable) {
 					((EntityAgeable)lel).setGrowingAge(-(lf & 4));

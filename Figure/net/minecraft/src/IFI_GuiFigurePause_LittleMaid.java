@@ -51,8 +51,7 @@ public class IFI_GuiFigurePause_LittleMaid extends IFI_GuiFigurePause {
 		buttonList.add(bt103);
 		buttonList.add(new GuiButton(104, width / 2 + 60, height / 6 + 96 + 12, 80, 20, button104[elm.isMaidWait() ? 0 : elm.mstatAimeBow ? 2 : 1]));
 		
-		bt110 = new GuiButton(110, width / 2 - 120, height / 6 + 72 + 12, 40,
-				20, String.format("%d", armorDamage));
+		bt110 = new GuiButton(110, width / 2 - 120, height / 6 + 72 + 12, 40, 20, String.format("%d", armorDamage));
 		buttonList.add(bt110);
 		buttonList.add(new GuiButton(111, width / 2 - 140, height / 6 + 72 + 12, 20, 20, "+"));
 		buttonList.add(new GuiButton(112, width / 2 - 80, height / 6 + 72 + 12, 20, 20, "-"));
@@ -113,9 +112,9 @@ public class IFI_GuiFigurePause_LittleMaid extends IFI_GuiFigurePause {
 		}
 		if (guibutton.id == 102) {
 			// êFÇ™Ç†ÇÈÇ©Çåüçı
-			MMM_TextureBox lbox = MMM_TextureManager.instance.getTextureBox(elm.textureBox[0].textureName);
+			MMM_TextureBox lbox = (MMM_TextureBox)elm.textureBox[0];
 			int i = 0;
-			int j = !elm.maidContract ? 0 : MMM_TextureManager.tx_wild;
+			int j = !elm.isContract() ? 0 : MMM_TextureManager.tx_wild;
 			for (i = elm.maidColor; i < 16; i++) {
 				if (lbox.hasColor(i + j)) {
 					break;
@@ -130,11 +129,11 @@ public class IFI_GuiFigurePause_LittleMaid extends IFI_GuiFigurePause {
 			}
 			if (i < 16) {
 				// å_ñÒèÛë‘ê›íË
-				elm.maidContract = !elm.maidContract;
-				elm.setOwner(elm.maidContract ? "Figure" : "");
-				guibutton.displayString = button102[elm.maidContract ? 0 : 1];
-				elm.setColor(i);
-				bt103.displayString = String.format("Color : %x", elm.getColor());
+				elm.setContract(!elm.isContract());
+				elm.setOwner(elm.isContract() ? "Figure" : "");
+				guibutton.displayString = button102[elm.isContract() ? 0 : 1];
+				elm.maidColor = i;
+				bt103.displayString = String.format("Color : %x", elm.maidColor);
 			}
 		}
 		if (guibutton.id == 103) {
