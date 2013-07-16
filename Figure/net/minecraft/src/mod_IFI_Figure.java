@@ -57,7 +57,7 @@ public class mod_IFI_Figure extends BaseMod {
 	@Override
 	public void load() {
 		// MMMLibのRevisionチェック
-		MMM_Helper.checkRevision("1");
+		MMM_Helper.checkRevision("2");
 		
 		figure = new IFI_ItemFigure(ItemID - 256).setUnlocalizedName("Figure").func_111206_d("Figure");
 		classFigure = MMM_Helper.getForgeClass(this, "IFI_EntityFigure");

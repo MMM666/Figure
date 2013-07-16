@@ -206,4 +206,39 @@ public class IFI_Client implements MMM_IItemRenderManager {
 		return true;
 	}
 
+
+	// プレーヤーモデルフィギュアのテクスチャ関連
+
+	public static ThreadDownloadImageData func_110304_a(
+			ResourceLocation par0ResourceLocation, String par1Str) {
+		return func_110301_a(par0ResourceLocation, func_110300_d(par1Str),
+				AbstractClientPlayer.field_110314_b, new ImageBufferDownload());
+	}
+
+	private static ThreadDownloadImageData func_110301_a(
+			ResourceLocation par0ResourceLocation, String par1Str,
+			ResourceLocation par2ResourceLocation, IImageBuffer par3IImageBuffer) {
+		TextureManager var4 = Minecraft.getMinecraft().func_110434_K();
+		Object var5 = var4.func_110581_b(par0ResourceLocation);
+		
+		if (var5 == null) {
+			var5 = new ThreadDownloadImageData(par1Str, par2ResourceLocation,
+					par3IImageBuffer);
+			var4.func_110579_a(par0ResourceLocation, (TextureObject) var5);
+		}
+		
+		return (ThreadDownloadImageData) var5;
+	}
+
+	public static String func_110300_d(String par0Str) {
+		return String.format(
+				"http://skins.minecraft.net/MinecraftSkins/%s.png",
+				new Object[] { StringUtils.stripControlCodes(par0Str) });
+	}
+
+	public static ResourceLocation func_110311_f(String par0Str) {
+		return new ResourceLocation(
+				"skins/" + StringUtils.stripControlCodes(par0Str));
+	}
+
 }
