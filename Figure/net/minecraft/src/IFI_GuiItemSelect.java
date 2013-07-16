@@ -112,9 +112,8 @@ public class IFI_GuiItemSelect extends GuiContainer {
 		} else {
 			// スロットをクリックしなかった
 			mod_IFI_Figure.Debug("Drop.(%d, %d, %d)", par2, par3, par4);
-			this.mc.thePlayer.dropPlayerItem(var6.getItemStack());
-			this.mc.playerController.func_78752_a(var6.getItemStack());
-			
+//			this.mc.thePlayer.dropPlayerItem(var6.getItemStack());
+//			this.mc.playerController.func_78752_a(var6.getItemStack());
 			var6.setItemStack((ItemStack) null);
 		}
 	}
@@ -242,7 +241,8 @@ public class IFI_GuiItemSelect extends GuiContainer {
 		CreativeTabs lct = CreativeTabs.creativeTabArray[selectedTabIndex];
 		
 		if (lct.drawInForegroundOfTab()) {
-			this.fontRenderer.drawString(lct.getTranslatedTabLabel(), 8, 6, 4210752);
+//			this.fontRenderer.drawString(lct.getTranslatedTabLabel(), 8, 6, 4210752);
+			fontRenderer.drawString(I18n.func_135053_a(lct.getTranslatedTabLabel()), 8, 6, 4210752);
 		}
 	}
 
@@ -353,8 +353,7 @@ public class IFI_GuiItemSelect extends GuiContainer {
 		int var1 = Mouse.getEventDWheel();
 
 		if (var1 != 0 && this.needsScrollBars()) {
-			int var2 = ((IFI_ContainerItemSelect) this.inventorySlots).itemList
-					.size() / 9 - 5 + 1;
+			int var2 = ((IFI_ContainerItemSelect) this.inventorySlots).itemList.size() / 9 - 5 + 1;
 
 			if (var1 > 0) {
 				var1 = 1;
