@@ -63,7 +63,7 @@ public class IFI_GuiFigurePause extends GuiScreen {
 		// ƒLƒƒƒ‰
 		int l = width / 2;
 		int k = height / 6 + 72;// height / 2;
-		EntityLiving elt = (EntityLiving) targetEntity.renderEntity;
+		EntityLivingBase elt = (EntityLiving) targetEntity.renderEntity;
 		GL11.glEnable(EXTRescaleNormal.GL_RESCALE_NORMAL_EXT);
 		GL11.glEnable(GL11.GL_COLOR_MATERIAL);
 		GL11.glPushMatrix();

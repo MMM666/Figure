@@ -16,6 +16,7 @@ public class IFI_RenderFigurePlayer extends RenderBiped {
 		modelArmor = new ModelBiped(0.5F);
 	}
 
+	@Override
 	protected ResourceLocation func_110856_a(EntityLiving par1EntityLiving) {
 		return ((IFI_EntityFigurePlayer)par1EntityLiving).func_110306_p();
 	}

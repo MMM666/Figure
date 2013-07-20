@@ -118,15 +118,15 @@ public class IFI_ItemFigure extends Item {
 		if (lmap != null) {
 			for (Entry<Integer, Class> le : lmap.entrySet()) {
 				Class lcl = le.getValue();
-				if (!Modifier.isAbstract(lcl.getModifiers()) && EntityLiving.class.isAssignableFrom(lcl)) {
+				if (!Modifier.isAbstract(lcl.getModifiers()) && EntityLivingBase.class.isAssignableFrom(lcl)) {
 					par3List.add(new ItemStack(mod_IFI_Figure.figure, 1, le.getKey()));
 				}
 			}
 		}
 	}
 
-	public static EntityLiving getEntityFromID(int pIndex) {
-		return (EntityLiving)entityStringMap.get(EntityList.getStringFromID(pIndex));
+	public static EntityLivingBase getEntityFromID(int pIndex) {
+		return (EntityLivingBase)entityStringMap.get(EntityList.getStringFromID(pIndex));
 	}
 
 }

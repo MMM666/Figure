@@ -32,7 +32,7 @@ public class IFI_EntityFigure_Forge extends IFI_EntityFigure
 //		lentity = EntityList.createEntityByID(data.readInt(), worldObj);
 		setRotation(data.readFloat(), data.readFloat());
 		lentity = EntityList.createEntityByName(data.readUTF(), worldObj);
-		setRenderEntity((EntityLiving) lentity);
+		setRenderEntity((EntityLivingBase) lentity);
 		IFI_Client.getGui(this);
 	}
 
