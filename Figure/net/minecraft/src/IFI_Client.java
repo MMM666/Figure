@@ -131,48 +131,6 @@ public class IFI_Client implements MMM_IItemRenderManager {
 	}
 
 	@Override
-	public boolean renderItem(EntityLivingBase pEntity, ItemStack pItemstack, int pIndex) {
-		//特殊レンダーへ
-//		if (pItemstack.getItemDamage() == 0 || IFI_ItemFigure.fentityFigure.renderEntity == null) {
-		if (pItemstack.getItemDamage() == 0) {
-			return false;
-		}
-		GL11.glPushMatrix();
-		if (pEntity != null) {
-			if (pItemstack == IFI_ItemFigure.firstPerson) {
-				GL11.glTranslatef(-0.5F, 0.0F, 0.25F);
-				GL11.glRotatef(225F, 0F, 1F, 0F);
-			} else {
-				GL11.glTranslatef(-0.5F, 0.0F, 0.5F);
-				GL11.glRotatef(180F, 0F, 1F, 0F);
-			}
-			GL11.glScalef(2.5F, 2.5F, 2.5F);
-		}
-		IFI_ItemFigure.firstPerson = null;
-		
-		IFI_ItemFigure.fentityFigure.setWorld(MMM_Helper.mc.theWorld);
-		IFI_ItemFigure.fentityFigure.setPositionAndRotation(0, 0, 0, 0F, 0F);
-		IFI_ItemFigure.fentityFigure.setRenderEntity(IFI_ItemFigure.getEntityFromID(pItemstack.getItemDamage()));
-		IFI_ItemFigure.fentityFigure.renderEntity.setPositionAndRotation(0, 0, 0, 0F, 0F);
-		IFI_ItemFigure.fentityFigure.renderEntity.prevRotationYawHead =
-				IFI_ItemFigure.fentityFigure.renderEntity.rotationYawHead = 0F;
-		RenderManager.instance.renderEntityWithPosYaw(IFI_ItemFigure.fentityFigure, 0, 0, 0, 0, 0);
-		IFI_Client.callAfterRender(IFI_ItemFigure.fentityFigure);
-		
-//		mod_IFI_Figure.Debug("Entity:%s, World:%b", fentityFigure.renderEntity.getClass().getSimpleName(), fentityFigure.worldObj != null);
-		
-		GL11.glPopMatrix();
-		return true;
-	}
-
-	@Override
-	public boolean renderItemInFirstPerson(float pDelta, MMM_ItemRenderer pItemRenderer) {
-		// 元のコード丸パクリ
-		IFI_ItemFigure.firstPerson = pItemRenderer.getItemToRender();
-		return false;
-	}
-
-	@Override
 	public ResourceLocation getRenderTexture() {
 		return null;
 	}
@@ -239,6 +197,69 @@ public class IFI_Client implements MMM_IItemRenderManager {
 	public static ResourceLocation func_110311_f(String par0Str) {
 		return new ResourceLocation(
 				"skins/" + StringUtils.stripControlCodes(par0Str));
+	}
+
+	@Override
+	public boolean renderItem(Entity pEntity, ItemStack pItemStack, int pIndex) {
+		//特殊レンダーへ
+//		if (pItemstack.getItemDamage() == 0 || IFI_ItemFigure.fentityFigure.renderEntity == null) {
+		if (pItemStack.getItemDamage() == 0) {
+			return false;
+		}
+		GL11.glPushMatrix();
+		if (pEntity != null) {
+			if (pItemStack == IFI_ItemFigure.firstPerson) {
+				GL11.glTranslatef(-0.5F, 0.0F, 0.25F);
+				GL11.glRotatef(225F, 0F, 1F, 0F);
+			} else {
+				GL11.glTranslatef(-0.5F, 0.0F, 0.5F);
+				GL11.glRotatef(180F, 0F, 1F, 0F);
+			}
+			GL11.glScalef(2.5F, 2.5F, 2.5F);
+		}
+		IFI_ItemFigure.firstPerson = null;
+		
+		IFI_ItemFigure.fentityFigure.setWorld(MMM_Helper.mc.theWorld);
+		IFI_ItemFigure.fentityFigure.setPositionAndRotation(0, 0, 0, 0F, 0F);
+		IFI_ItemFigure.fentityFigure.setRenderEntity(IFI_ItemFigure.getEntityFromID(pItemStack.getItemDamage()));
+		IFI_ItemFigure.fentityFigure.renderEntity.setPositionAndRotation(0, 0, 0, 0F, 0F);
+		IFI_ItemFigure.fentityFigure.renderEntity.prevRotationYawHead =
+				IFI_ItemFigure.fentityFigure.renderEntity.rotationYawHead = 0F;
+		RenderManager.instance.renderEntityWithPosYaw(IFI_ItemFigure.fentityFigure, 0, 0, 0, 0, 0);
+		IFI_Client.callAfterRender(IFI_ItemFigure.fentityFigure);
+		
+//		mod_IFI_Figure.Debug("Entity:%s, World:%b", fentityFigure.renderEntity.getClass().getSimpleName(), fentityFigure.worldObj != null);
+		
+		GL11.glPopMatrix();
+		return true;
+	}
+
+
+	@Override
+	public boolean renderItemInFirstPerson(Entity pEntity,
+			ItemStack pItemStack, float pDeltaTimepRenderPhatialTick) {
+		// 元のコード丸パクリ
+		IFI_ItemFigure.firstPerson = pItemStack;
+		return false;
+	}
+
+
+	@Override
+	public boolean renderItemWorld() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public boolean isRenderItem() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public boolean isRenderItemInFirstPerson() {
+		// TODO Auto-generated method stub
+		return true;
 	}
 
 }

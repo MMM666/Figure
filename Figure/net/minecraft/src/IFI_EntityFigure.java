@@ -237,8 +237,8 @@ public class IFI_EntityFigure extends Entity {
 		setSize(width, height);
 		setPosition(posX, posY, posZ);
 		renderEntity.renderDistanceWeight = zoom;
-		mod_IFI_Figure.Debug("setZoom(%s) w:%f, h:%f zoom*%f", worldObj.isRemote ? "CL" : "SV",
-				width, height, zoom);
+//		mod_IFI_Figure.Debug("setZoom(%s) w:%f, h:%f zoom*%f", worldObj.isRemote ? "CL" : "SV",
+//				width, height, zoom);
 	}
 
 	@Override
