@@ -15,16 +15,16 @@ public class IFI_ServerFigure_LittleMaid extends IFI_ServerFigure {
 				(lentity.isContract() ? 2 : 0) |
 				(lentity.mstatAimeBow ? 4 : 0);
 		pData.writeByte(lf);
-		pData.writeByte(lentity.maidColor);
+		pData.writeByte(lentity.getColor());
 		if (pFigure.worldObj.isRemote) {
-			lentity.textureIndex[0] = MMM_TextureManager.instance.getIndexTextureBoxServerIndex((MMM_TextureBox)lentity.textureBox[0]);
-			lentity.textureIndex[1] = MMM_TextureManager.instance.getIndexTextureBoxServerIndex((MMM_TextureBox)lentity.textureBox[1]);
+			lentity.textureData.textureIndex[0] = MMM_TextureManager.instance.getIndexTextureBoxServerIndex((MMM_TextureBox)lentity.textureData.textureBox[0]);
+			lentity.textureData.textureIndex[1] = MMM_TextureManager.instance.getIndexTextureBoxServerIndex((MMM_TextureBox)lentity.textureData.textureBox[1]);
 //			lentity.textureIndex[1] = MMM_TextureManager.instance.getIndexTextureBoxServer(lentity, lentity.textureBox[1].textureName);
 		}
-		pData.writeInt(lentity.textureIndex[0]);
-		pData.writeInt(lentity.textureIndex[1]);
+		pData.writeInt(lentity.textureData.textureIndex[0]);
+		pData.writeInt(lentity.textureData.textureIndex[1]);
 		mod_IFI_Figure.Debug("tex-s(%s): %d,  %d : %d", pFigure.worldObj.isRemote ? "CL->SV" : "SV->CL", 
-				lentity.textureIndex[0], lentity.textureIndex[1], lentity.maidColor);
+				lentity.textureData.textureIndex[0], lentity.textureData.textureIndex[1], lentity.textureData.getColor());
 	}
 
 	@Override
@@ -34,24 +34,24 @@ public class IFI_ServerFigure_LittleMaid extends IFI_ServerFigure {
 		LMM_EntityLittleMaid lentity = (LMM_EntityLittleMaid)pFigure.renderEntity;
 		int lf = pData.readByte();
 		lentity.setMaidWait((lf & 1) != 0);
-		lentity.maidContract = (lf & 2) != 0;
-		lentity.setContract(lentity.maidContract);
-		lentity.setOwner(lentity.maidContract ? "Figure" : "");
+		lentity.textureData.setContract((lf & 2) != 0);
+		lentity.setContract(lentity.textureData.isContract());
+		lentity.setOwner(lentity.textureData.isContract() ? "Figure" : "");
 		lentity.mstatAimeBow = (lf & 4) != 0;
 		lentity.updateAimebow();
-		lentity.maidColor = pData.readByte();
-		lentity.textureIndex[0] = pData.readInt();
-		lentity.textureIndex[1] = pData.readInt();
+		lentity.setColor(pData.readByte());
+		lentity.textureData.textureIndex[0] = pData.readInt();
+		lentity.textureData.textureIndex[1] = pData.readInt();
 		if (pFigure.worldObj.isRemote) {
 			// Client
-			MMM_TextureManager.instance.postGetTexturePack(lentity, lentity.textureIndex);
+			MMM_TextureManager.instance.postGetTexturePack(lentity, lentity.textureData.getTextureIndex());
 		} else {
 			// Server
-			lentity.setTexturePackIndex(lentity.maidColor, lentity.textureIndex);
+			lentity.setTexturePackIndex(lentity.textureData.getColor(), lentity.textureData.getTextureIndex());
 		}
 		mod_IFI_Figure.Debug("tex-r(%s): %d,  %d : %d",
 				pFigure.worldObj.isRemote ? "SV->CL" : "CL->SV",
-				lentity.textureIndex[0], lentity.textureIndex[1], lentity.maidColor);
+				lentity.textureData.textureIndex[0], lentity.textureData.textureIndex[1], lentity.textureData.color);
 		
 //		lentity.setDominantArm(0);
 //		lentity.setEquipItem(0, 0);

@@ -41,13 +41,13 @@ public class IFI_GuiFigurePause_LittleMaid extends IFI_GuiFigurePause {
 			}
 		}
 		
-		bt100 = new GuiButton(100, width / 2 - 120, height / 6 + 120 + 12, 240, 20, elm.textureBox[0].textureName);
-		bt101 = new GuiButton(101, width / 2 - 120, height / 6 + 144 + 12, 240, 20, elm.textureBox[1].textureName);
+		bt100 = new GuiButton(100, width / 2 - 120, height / 6 + 120 + 12, 240, 20, elm.textureData.getTextureName(0));
+		bt101 = new GuiButton(101, width / 2 - 120, height / 6 + 144 + 12, 240, 20, elm.textureData.getTextureName(1));
 		buttonList.add(bt100);
 		buttonList.add(bt101);
 		buttonList.add(new GuiButton(160, width / 2 - 140, height / 6 + 0 + 12, 80, 20, "TextureSelect"));
-		buttonList.add(new GuiButton(102, width / 2 - 140, height / 6 + 24 + 12, 80, 20, button102[elm.maidContract ? 0 : 1]));
-		bt103 = new GuiButton(103, width / 2 - 140, height / 6 + 48 + 12, 80, 20, String.format("Color : %x", elm.maidColor));
+		buttonList.add(new GuiButton(102, width / 2 - 140, height / 6 + 24 + 12, 80, 20, button102[elm.textureData.isContract() ? 0 : 1]));
+		bt103 = new GuiButton(103, width / 2 - 140, height / 6 + 48 + 12, 80, 20, String.format("Color : %x", elm.getColor()));
 		buttonList.add(bt103);
 		buttonList.add(new GuiButton(104, width / 2 + 60, height / 6 + 96 + 12, 80, 20, button104[elm.isMaidWait() ? 0 : elm.mstatAimeBow ? 2 : 1]));
 		
@@ -75,43 +75,43 @@ public class IFI_GuiFigurePause_LittleMaid extends IFI_GuiFigurePause {
 			MMM_TextureBox lbox[] = new MMM_TextureBox[2];
 			if (Keyboard.isKeyDown(42) || Keyboard.isKeyDown(54)) {
 				elm.setPrevTexturePackege(0);
-				lbox[0] = (MMM_TextureBox)elm.textureBox[0];
-				lbox[1] = (MMM_TextureBox)elm.textureBox[1];
+				lbox[0] = (MMM_TextureBox)elm.textureData.textureBox[0];
+				lbox[1] = (MMM_TextureBox)elm.textureData.textureBox[1];
 				elm.setPrevTexturePackege(0);
 			} else {
 				elm.setNextTexturePackege(0);
-				lbox[0] = (MMM_TextureBox)elm.textureBox[0];
-				lbox[1] = (MMM_TextureBox)elm.textureBox[1];
+				lbox[0] = (MMM_TextureBox)elm.textureData.textureBox[0];
+				lbox[1] = (MMM_TextureBox)elm.textureData.textureBox[1];
 				elm.setPrevTexturePackege(0);
 			}
-			MMM_TextureManager.instance.checkTextureBoxServer((MMM_TextureBox)elm.textureBox[0]);
-			elm.textureBox[0] = lbox[0];
-			elm.textureBox[1] = lbox[1];
-			elm.textureIndex[0] = MMM_TextureManager.instance.getIndexTextureBoxServerIndex(lbox[0]);
-			elm.textureIndex[1] = MMM_TextureManager.instance.getIndexTextureBoxServerIndex(lbox[1]);
+			MMM_TextureManager.instance.checkTextureBoxServer((MMM_TextureBox)elm.textureData.textureBox[0]);
+			elm.textureData.textureBox[0] = lbox[0];
+			elm.textureData.textureBox[1] = lbox[1];
+			elm.textureData.textureIndex[0] = MMM_TextureManager.instance.getIndexTextureBoxServerIndex(lbox[0]);
+			elm.textureData.textureIndex[1] = MMM_TextureManager.instance.getIndexTextureBoxServerIndex(lbox[1]);
 		}
 		if (guibutton.id == 101) {
 			MMM_TextureBox lbox[] = new MMM_TextureBox[2];
 			if (Keyboard.isKeyDown(42) || Keyboard.isKeyDown(54)) {
 				elm.setPrevTexturePackege(1);
-				lbox[0] = (MMM_TextureBox)elm.textureBox[0];
-				lbox[1] = (MMM_TextureBox)elm.textureBox[1];
+				lbox[0] = (MMM_TextureBox)elm.textureData.textureBox[0];
+				lbox[1] = (MMM_TextureBox)elm.textureData.textureBox[1];
 				elm.setPrevTexturePackege(1);
 			} else {
 				elm.setNextTexturePackege(1);
-				lbox[0] = (MMM_TextureBox)elm.textureBox[0];
-				lbox[1] = (MMM_TextureBox)elm.textureBox[1];
+				lbox[0] = (MMM_TextureBox)elm.textureData.textureBox[0];
+				lbox[1] = (MMM_TextureBox)elm.textureData.textureBox[1];
 				elm.setPrevTexturePackege(1);
 			}
-			MMM_TextureManager.instance.checkTextureBoxServer((MMM_TextureBox)elm.textureBox[1]);
-			elm.textureBox[0] = lbox[0];
-			elm.textureBox[1] = lbox[1];
-			elm.textureIndex[0] = MMM_TextureManager.instance.getIndexTextureBoxServerIndex(lbox[0]);
-			elm.textureIndex[1] = MMM_TextureManager.instance.getIndexTextureBoxServerIndex(lbox[1]);
+			MMM_TextureManager.instance.checkTextureBoxServer((MMM_TextureBox)elm.textureData.textureBox[1]);
+			elm.textureData.textureBox[0] = lbox[0];
+			elm.textureData.textureBox[1] = lbox[1];
+			elm.textureData.textureIndex[0] = MMM_TextureManager.instance.getIndexTextureBoxServerIndex(lbox[0]);
+			elm.textureData.textureIndex[1] = MMM_TextureManager.instance.getIndexTextureBoxServerIndex(lbox[1]);
 		}
 		if (guibutton.id == 102) {
 			// êFÇ™Ç†ÇÈÇ©Çåüçı
-			MMM_TextureBox lbox = (MMM_TextureBox)elm.textureBox[0];
+			MMM_TextureBox lbox = (MMM_TextureBox)elm.textureData.textureBox[0];
 			int i = 0;
 			int j = !elm.isContract() ? 0 : MMM_TextureManager.tx_wild;
 			for (i = elm.getColor(); i < 16; i++) {
@@ -136,7 +136,7 @@ public class IFI_GuiFigurePause_LittleMaid extends IFI_GuiFigurePause {
 			}
 		}
 		if (guibutton.id == 103) {
-			MMM_TextureBox lbox = MMM_TextureManager.instance.getTextureBox(elm.textureBox[0].textureName);
+			MMM_TextureBox lbox = MMM_TextureManager.instance.getTextureBox(elm.textureData.textureBox[0].textureName);
 			
 			int i = 0;
 			int j = elm.isContract() ? 0 : MMM_TextureManager.tx_wild;
@@ -203,8 +203,8 @@ public class IFI_GuiFigurePause_LittleMaid extends IFI_GuiFigurePause {
 		}
 		
 		mod_IFI_Figure.Debug("b:%b,  %d", elm.isContract(), elm.getColor());
-		bt100.displayString = elm.textureBox[0].textureName;
-		bt101.displayString = elm.textureBox[1].textureName;
+		bt100.displayString = elm.textureData.getTextureName(0);
+		bt101.displayString = elm.textureData.getTextureName(1);
 		elm.setTextureNames();
 		
 		mod_IFI_Figure.Debug("a:%b,  %d", elm.isContract(), elm.getColor());
