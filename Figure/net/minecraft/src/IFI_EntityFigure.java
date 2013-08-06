@@ -24,7 +24,7 @@ public class IFI_EntityFigure extends Entity {
 		additionalYaw = 0.0F;
 		changeCount = -1;
 		fyOffset = 0F;
-		zoom = mod_IFI_Figure.defaultZoomRate;
+		zoom = mod_IFI_Figure.cfg_defaultZoomRate;
 	}
 
 	public IFI_EntityFigure(World world, Entity entity) {

@@ -19,7 +19,7 @@ public class IFI_Client implements MMM_IItemRenderManager {
 
 
 	public static void setZoomRate() {
-		String s[] = mod_IFI_Figure.zoomRate.split(",");
+		String s[] = mod_IFI_Figure.cfg_zoomRate.split(",");
 		if (s.length > 0) {
 			float az[] = new float[s.length];
 			for (int i = 0; i < s.length; i++) {

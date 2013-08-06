@@ -12,18 +12,27 @@ import java.util.Random;
 
 public class mod_IFI_Figure extends BaseMod {
 
-	@MLProp(info = "ItemID(shiftIndex = ItemID - 256)", min = 256, max = 32000)
-	public static int ItemID = 22203;
-	@MLProp(info = "Zoom rate.")
-	public static String zoomRate = "1, 2, 4, 6";
-	@MLProp(info = "default Zoom rate.")
-	public static float defaultZoomRate = 4F;
-	@MLProp()
-	public static boolean isDebugMessage = true;
-	@MLProp(info = "use Player Figure.")
-	public static boolean isFigurePlayer = true;
-	@MLProp(info = "EntityID. 0 is auto assigned.")
-	public static int UniqueEntityIdFigurePlayer = 224;
+	public static String[] cfg_comment = {
+		"ItemID = ItemID(shiftIndex = ItemID - 256, min = 256, max = 32000)",
+		"zoomRate = Zoom rate.",
+		"defaultZoomRate = default Zoom rate.",
+		"isFigurePlayer = use Player Figure.",
+		"UniqueEntityIdFigurePlayer = EntityID. 0 is auto assigned.",
+		"isDebugMessage = Print Debug Massages."
+	};
+	
+//	@MLProp(info = "ItemID(shiftIndex = ItemID - 256)", min = 256, max = 32000)
+	public static int cfg_ItemID = 22203;
+//	@MLProp(info = "Zoom rate.")
+	public static String cfg_zoomRate = "1, 2, 4, 6";
+//	@MLProp(info = "default Zoom rate.")
+	public static float cfg_defaultZoomRate = 4F;
+//	@MLProp()
+	public static boolean cfg_isDebugMessage = true;
+//	@MLProp(info = "use Player Figure.")
+	public static boolean cfg_isFigurePlayer = true;
+//	@MLProp(info = "EntityID. 0 is auto assigned.")
+	public static int cfg_UniqueEntityIdFigurePlayer = 224;
 	
 	public static Item figure;
 	public static Class classFigure;
@@ -34,7 +43,7 @@ public class mod_IFI_Figure extends BaseMod {
 
 	public static void Debug(String pText, Object... pData) {
 		// デバッグメッセージ
-		if (isDebugMessage) {
+		if (cfg_isDebugMessage) {
 			System.out.println(String.format("Figure-" + pText, pData));
 		}
 	}
@@ -51,15 +60,16 @@ public class mod_IFI_Figure extends BaseMod {
 
 	@Override
 	public String getVersion() {
-		return "1.6.2-2";
+		return "1.6.2-3";
 	}
 
 	@Override
 	public void load() {
 		// MMMLibのRevisionチェック
-		MMM_Helper.checkRevision("3");
+		MMM_Helper.checkRevision("4");
+		MMM_Config.checkConfig(this.getClass());
 		
-		figure = new IFI_ItemFigure(ItemID - 256).setUnlocalizedName("Figure").func_111206_d("Figure");
+		figure = new IFI_ItemFigure(cfg_ItemID - 256).setUnlocalizedName("Figure").func_111206_d("Figure");
 		classFigure = MMM_Helper.getForgeClass(this, "IFI_EntityFigure");
 		MMM_Helper.registerEntity(classFigure, "Figure", 0, this, 80, 10, false);
 		try {
@@ -78,8 +88,8 @@ public class mod_IFI_Figure extends BaseMod {
 		}
 		
 		// プレーヤースキン表示用MOBの追加
-		if (isFigurePlayer) {
-			MMM_Helper.registerEntity(IFI_EntityFigurePlayer.class, "FigurePlayer", UniqueEntityIdFigurePlayer, this, 64, 10, false);
+		if (cfg_isFigurePlayer) {
+			MMM_Helper.registerEntity(IFI_EntityFigurePlayer.class, "FigurePlayer", cfg_UniqueEntityIdFigurePlayer, this, 64, 10, false);
 		}
 		
 		// パケットチャンネル追加
@@ -93,7 +103,7 @@ public class mod_IFI_Figure extends BaseMod {
 	@Override
 	public void addRenderer(Map map) {
 		map.put(classFigure, new IFI_RenderFigure());
-		if (isFigurePlayer) {
+		if (cfg_isFigurePlayer) {
 			map.put(IFI_EntityFigurePlayer.class, new IFI_RenderFigurePlayer());
 		}
 	}
