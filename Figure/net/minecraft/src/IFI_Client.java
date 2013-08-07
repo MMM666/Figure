@@ -131,7 +131,7 @@ public class IFI_Client implements MMM_IItemRenderManager {
 	}
 
 	@Override
-	public ResourceLocation getRenderTexture() {
+	public ResourceLocation getRenderTexture(ItemStack pItemStack) {
 		return null;
 	}
 /*
@@ -159,11 +159,6 @@ public class IFI_Client implements MMM_IItemRenderManager {
 		}
 	}
 */
-	@Override
-	public boolean isRenderItemWorld() {
-		return true;
-	}
-
 
 	// プレーヤーモデルフィギュアのテクスチャ関連
 
@@ -245,21 +240,26 @@ public class IFI_Client implements MMM_IItemRenderManager {
 
 
 	@Override
-	public boolean renderItemWorld() {
+	public boolean renderItemWorld(ItemStack pItemStack) {
 		// TODO Auto-generated method stub
 		return true;
 	}
 
 	@Override
-	public boolean isRenderItem() {
-		// TODO Auto-generated method stub
-		return true;
+	public boolean isRenderItemWorld(ItemStack pItemStack) {
+		return pItemStack.getItemDamage() != 0;
 	}
 
 	@Override
-	public boolean isRenderItemInFirstPerson() {
+	public boolean isRenderItem(ItemStack pItemStack) {
 		// TODO Auto-generated method stub
-		return true;
+		return pItemStack.getItemDamage() != 0;
+	}
+
+	@Override
+	public boolean isRenderItemInFirstPerson(ItemStack pItemStack) {
+		// TODO Auto-generated method stub
+		return pItemStack.getItemDamage() != 0;
 	}
 
 }
