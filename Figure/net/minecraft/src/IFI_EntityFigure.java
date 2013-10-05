@@ -60,6 +60,7 @@ public class IFI_EntityFigure extends Entity {
 				System.out.println(String.format("figua-lost:%s",
 						nbttagcompound.getString("mobString")));
 //				IFI_ItemFigure.checkCreateEntity(worldObj);
+				IFI_Client.initEntitys();
 				lentity = (Entity) IFI_ItemFigure.entityStringMap.values().toArray()[0];
 			}
 			if (lentity instanceof EntityLivingBase) {
@@ -140,7 +141,13 @@ public class IFI_EntityFigure extends Entity {
 			if (riddenByEntity != null) {
 				riddenByEntity.mountEntity(null);
 			}
-			entityDropItem(new ItemStack(mod_IFI_Figure.figure.itemID, 1, mobIndex), 0.0F);
+			ItemStack lis = new ItemStack(mod_IFI_Figure.figure.itemID, 1, mobIndex);
+			if (!lis.hasTagCompound()) {
+				lis.setTagCompound(new NBTTagCompound());
+			}
+			NBTTagCompound lnbt = lis.getTagCompound();
+			lnbt.setString("FigureName", mobString);
+			entityDropItem(lis, 0.0F);
 			setDead();
 		} else {
 			health -= i;

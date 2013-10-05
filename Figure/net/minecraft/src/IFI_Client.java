@@ -107,7 +107,10 @@ public class IFI_Client implements MMM_IItemRenderManager {
 	}
 
 	public static void initEntitys() {
-		new IFI_GuiFigureSelect(MMM_Helper.mc.theWorld, null);
+		if (IFI_ItemFigure.entityStringMap.isEmpty()) {
+			// リストがブランクなら生成する
+			new IFI_GuiFigureSelect(MMM_Helper.mc.theWorld, null);
+		}
 	}
 
 	/**
@@ -216,7 +219,7 @@ public class IFI_Client implements MMM_IItemRenderManager {
 		
 		IFI_ItemFigure.fentityFigure.setWorld(MMM_Helper.mc.theWorld);
 		IFI_ItemFigure.fentityFigure.setPositionAndRotation(0, 0, 0, 0F, 0F);
-		IFI_ItemFigure.fentityFigure.setRenderEntity(IFI_ItemFigure.getEntityFromID(pItemStack.getItemDamage()));
+		IFI_ItemFigure.fentityFigure.setRenderEntity(IFI_ItemFigure.getEntityFromItemStack(pItemStack));
 		IFI_ItemFigure.fentityFigure.renderEntity.setPositionAndRotation(0, 0, 0, 0F, 0F);
 		IFI_ItemFigure.fentityFigure.renderEntity.prevRotationYawHead =
 				IFI_ItemFigure.fentityFigure.renderEntity.rotationYawHead = 0F;

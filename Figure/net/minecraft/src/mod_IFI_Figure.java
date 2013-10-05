@@ -60,7 +60,7 @@ public class mod_IFI_Figure extends BaseMod {
 
 	@Override
 	public String getVersion() {
-		return "1.6.2-3";
+		return "1.6.2-4";
 	}
 
 	@Override
@@ -301,8 +301,8 @@ public class mod_IFI_Figure extends BaseMod {
 
 	@Override
 	public void clientConnect(NetClientHandler var1) {
-		// コネクト時にリストを作成。
-		IFI_Client.initEntitys();
+		// コネクト時にリストをクリア。
+		IFI_ItemFigure.entityStringMap.clear();
 	}
 
 	/**

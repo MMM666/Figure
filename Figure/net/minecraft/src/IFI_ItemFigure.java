@@ -45,6 +45,7 @@ public class IFI_ItemFigure extends Item {
 				z = par6 + 0.5D;
 			}
 			float lyaw = (180F - par2EntityPlayer.rotationYaw) % 360F;
+			EntityLivingBase lelb = getEntityFromItemStack(par1ItemStack);
 			
 			if (par1ItemStack.getItemDamage() > 0) {
 				if (!par3World.isRemote) {
@@ -66,34 +67,30 @@ public class IFI_ItemFigure extends Item {
 					// Client
 					// Guiを表示してフィギュアを選択
 					// ここで生成されるEntityは捨てインスタンス
-//					IFI_EntityFigure ef = new IFI_EntityFigure(par3World);
 					fentityFigure.setWorld(par3World);
 					fentityFigure.setPositionAndRotation(x, y, z, lyaw, 0F);
-//					ModLoader.openGUI(par2EntityPlayer, new IFI_GuiFigureSelect(par3World, fentityFigure));
 					IFI_Client.openGuiSelect(par2EntityPlayer, par3World);
 				}
 			}
 			par1ItemStack.stackSize--;
 		}
-
 		return false;
-	}
-
-	@Override
-	public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer) {
-		return super.onItemRightClick(itemstack, world, entityplayer);
 	}
 
 	@Override
 	public String getUnlocalizedName(ItemStack itemstack) {
 		if (itemstack.getItemDamage() != 0) {
-			String ls = EntityList.getStringFromID(itemstack.getItemDamage());
+			String ls;
+			if (itemstack.hasTagCompound() && itemstack.getTagCompound().hasKey("FigureName")) {
+				ls = itemstack.getTagCompound().getString("FigureName");
+			} else {
+				ls = EntityList.getStringFromID(itemstack.getItemDamage());
+			}
 			if (ls != null) {
 				return (new StringBuilder()).append(super.getUnlocalizedName())
 						.append(".").append(ls).toString();
 			} else {
-				// System.out.println(String.format("figua-e-id lost:%d",
-				// itemstack.getItemDamage()));
+				mod_IFI_Figure.Debug("figua-e-id lost:%d", itemstack.getItemDamage());
 				itemstack.setItemDamage(0);
 			}
 		}
@@ -101,13 +98,8 @@ public class IFI_ItemFigure extends Item {
 	}
 
 	@Override
-	public String getItemDisplayName(ItemStack par1ItemStack) {
-		// TODO Auto-generated method stub
-		return super.getItemDisplayName(par1ItemStack);
-	}
-
-	@Override
 	public void getSubItems(int par1, CreativeTabs par2CreativeTabs, List par3List) {
+		// Creativeタブに追加するアイテム
 		par3List.add(new ItemStack(mod_IFI_Figure.figure, 1));
 		Map<Integer, Class> lmap = null;
 		try {
@@ -125,8 +117,36 @@ public class IFI_ItemFigure extends Item {
 		}
 	}
 
-	public static EntityLivingBase getEntityFromID(int pIndex) {
-		return (EntityLivingBase)entityStringMap.get(EntityList.getStringFromID(pIndex));
+//	public static EntityLivingBase getEntityFromID(int pIndex) {
+//		IFI_Client.initEntitys();
+//		return (EntityLivingBase)entityStringMap.get(EntityList.getStringFromID(pIndex));
+//	}
+
+	/**
+	 * ItemStackに関連付けられているEntityを返す。<br>
+	 * 対象となるEntityが存在しない場合はItemDamageを０に設定し適当なEntityを返す。
+	 * @param pItemStack
+	 * @return
+	 */
+	public static EntityLivingBase getEntityFromItemStack(ItemStack pItemStack) {
+		IFI_Client.initEntitys();
+		String ls = EntityList.getStringFromID(pItemStack.getItemDamage());
+		if (ls == null || !entityStringMap.containsKey(ls)) {
+			if (pItemStack.hasTagCompound()) {
+				if (pItemStack.getTagCompound().hasKey("FigureName")) {
+					ls = pItemStack.getTagCompound().getString("FigureName");
+					if (entityStringMap.containsKey(ls)) {
+						EntityLivingBase le = (EntityLivingBase)entityStringMap.get(ls);
+						pItemStack.setItemDamage(EntityList.getEntityID(le));
+						return le;
+					}
+				}
+			}
+			pItemStack.setItemDamage(0);
+			return (EntityLivingBase)entityStringMap.values().iterator().next();
+		}
+		
+		return (EntityLivingBase)entityStringMap.get(ls);
 	}
 
 }
