@@ -1,4 +1,4 @@
-駄目な感じのインテリアを追加するMOD Figure 1.6.2 Rev3
+駄目な感じのインテリアを追加するMOD Figure 1.6.2 Rev4
 
 インテリアとして設置できるフィギュアを追加します。
 MODで追加したMOBもEntityLivingBaseクラス派生ならば設置できます。
@@ -13,7 +13,7 @@ MODで追加したMOBもEntityLivingBaseクラス派生ならば設置できます。
 
 使い方
 	要Modloader。
-	要MMMLib Rev4。
+	要MMMLib Rev6。
 	%appdata%/.mincraft/versions/1.6.2ML/modsにZIPのまま放りこめば動くはずです。
 	%appdata%/.mincraft/config/mod_Figure.cfgができるので設定はそちらで。
 
@@ -43,13 +43,16 @@ MODで追加したMOBもEntityLivingBaseクラス派生ならば設置できます。
 
 
 変更点
+	20131016.1	1.6.2 Rev4 バージョンアップ
+				Forge環境で一部の追加MOBが選択できないのを修正。
+				対象MOBをID管理から名称管理へ変更。
+
+
+
 	20130807.1	1.6.2 Rev3 バージョンアップ
 				Forge対策。
 				LMM改変対応。
 				cfgを独自仕様へ。
-
-
-
 	20130720.1	1.6.2 Rev2 バージョンアップ
 				メイドさんのGUIの不具合を修正。
 				その他細々。

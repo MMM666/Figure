@@ -66,7 +66,7 @@ public class mod_IFI_Figure extends BaseMod {
 	@Override
 	public void load() {
 		// MMMLibのRevisionチェック
-		MMM_Helper.checkRevision("4");
+		MMM_Helper.checkRevision("6");
 		MMM_Config.checkConfig(this.getClass());
 		
 		figure = new IFI_ItemFigure(cfg_ItemID - 256).setUnlocalizedName("Figure").func_111206_d("Figure");
